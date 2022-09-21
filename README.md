@@ -1,5 +1,11 @@
 # Welcome
 
+## Description
+
+Testing the rn-expo template with Storybook (*SB*) React Native (tutorial)[https://storybook.js.org/tutorials/intro-to-storybook/react-native/en/get-started/]. 
+
+The default setup `expo init --template tabs@sdk-46` && then `sb init --type react_native` produces a broken SB build, so I wanted to trial my custom template.
+
 ## Knowledge Base
 
 ### Common Issues
