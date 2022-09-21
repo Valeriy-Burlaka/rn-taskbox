@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<View
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "backgroundColor": "violet",
+      "opacity": 1,
+      "paddingHorizontal": 40,
+      "paddingVertical": 20,
+    }
+  }
+>
+  <Text
+    style={
+      {
+        "color": "black",
+      }
+    }
+  >
+    click me
+  </Text>
+</View>
+`;

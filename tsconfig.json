@@ -1,0 +1,24 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    // That's a fake setting and it doesn't work in RN since RN 0.57, as all transpiling is done by `module-resolver` babel plugin. 
+    // See https://github.com/react-native-community/react-native-template-typescript/issues/23#issuecomment-426533599
+    // https://devblogs.microsoft.com/typescript/typescript-and-babel-7/
+    // It is however needed to enable module inspection and links in VSCode.
+    "baseUrl": "./app",
+    // Don't emit; allow Babel to transform files.
+    "noEmit": true,
+    "strict": true,
+    "target": "esnext",
+    "lib": ["esnext"],
+    "jsx": "react-native",
+    "module": "es2015",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+  },
+  // "include": ["app"],
+  "exclude": ["node_modules"]
+}
