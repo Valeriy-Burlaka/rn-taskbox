@@ -1,13 +1,14 @@
-import React from "react";
-import { View } from "react-native";
-import { ComponentStory, ComponentMeta } from "@storybook/react-native";
-import { Button } from "./Button";
+import React from 'react';
+import { View } from 'react-native';
+import { ComponentStory, ComponentMeta } from '@storybook/react-native';
+
+import { Button } from './Button';
 
 const ButtonMeta: ComponentMeta<typeof Button> = {
-  title: "Button",
+  title: 'Button',
   component: Button,
   argTypes: {
-    onPress: { action: "pressed the button" },
+    onPress: { action: 'pressed the button' },
   },
   decorators: [
     (Story) => (
@@ -19,8 +20,6 @@ const ButtonMeta: ComponentMeta<typeof Button> = {
           flex: 1,
           alignItems: 'center',
           justifyContent: 'center',
-          maxWidth: '50vw',
-          padding: '10%',
         }}
       >
         <Story />
@@ -37,6 +36,7 @@ export const Default: ButtonStory = (args) => <Button {...args} />;
 export const WithText = Default.bind({});
 Default.args = {
   text: 'hello',
+  onPress: () => console.log('Pressed the button')
 };
 
 export const Pink = Default.bind({});

@@ -1,6 +1,8 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 
+import { MonoText } from '../StyledText';
+
 interface Props {
   backgroundColor?: string;
   onPress: () => void;
@@ -19,16 +21,13 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   text: {
-    color: 'black',
-    fontFamily: 'space-mono',
     fontSize: 18,
-    fontWeight: '500',
     letterSpacing: 1.25,
     textTransform: 'uppercase',
   },
 });
 
-export const Button = ({ backgroundColor = 'violet', text = 'click me', onPress, }: Props) => {
+export const Button = ({ backgroundColor = 'violet', text = 'click me', onPress }: Props) => {
   return (
     <TouchableOpacity
       style={{
@@ -37,7 +36,7 @@ export const Button = ({ backgroundColor = 'violet', text = 'click me', onPress,
       }}
       onPress={onPress}
     >
-      <Text style={styles.text}>{text}</Text>
+      <MonoText style={styles.text}>{text}</MonoText>
     </TouchableOpacity>
   );
 };

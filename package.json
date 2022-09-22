@@ -11,8 +11,8 @@
     "eject": "expo eject",
     "lint": "eslint . --ext .tsx",
     "test": "jest",
-    "update-stories": "sb-rn-get-stories --config-path .ondevice",
-    "storybook-watcher": "sb-rn-watcher --config-path .ondevice",
+    "update-stories": "sb-rn-get-stories --config-path storybook-ondevice",
+    "storybook-watcher": "sb-rn-watcher --config-path storybook-ondevice",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
