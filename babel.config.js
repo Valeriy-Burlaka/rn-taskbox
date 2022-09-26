@@ -10,6 +10,7 @@ module.exports = function(api) {
         {
           root: ['./app'],
           extensions: [
+            '.js',
             '.ts',
             '.tsx',
           ],
