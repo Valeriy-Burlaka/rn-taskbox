@@ -23,7 +23,6 @@ if (parameters) {
 const getStories = () => {
   return [
     require('../app/components/Button/Button.stories.tsx'),
-    require('../app/components/StyledText.stories.tsx'),
     require('../app/components/Task/Task.stories.tsx'),
   ];
 };

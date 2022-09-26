@@ -1,7 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 
-import { MonoText } from '../StyledText';
+import { MonoText } from 'components/StyledText';
 
 interface Props {
   backgroundColor?: string;
