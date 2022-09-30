@@ -1,17 +1,16 @@
 import React from 'react';
 import { View } from 'react-native';
-import { ComponentStory, ComponentMeta } from '@storybook/react-native';
+import { storiesOf } from '@storybook/react-native';
+import { action } from '@storybook/addon-actions';
 
 import { Button } from './Button';
 
-const ButtonMeta: ComponentMeta<typeof Button> = {
-  title: 'Button',
-  component: Button,
-  argTypes: {
-    onPress: { action: 'pressed the button' },
-  },
-  decorators: [
-    (Story) => (
+export const actions = {
+  onPress: action('onPress'),
+};
+
+storiesOf('Button', module)
+  .addDecorator((story) => (
       <View
         style={{
           borderColor: 'coral',
@@ -22,25 +21,10 @@ const ButtonMeta: ComponentMeta<typeof Button> = {
           justifyContent: 'center',
         }}
       >
-        <Story />
+        {story()}
       </View>
-    ),
-  ],
-};
-
-export default ButtonMeta;
-
-type ButtonStory = ComponentStory<typeof Button>;
-
-export const Default: ButtonStory = (args) => <Button {...args} />;
-export const WithText = Default.bind({});
-Default.args = {
-  text: 'hello',
-  onPress: () => console.log('Pressed the button')
-};
-
-export const Pink = Default.bind({});
-Pink.args = {
-  text: 'hey',
-  backgroundColor: 'pink',
-};
+    )
+  )
+  .add('default', () => <Button {...actions} />)
+  .add('withText', () => <Button {...{ text: 'hello' }} {...actions} />)
+  .add('withPinkBackground', () => <Button {...{ text: 'hey', backgroundColor: 'pink' }} {...actions} />);

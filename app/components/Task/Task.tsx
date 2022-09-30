@@ -42,7 +42,7 @@ export default function Task({
       <PercolateIcons
         name="star"
         size={20}
-        color={state !== 'TASK_PINNED' ? '#eee' : '#26c6da'}
+        color={state == 'TASK_PINNED' ? '#26c6da' : '#eee' }
       />
     </TouchableOpacity>
   </SafeAreaView>
