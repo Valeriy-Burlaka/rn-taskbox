@@ -4,14 +4,14 @@ import { TextInput, TouchableOpacity, SafeAreaView,View } from 'react-native';
 import { styles } from 'constants/globalStyles';
 import PercolateIcons from 'constants/Percolate';
 
-interface Task {
+export interface TaskData {
   id: string;
   title: string;
   state: string;
 }
 
-interface Props {
-  task: Task;
+export interface Props {
+  task: TaskData;
   onArchiveTask: (id: string) => void;
   onPinTask: (id: string) => void;
 }
