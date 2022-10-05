@@ -19,13 +19,23 @@ const GlowView = (props: Props) => {
             toValue: 1,
             duration: 2000,
             easing: Easing.inOut(Easing.quad),
-            useNativeDriver: true,
+            /**
+             * console.warn
+                Animated: `useNativeDriver` is not supported because the native animated module is missing.
+                Falling back to JS-based animation.
+                To resolve this, add `RCTAnimation` module to this app, or remove `useNativeDriver`.
+                Make sure to run `bundle exec pod install` first.
+                Read more about autolinking: https://github.com/react-native-community/cli/blob/master/docs/autolinking.md
+
+                ^^^ Really nothing about this in Expo & RN docs :(
+             */
+            useNativeDriver: false,
           }),
           Animated.timing(glowAnim, {
             toValue: 0,
             duration: 2000,
             easing: Easing.inOut(Easing.quad),
-            useNativeDriver: true,
+            useNativeDriver: false,
           }),
         ]
       )
