@@ -1,63 +1,74 @@
-import * as React from 'react';
-import { FlatList, View, Text, SafeAreaView } from 'react-native';
+import React, { useEffect, useState } from 'react';
 
-import PercolateIcons from 'constants/Percolate';
-import { styles } from 'constants/globalStyles';
-import { Task, Props as TaskProps, TaskData } from 'components/Task';
+import { TaskData, TaskStates } from 'components/Task';
 
-import LoadingRow from './components/LoadingRow';
+import PureTaskList from './components/PureTaskList';
 
-type Props = {
-  loading: boolean;
-  tasks: TaskData[];
-} &
-  Pick<TaskProps, 'onArchiveTask'>
-  &
-  Pick<TaskProps, 'onPinTask'>;
-
-export default function TaskList({ loading, tasks, onArchiveTask, onPinTask }: Props) {
-  const events = {
-    onPinTask,
-    onArchiveTask,
+function getTasks () {
+  const result = {
+    '1': {
+      id: '1',
+      title: 'Something',
+      state: TaskStates.TASK_INBOX,
+    },
+    '2': {
+      id: '2',
+      title: 'Something more',
+      state: TaskStates.TASK_INBOX,
+    },
+    '3': {
+      id: '3',
+      title: 'Something else',
+      state: TaskStates.TASK_INBOX,
+    },
+    '4': {
+      id: '4',
+      title: 'Something again',
+      state: TaskStates.TASK_INBOX,
+    },
+    '5': {
+      id: '5',
+      title: 'Something again',
+      state: TaskStates.TASK_PINNED,
+    },
+    '6': {
+      id: '6',
+      title: 'Something again',
+      state: TaskStates.TASK_ARCHIVED,
+    },
   };
 
-  if (loading) {
-    return (
-      <SafeAreaView style={styles.ListItems}>
-        <LoadingRow />
-        <LoadingRow />
-        <LoadingRow />
-        <LoadingRow />
-        <LoadingRow />
-        <LoadingRow />
-        <LoadingRow />
-      </SafeAreaView>
-    );
-  }
+  return result;
+}
 
-  if (tasks.length === 0) {
-    return (
-      <SafeAreaView style={styles.ListItemsEmpty}>
-        <View>
-          <PercolateIcons name="check" size={64} color={'#2cc5d2'} />
-          <Text style={styles.TitleMessage}>You have no tasks</Text>
-          <Text style={styles.SubtitleMessage}>Sit back and relax</Text>
-        </View>
-      </SafeAreaView>
-    );
-  }
+export default function TaskList() {
+  
+  const [tasks, setTasks] = useState<TaskData[]>([]);
 
-  const tasksInOrder = [
-    ...tasks.filter(t => t.state === 'TASK_PINNED'),
-    ...tasks.filter(t => t.state !== 'TASK_PINNED'),
-  ];
+  useEffect(() => {
+    const tasksMap = getTasks();
+
+    setTasks(tasksMapToArray(tasksMap))
+  }, []);
+
+  const tasksMapToArray = (tasks: ReturnType<typeof getTasks>) => {
+    return Object.values(tasks);
+  }
+  
+  const onPinTask = (id: string) => ({
+
+  });
+
+  const onArchiveTask = (id: string) => ({
+
+  });
+
   return (
-    <SafeAreaView style={styles.ListItems}>
-      <FlatList
-        data={tasksInOrder}
-        keyExtractor={task => task.id}
-        renderItem={({ item }) => <Task key={item.id} task={item} {...events} />}
-      />
-    </SafeAreaView>
-  );
+    <PureTaskList
+      loading={false}
+      onArchiveTask={onArchiveTask}
+      onPinTask={onPinTask}
+      tasks={tasks}
+    />
+    );
 }

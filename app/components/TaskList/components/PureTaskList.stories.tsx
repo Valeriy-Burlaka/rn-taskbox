@@ -5,7 +5,7 @@ import { storiesOf } from '@storybook/react-native';
 import { styles } from 'constants/globalStyles';
 import { task, actions } from 'components/Task';
 
-import TaskList from './TaskList';
+import TaskList from './PureTaskList';
 
 const taskList = {
   loading: false,

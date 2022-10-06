@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { create } from 'react-test-renderer';
 
-import TaskList from '../TaskList';
-import { withPinnedTasks } from '../TaskList.stories';
+import TaskList from '../PureTaskList';
+import { withPinnedTasks } from '../PureTaskList.stories';
 import { Task } from 'components/Task';
 
 describe('TaskList', () => {

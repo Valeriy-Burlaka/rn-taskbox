@@ -19,7 +19,7 @@ import LinkingConfiguration from './LinkingConfiguration';
 import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
 import TabOneScreen from '../screens/TabOneScreen';
-import TabTwoScreen from '../screens/TabTwoScreen';
+import TasksScreen from '../screens/TasksScreen';
 import StorybookScreen from '../screens/StorybookScreen';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
@@ -88,10 +88,10 @@ function BottomTabNavigator() {
         })}
       />
       <BottomTab.Screen
-        name="TabTwo"
-        component={TabTwoScreen}
+        name="TasksScreen"
+        component={TasksScreen}
         options={{
-          title: 'Tab Two',
+          title: 'Tasks',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />

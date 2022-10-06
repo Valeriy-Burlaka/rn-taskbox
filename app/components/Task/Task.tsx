@@ -4,6 +4,12 @@ import { TextInput, TouchableOpacity, SafeAreaView,View } from 'react-native';
 import { styles } from 'constants/globalStyles';
 import PercolateIcons from 'constants/Percolate';
 
+export enum TaskStates {
+  TASK_INBOX = 'TASK_INBOX',
+  TASK_PINNED = 'TASK_PINNED',
+  TASK_ARCHIVED = 'TASK_ARCHIVED', 
+}
+
 export interface TaskData {
   id: string;
   title: string;
@@ -24,7 +30,7 @@ export default function Task({
   return (
     <SafeAreaView style={styles.ListItem}>
       <TouchableOpacity onPress={() => onArchiveTask(id)}>
-        {state !== 'TASK_ARCHIVED' ? (
+        {state !== TaskStates.TASK_ARCHIVED ? (
           <View style={styles.CheckBox} />
         ) : (
           <PercolateIcons name="check" size={20} color={'#2cc5d2'} />
@@ -33,7 +39,7 @@ export default function Task({
       <TextInput
         placeholder="Input Title"
         style={
-          state === 'TASK_ARCHIVED' ? styles.ListItemInputTaskArchived : styles.ListItemInputTask
+          state === TaskStates.TASK_ARCHIVED ? styles.ListItemInputTaskArchived : styles.ListItemInputTask
         }
         value={title}
         editable={false}
@@ -42,7 +48,7 @@ export default function Task({
         <PercolateIcons
           name="star"
           size={20}
-          color={state == 'TASK_PINNED' ? '#26c6da' : '#eee' }
+          color={state == TaskStates.TASK_PINNED ? '#26c6da' : '#eee' }
         />
       </TouchableOpacity>
     </SafeAreaView>
