@@ -8,32 +8,42 @@ function getTasks():{[key: string]: TaskData} {
   const result = {
     '1': {
       id: '1',
-      title: 'Something',
-      state: TaskStates.TASK_INBOX,
+      title: 'Add real handlers',
+      state: TaskStates.TASK_PINNED,
     },
     '2': {
       id: '2',
-      title: 'Something more',
-      state: TaskStates.TASK_INBOX,
+      title: '"Create task" button & handler',
+      state: TaskStates.TASK_PINNED,
     },
     '3': {
       id: '3',
-      title: 'Something else',
+      title: 'Use local storage to store tasks',
       state: TaskStates.TASK_INBOX,
     },
     '4': {
       id: '4',
-      title: 'Something again',
+      title: 'Error screen',
       state: TaskStates.TASK_INBOX,
     },
     '5': {
       id: '5',
-      title: 'Something again',
-      state: TaskStates.TASK_PINNED,
+      title: 'Marry styled-components & storybook',
+      state: TaskStates.TASK_INBOX,
     },
     '6': {
       id: '6',
-      title: 'Something again',
+      title: 'deploy web?',
+      state: TaskStates.TASK_INBOX,
+    },
+    '7': {
+      id: '7',
+      title: 'deploy app-dev?',
+      state: TaskStates.TASK_INBOX,
+    },
+    '8': {
+      id: '8',
+      title: 'Setup storybook on-device',
       state: TaskStates.TASK_ARCHIVED,
     },
   };
@@ -50,14 +60,21 @@ export default function TaskList() {
 
     setTasks(tasks);
   }, []);
-
-  const tasksMapToArray = (tasks: ReturnType<typeof getTasks>) => {
-    return Object.values(tasks);
-  }
   
-  const onPinTask = (id: string) => ({
+  const onPinTask = (id: string) => {
+    const t = tasks[id];
+    if (t.state === TaskStates.TASK_ARCHIVED) {
+      return;
+    }
 
-  });
+    const tasksCopy = { ...tasks };
+    tasksCopy[t.id] = {
+      ...t,
+      state: t.state === TaskStates.TASK_INBOX ? TaskStates.TASK_PINNED : TaskStates.TASK_INBOX,
+    };
+
+    setTasks(tasksCopy);
+  };
 
   const onArchiveTask = (id: string) => ({
 
