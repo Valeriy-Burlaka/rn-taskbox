@@ -1,18 +1,18 @@
 import * as React from 'react';
 import { create } from 'react-test-renderer';
 
-import TaskList from '../PureTaskList';
+import PureTaskList from '../PureTaskList';
 import { withPinnedTasks } from '../PureTaskList.stories';
 import { Task } from 'components/Task';
 
-describe('TaskList', () => {
+describe('PureTaskList', () => {
   it('renders pinned tasks at the start of the list', () => {
     const events = {
       onPinTask: jest.fn(), 
       onArchiveTask: jest.fn(),
     };
     const tree = create(
-      <TaskList loading={false} tasks={withPinnedTasks} {...events} />
+      <PureTaskList loading={false} tasks={withPinnedTasks} {...events} />
     );
     const rootElement = tree.root;
     const listofTasks = rootElement.findAllByType(Task);
