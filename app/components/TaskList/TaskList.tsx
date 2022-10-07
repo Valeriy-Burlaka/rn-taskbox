@@ -4,7 +4,7 @@ import { TaskData, TaskStates } from 'components/Task';
 
 import PureTaskList from './components/PureTaskList';
 
-function getTasks () {
+function getTasks():{[key: string]: TaskData} {
   const result = {
     '1': {
       id: '1',
@@ -43,12 +43,12 @@ function getTasks () {
 
 export default function TaskList() {
   
-  const [tasks, setTasks] = useState<TaskData[]>([]);
+  const [tasks, setTasks] = useState<ReturnType<typeof getTasks>>({});
 
   useEffect(() => {
-    const tasksMap = getTasks();
+    const tasks = getTasks();
 
-    setTasks(tasksMapToArray(tasksMap))
+    setTasks(tasks);
   }, []);
 
   const tasksMapToArray = (tasks: ReturnType<typeof getTasks>) => {
@@ -68,7 +68,7 @@ export default function TaskList() {
       loading={false}
       onArchiveTask={onArchiveTask}
       onPinTask={onPinTask}
-      tasks={tasks}
+      tasks={Object.values(tasks)}
     />
     );
 }

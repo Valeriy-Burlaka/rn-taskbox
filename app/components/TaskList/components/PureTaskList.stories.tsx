@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { storiesOf } from '@storybook/react-native';
 
 import { styles } from 'constants/globalStyles';
-import { task, actions } from 'components/Task';
+import { task, actions, TaskStates } from 'components/Task';
 
 import TaskList from './PureTaskList';
 
@@ -21,7 +21,7 @@ export const defaultTasks = [
 ];
 export const withPinnedTasks = [
   ...defaultTasks.slice(0, 5),
-  { id: '6', title: 'Task 6 (pinned)', state: 'TASK_PINNED' },
+  { id: '6', title: 'Task 6 (pinned)', state: TaskStates.TASK_PINNED },
 ];
 
 storiesOf('TaskList', module)

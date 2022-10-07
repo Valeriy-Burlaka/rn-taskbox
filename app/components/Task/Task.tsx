@@ -13,7 +13,7 @@ export enum TaskStates {
 export interface TaskData {
   id: string;
   title: string;
-  state: string;
+  state: TaskStates;
 }
 
 export interface Props {
