@@ -5,9 +5,9 @@ import { styles } from 'constants/globalStyles';
 import PercolateIcons from 'constants/Percolate';
 
 export enum TaskStates {
-  TASK_INBOX = 'TASK_INBOX',
-  TASK_PINNED = 'TASK_PINNED',
-  TASK_ARCHIVED = 'TASK_ARCHIVED', 
+  TASK_PINNED = 0,
+  TASK_INBOX = 1,
+  TASK_ARCHIVED = 2,
 }
 
 export interface TaskData {

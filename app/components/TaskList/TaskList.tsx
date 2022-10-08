@@ -81,7 +81,7 @@ export default function TaskList() {
     const tasksCopy = { ...tasks };
     tasksCopy[t.id] = {
       ...t,
-      state: t.state === TaskStates.TASK_INBOX ? TaskStates.TASK_ARCHIVED : TaskStates.TASK_INBOX,
+      state: t.state !== TaskStates.TASK_ARCHIVED ? TaskStates.TASK_ARCHIVED : TaskStates.TASK_INBOX,
     };
 
     setTasks(tasksCopy);

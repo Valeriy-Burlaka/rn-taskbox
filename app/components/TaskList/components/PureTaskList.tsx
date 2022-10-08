@@ -3,7 +3,7 @@ import { FlatList, View, Text, SafeAreaView } from 'react-native';
 
 import PercolateIcons from 'constants/Percolate';
 import { styles } from 'constants/globalStyles';
-import { Task, TaskData, Props as TaskProps, TaskStates, } from 'components/Task';
+import { Task, TaskData, Props as TaskProps } from 'components/Task';
 
 import LoadingRow from './LoadingRow';
 
@@ -47,10 +47,14 @@ export default function PureTaskList({ loading, tasks, onArchiveTask, onPinTask 
     );
   }
 
-  const tasksInOrder = [
-    ...tasks.filter(t => t.state === TaskStates.TASK_PINNED),
-    ...tasks.filter(t => t.state !== TaskStates.TASK_PINNED),
-  ];
+  const tasksInOrder = [ ...tasks ].sort((t1: TaskData, t2: TaskData) => {
+    if (t1.state === t2.state) {
+      return t1.title.toLowerCase().charCodeAt(0) - t2.title.toLowerCase().charCodeAt(0);
+    } else {
+      return t1.state - t2.state;
+    }
+  });
+
   return (
     <SafeAreaView style={styles.ListItems}>
       <FlatList
