@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { FlatList, View, Text, SafeAreaView } from 'react-native';
+import styled from '@emotion/native';
 
 import PercolateIcons from 'constants/Percolate';
 import { styles } from 'constants/globalStyles';
@@ -15,6 +16,18 @@ type Props = {
   &
   Pick<TaskProps, 'onPinTask'>;
 
+const ListItemsEmpty = styled(SafeAreaView)`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+`;
+
+const ListItems = styled(SafeAreaView)`
+  flex: 1;
+  background-color: 'white';
+`;
+
 export default function PureTaskList({ loading, tasks, onArchiveTask, onPinTask }: Props) {
   const events = {
     onPinTask,
@@ -23,7 +36,7 @@ export default function PureTaskList({ loading, tasks, onArchiveTask, onPinTask 
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.ListItems}>
+      <ListItems>
         <LoadingRow />
         <LoadingRow />
         <LoadingRow />
@@ -31,19 +44,19 @@ export default function PureTaskList({ loading, tasks, onArchiveTask, onPinTask 
         <LoadingRow />
         <LoadingRow />
         <LoadingRow />
-      </SafeAreaView>
+      </ListItems>
     );
   }
 
   if (tasks.length === 0) {
     return (
-      <SafeAreaView style={styles.ListItemsEmpty}>
+      <ListItemsEmpty>
         <View>
           <PercolateIcons name="check" size={64} color={'#2cc5d2'} />
           <Text style={styles.TitleMessage}>You have no tasks</Text>
           <Text style={styles.SubtitleMessage}>Sit back and relax</Text>
         </View>
-      </SafeAreaView>
+      </ListItemsEmpty>
     );
   }
 
@@ -56,12 +69,12 @@ export default function PureTaskList({ loading, tasks, onArchiveTask, onPinTask 
   });
 
   return (
-    <SafeAreaView style={styles.ListItems}>
+    <ListItems>
       <FlatList
         data={tasksInOrder}
         keyExtractor={task => task.id}
         renderItem={({ item }) => <Task key={item.id} task={item} {...events} />}
       />
-    </SafeAreaView>
+    </ListItems>
   );
 }

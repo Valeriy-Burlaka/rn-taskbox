@@ -58,8 +58,8 @@ export const styles = StyleSheet.create({
   },
   ListItemInputTask: {
     backgroundColor: 'transparent',
-    width: '95%',
     padding: 10,
+    flex: 1,
     fontFamily: 'NunitoSans',
     fontSize: 14,
     lineHeight: 20,
@@ -67,12 +67,14 @@ export const styles = StyleSheet.create({
   },
   ListItemInputTaskArchived: {
     color: '#aaa',
-    width: '95%',
-    padding: 10,
+    flex: 1,
     fontFamily: 'NunitoSans',
     fontSize: 14,
-    lineHeight: 20,
     fontStyle: 'normal',
+    lineHeight: 20,
+    padding: 10,
+    textDecorationLine: 'line-through',
+    textDecorationStyle: 'solid',
   },
   LoadingListItem: {
     alignItems: 'center',

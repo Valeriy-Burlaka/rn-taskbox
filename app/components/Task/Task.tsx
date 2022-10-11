@@ -1,8 +1,12 @@
 import * as React from 'react';
-import { TextInput, TouchableOpacity, SafeAreaView,View } from 'react-native';
+import * as Haptics from 'expo-haptics';
+import { TextInput, TouchableOpacity, SafeAreaView, View } from 'react-native';
+import styled from '@emotion/native';
 
-import { styles } from 'constants/globalStyles';
 import PercolateIcons from 'constants/Percolate';
+import { styles } from 'constants/globalStyles';
+
+// import TaskTitle from './components/TaskTitle';
 
 export enum TaskStates {
   TASK_PINNED = 0,
@@ -22,20 +26,61 @@ export interface Props {
   onPinTask: (id: string) => void;
 }
 
+const Container = styled(SafeAreaView)`
+  background-color: white;
+  align-items: center;
+  justify-content: space-around;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  height: 48px;
+`;
+
+const Checkbox = styled(View)`
+  border-color: #26c6da;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 100px;
+  background-color: transparent;
+  height: 24px;
+  width: 24px;
+`;
+
+// const TaskTitle__Archived = styled(TaskTitle)`
+//   color: #aaa;
+//   text-decoration-line: line-through;
+//   text-decoration-style: solid;
+// `;
+
 export default function Task({
   task: { id, title, state },
   onArchiveTask,
   onPinTask,
 }: Props) {
   return (
-    <SafeAreaView style={styles.ListItem}>
-      <TouchableOpacity onPress={() => onArchiveTask(id)}>
+    <Container>
+
+      <TouchableOpacity
+        hitSlop={{
+          left: 10,
+          right: 10,
+          top: 10,
+          bottom: 10,
+        }}
+        style={{
+          paddingHorizontal: 12,
+        }}
+        onPress={() => {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          onArchiveTask(id);
+        }}
+      >
         {state !== TaskStates.TASK_ARCHIVED ? (
-          <View style={styles.CheckBox} />
+          <Checkbox />
         ) : (
-          <PercolateIcons name="check" size={20} color={'#2cc5d2'} />
+          <PercolateIcons name="check" size={26} color={'#2cc5d2'} />
         )}
       </TouchableOpacity>
+
       <TextInput
         placeholder="Input Title"
         style={
@@ -44,13 +89,29 @@ export default function Task({
         value={title}
         editable={false}
       />
-      <TouchableOpacity onPress={() => onPinTask(id)}>
+
+      <TouchableOpacity
+        hitSlop={{
+          left: 10,
+          right: 10,
+          top: 10,
+          bottom: 10,
+        }}
+        onPress={() => {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          onPinTask(id);
+        }}
+        style={{
+          paddingHorizontal: 12,
+        }}
+      >
         <PercolateIcons
           name="star"
-          size={20}
+          size={24}
           color={state == TaskStates.TASK_PINNED ? '#26c6da' : '#eee' }
         />
       </TouchableOpacity>
-    </SafeAreaView>
+
+    </Container>
   );
 }
