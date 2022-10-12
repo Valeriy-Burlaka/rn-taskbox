@@ -16,6 +16,8 @@ export const task = {
 export const actions = {
   onPinTask: action('onPinTask'),
   onArchiveTask: action('onArchiveTask'),
+  onSaveTask: action('onSaveTask'),
+  onUpdateTaskTitle: action('onUpdateTaskTitle'),
 };
 
 storiesOf('Task', module)

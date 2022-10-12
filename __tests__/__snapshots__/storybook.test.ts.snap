@@ -258,7 +258,7 @@ exports[`Storyshots PureTaskList default 1`] = `
           "fontSize": 16,
         },
         {
-          "padding": 42,
+          "padding": 10,
         },
       ]
     }
@@ -409,17 +409,20 @@ exports[`Storyshots PureTaskList default 1`] = `
               </View>
               <TextInput
                 editable={false}
-                placeholder="Input Title"
                 style={
-                  {
-                    "backgroundColor": "transparent",
-                    "flex": 1,
-                    "fontFamily": "NunitoSans",
-                    "fontSize": 14,
-                    "fontStyle": "normal",
-                    "lineHeight": 20,
-                    "padding": 10,
-                  }
+                  [
+                    {
+                      "backgroundColor": "transparent",
+                      "flexBasis": 0,
+                      "flexGrow": 1,
+                      "flexShrink": 1,
+                      "fontFamily": "NunitoSans",
+                      "fontSize": 14,
+                      "fontStyle": "normal",
+                      "lineHeight": 20,
+                    },
+                    undefined,
+                  ]
                 }
                 value="Task 1"
               />
@@ -527,17 +530,20 @@ exports[`Storyshots PureTaskList default 1`] = `
               </View>
               <TextInput
                 editable={false}
-                placeholder="Input Title"
                 style={
-                  {
-                    "backgroundColor": "transparent",
-                    "flex": 1,
-                    "fontFamily": "NunitoSans",
-                    "fontSize": 14,
-                    "fontStyle": "normal",
-                    "lineHeight": 20,
-                    "padding": 10,
-                  }
+                  [
+                    {
+                      "backgroundColor": "transparent",
+                      "flexBasis": 0,
+                      "flexGrow": 1,
+                      "flexShrink": 1,
+                      "fontFamily": "NunitoSans",
+                      "fontSize": 14,
+                      "fontStyle": "normal",
+                      "lineHeight": 20,
+                    },
+                    undefined,
+                  ]
                 }
                 value="Task 2"
               />
@@ -645,17 +651,20 @@ exports[`Storyshots PureTaskList default 1`] = `
               </View>
               <TextInput
                 editable={false}
-                placeholder="Input Title"
                 style={
-                  {
-                    "backgroundColor": "transparent",
-                    "flex": 1,
-                    "fontFamily": "NunitoSans",
-                    "fontSize": 14,
-                    "fontStyle": "normal",
-                    "lineHeight": 20,
-                    "padding": 10,
-                  }
+                  [
+                    {
+                      "backgroundColor": "transparent",
+                      "flexBasis": 0,
+                      "flexGrow": 1,
+                      "flexShrink": 1,
+                      "fontFamily": "NunitoSans",
+                      "fontSize": 14,
+                      "fontStyle": "normal",
+                      "lineHeight": 20,
+                    },
+                    undefined,
+                  ]
                 }
                 value="Task 3"
               />
@@ -763,17 +772,20 @@ exports[`Storyshots PureTaskList default 1`] = `
               </View>
               <TextInput
                 editable={false}
-                placeholder="Input Title"
                 style={
-                  {
-                    "backgroundColor": "transparent",
-                    "flex": 1,
-                    "fontFamily": "NunitoSans",
-                    "fontSize": 14,
-                    "fontStyle": "normal",
-                    "lineHeight": 20,
-                    "padding": 10,
-                  }
+                  [
+                    {
+                      "backgroundColor": "transparent",
+                      "flexBasis": 0,
+                      "flexGrow": 1,
+                      "flexShrink": 1,
+                      "fontFamily": "NunitoSans",
+                      "fontSize": 14,
+                      "fontStyle": "normal",
+                      "lineHeight": 20,
+                    },
+                    undefined,
+                  ]
                 }
                 value="Task 4"
               />
@@ -881,17 +893,20 @@ exports[`Storyshots PureTaskList default 1`] = `
               </View>
               <TextInput
                 editable={false}
-                placeholder="Input Title"
                 style={
-                  {
-                    "backgroundColor": "transparent",
-                    "flex": 1,
-                    "fontFamily": "NunitoSans",
-                    "fontSize": 14,
-                    "fontStyle": "normal",
-                    "lineHeight": 20,
-                    "padding": 10,
-                  }
+                  [
+                    {
+                      "backgroundColor": "transparent",
+                      "flexBasis": 0,
+                      "flexGrow": 1,
+                      "flexShrink": 1,
+                      "fontFamily": "NunitoSans",
+                      "fontSize": 14,
+                      "fontStyle": "normal",
+                      "lineHeight": 20,
+                    },
+                    undefined,
+                  ]
                 }
                 value="Task 5"
               />
@@ -999,17 +1014,20 @@ exports[`Storyshots PureTaskList default 1`] = `
               </View>
               <TextInput
                 editable={false}
-                placeholder="Input Title"
                 style={
-                  {
-                    "backgroundColor": "transparent",
-                    "flex": 1,
-                    "fontFamily": "NunitoSans",
-                    "fontSize": 14,
-                    "fontStyle": "normal",
-                    "lineHeight": 20,
-                    "padding": 10,
-                  }
+                  [
+                    {
+                      "backgroundColor": "transparent",
+                      "flexBasis": 0,
+                      "flexGrow": 1,
+                      "flexShrink": 1,
+                      "fontFamily": "NunitoSans",
+                      "fontSize": 14,
+                      "fontStyle": "normal",
+                      "lineHeight": 20,
+                    },
+                    undefined,
+                  ]
                 }
                 value="Task 6"
               />
@@ -1074,7 +1092,7 @@ exports[`Storyshots PureTaskList empty 1`] = `
           "fontSize": 16,
         },
         {
-          "padding": 42,
+          "padding": 10,
         },
       ]
     }
@@ -1152,7 +1170,7 @@ exports[`Storyshots PureTaskList loading 1`] = `
           "fontSize": 16,
         },
         {
-          "padding": 42,
+          "padding": 10,
         },
       ]
     }
@@ -1802,7 +1820,7 @@ exports[`Storyshots PureTaskList withArchivedAndPinnedTasks 1`] = `
           "fontSize": 16,
         },
         {
-          "padding": 42,
+          "padding": 10,
         },
       ]
     }
@@ -1855,7 +1873,7 @@ exports[`Storyshots PureTaskList withArchivedAndPinnedTasks 1`] = `
             },
             {
               "id": "1",
-              "state": 2,
+              "state": 3,
               "title": "Task 1 (archived)",
             },
           ]
@@ -1951,17 +1969,20 @@ exports[`Storyshots PureTaskList withArchivedAndPinnedTasks 1`] = `
               </View>
               <TextInput
                 editable={false}
-                placeholder="Input Title"
                 style={
-                  {
-                    "backgroundColor": "transparent",
-                    "flex": 1,
-                    "fontFamily": "NunitoSans",
-                    "fontSize": 14,
-                    "fontStyle": "normal",
-                    "lineHeight": 20,
-                    "padding": 10,
-                  }
+                  [
+                    {
+                      "backgroundColor": "transparent",
+                      "flexBasis": 0,
+                      "flexGrow": 1,
+                      "flexShrink": 1,
+                      "fontFamily": "NunitoSans",
+                      "fontSize": 14,
+                      "fontStyle": "normal",
+                      "lineHeight": 20,
+                    },
+                    undefined,
+                  ]
                 }
                 value="Task 6 (pinned)"
               />
@@ -2069,17 +2090,20 @@ exports[`Storyshots PureTaskList withArchivedAndPinnedTasks 1`] = `
               </View>
               <TextInput
                 editable={false}
-                placeholder="Input Title"
                 style={
-                  {
-                    "backgroundColor": "transparent",
-                    "flex": 1,
-                    "fontFamily": "NunitoSans",
-                    "fontSize": 14,
-                    "fontStyle": "normal",
-                    "lineHeight": 20,
-                    "padding": 10,
-                  }
+                  [
+                    {
+                      "backgroundColor": "transparent",
+                      "flexBasis": 0,
+                      "flexGrow": 1,
+                      "flexShrink": 1,
+                      "fontFamily": "NunitoSans",
+                      "fontSize": 14,
+                      "fontStyle": "normal",
+                      "lineHeight": 20,
+                    },
+                    undefined,
+                  ]
                 }
                 value="Task 2"
               />
@@ -2187,17 +2211,20 @@ exports[`Storyshots PureTaskList withArchivedAndPinnedTasks 1`] = `
               </View>
               <TextInput
                 editable={false}
-                placeholder="Input Title"
                 style={
-                  {
-                    "backgroundColor": "transparent",
-                    "flex": 1,
-                    "fontFamily": "NunitoSans",
-                    "fontSize": 14,
-                    "fontStyle": "normal",
-                    "lineHeight": 20,
-                    "padding": 10,
-                  }
+                  [
+                    {
+                      "backgroundColor": "transparent",
+                      "flexBasis": 0,
+                      "flexGrow": 1,
+                      "flexShrink": 1,
+                      "fontFamily": "NunitoSans",
+                      "fontSize": 14,
+                      "fontStyle": "normal",
+                      "lineHeight": 20,
+                    },
+                    undefined,
+                  ]
                 }
                 value="Task 3"
               />
@@ -2305,17 +2332,20 @@ exports[`Storyshots PureTaskList withArchivedAndPinnedTasks 1`] = `
               </View>
               <TextInput
                 editable={false}
-                placeholder="Input Title"
                 style={
-                  {
-                    "backgroundColor": "transparent",
-                    "flex": 1,
-                    "fontFamily": "NunitoSans",
-                    "fontSize": 14,
-                    "fontStyle": "normal",
-                    "lineHeight": 20,
-                    "padding": 10,
-                  }
+                  [
+                    {
+                      "backgroundColor": "transparent",
+                      "flexBasis": 0,
+                      "flexGrow": 1,
+                      "flexShrink": 1,
+                      "fontFamily": "NunitoSans",
+                      "fontSize": 14,
+                      "fontStyle": "normal",
+                      "lineHeight": 20,
+                    },
+                    undefined,
+                  ]
                 }
                 value="Task 4"
               />
@@ -2423,17 +2453,20 @@ exports[`Storyshots PureTaskList withArchivedAndPinnedTasks 1`] = `
               </View>
               <TextInput
                 editable={false}
-                placeholder="Input Title"
                 style={
-                  {
-                    "backgroundColor": "transparent",
-                    "flex": 1,
-                    "fontFamily": "NunitoSans",
-                    "fontSize": 14,
-                    "fontStyle": "normal",
-                    "lineHeight": 20,
-                    "padding": 10,
-                  }
+                  [
+                    {
+                      "backgroundColor": "transparent",
+                      "flexBasis": 0,
+                      "flexGrow": 1,
+                      "flexShrink": 1,
+                      "fontFamily": "NunitoSans",
+                      "fontSize": 14,
+                      "fontStyle": "normal",
+                      "lineHeight": 20,
+                    },
+                    undefined,
+                  ]
                 }
                 value="Task 5"
               />
@@ -2517,19 +2550,27 @@ exports[`Storyshots PureTaskList withArchivedAndPinnedTasks 1`] = `
               </View>
               <TextInput
                 editable={false}
-                placeholder="Input Title"
                 style={
-                  {
-                    "color": "#aaa",
-                    "flex": 1,
-                    "fontFamily": "NunitoSans",
-                    "fontSize": 14,
-                    "fontStyle": "normal",
-                    "lineHeight": 20,
-                    "padding": 10,
-                    "textDecorationLine": "line-through",
-                    "textDecorationStyle": "solid",
-                  }
+                  [
+                    {
+                      "backgroundColor": "transparent",
+                      "flexBasis": 0,
+                      "flexGrow": 1,
+                      "flexShrink": 1,
+                      "fontFamily": "NunitoSans",
+                      "fontSize": 14,
+                      "fontStyle": "normal",
+                      "lineHeight": 20,
+                    },
+                    [
+                      {
+                        "color": "#aaa",
+                        "textDecorationLine": "line-through",
+                        "textDecorationStyle": "solid",
+                      },
+                      undefined,
+                    ],
+                  ]
                 }
                 value="Task 1 (archived)"
               />
@@ -2594,7 +2635,7 @@ exports[`Storyshots PureTaskList withArchivedTasks 1`] = `
           "fontSize": 16,
         },
         {
-          "padding": 42,
+          "padding": 10,
         },
       ]
     }
@@ -2648,7 +2689,7 @@ exports[`Storyshots PureTaskList withArchivedTasks 1`] = `
             },
             {
               "id": "1",
-              "state": 2,
+              "state": 3,
               "title": "Task 1 (archived)",
             },
           ]
@@ -2744,17 +2785,20 @@ exports[`Storyshots PureTaskList withArchivedTasks 1`] = `
               </View>
               <TextInput
                 editable={false}
-                placeholder="Input Title"
                 style={
-                  {
-                    "backgroundColor": "transparent",
-                    "flex": 1,
-                    "fontFamily": "NunitoSans",
-                    "fontSize": 14,
-                    "fontStyle": "normal",
-                    "lineHeight": 20,
-                    "padding": 10,
-                  }
+                  [
+                    {
+                      "backgroundColor": "transparent",
+                      "flexBasis": 0,
+                      "flexGrow": 1,
+                      "flexShrink": 1,
+                      "fontFamily": "NunitoSans",
+                      "fontSize": 14,
+                      "fontStyle": "normal",
+                      "lineHeight": 20,
+                    },
+                    undefined,
+                  ]
                 }
                 value="Task 2"
               />
@@ -2862,17 +2906,20 @@ exports[`Storyshots PureTaskList withArchivedTasks 1`] = `
               </View>
               <TextInput
                 editable={false}
-                placeholder="Input Title"
                 style={
-                  {
-                    "backgroundColor": "transparent",
-                    "flex": 1,
-                    "fontFamily": "NunitoSans",
-                    "fontSize": 14,
-                    "fontStyle": "normal",
-                    "lineHeight": 20,
-                    "padding": 10,
-                  }
+                  [
+                    {
+                      "backgroundColor": "transparent",
+                      "flexBasis": 0,
+                      "flexGrow": 1,
+                      "flexShrink": 1,
+                      "fontFamily": "NunitoSans",
+                      "fontSize": 14,
+                      "fontStyle": "normal",
+                      "lineHeight": 20,
+                    },
+                    undefined,
+                  ]
                 }
                 value="Task 3"
               />
@@ -2980,17 +3027,20 @@ exports[`Storyshots PureTaskList withArchivedTasks 1`] = `
               </View>
               <TextInput
                 editable={false}
-                placeholder="Input Title"
                 style={
-                  {
-                    "backgroundColor": "transparent",
-                    "flex": 1,
-                    "fontFamily": "NunitoSans",
-                    "fontSize": 14,
-                    "fontStyle": "normal",
-                    "lineHeight": 20,
-                    "padding": 10,
-                  }
+                  [
+                    {
+                      "backgroundColor": "transparent",
+                      "flexBasis": 0,
+                      "flexGrow": 1,
+                      "flexShrink": 1,
+                      "fontFamily": "NunitoSans",
+                      "fontSize": 14,
+                      "fontStyle": "normal",
+                      "lineHeight": 20,
+                    },
+                    undefined,
+                  ]
                 }
                 value="Task 4"
               />
@@ -3098,17 +3148,20 @@ exports[`Storyshots PureTaskList withArchivedTasks 1`] = `
               </View>
               <TextInput
                 editable={false}
-                placeholder="Input Title"
                 style={
-                  {
-                    "backgroundColor": "transparent",
-                    "flex": 1,
-                    "fontFamily": "NunitoSans",
-                    "fontSize": 14,
-                    "fontStyle": "normal",
-                    "lineHeight": 20,
-                    "padding": 10,
-                  }
+                  [
+                    {
+                      "backgroundColor": "transparent",
+                      "flexBasis": 0,
+                      "flexGrow": 1,
+                      "flexShrink": 1,
+                      "fontFamily": "NunitoSans",
+                      "fontSize": 14,
+                      "fontStyle": "normal",
+                      "lineHeight": 20,
+                    },
+                    undefined,
+                  ]
                 }
                 value="Task 5"
               />
@@ -3216,17 +3269,20 @@ exports[`Storyshots PureTaskList withArchivedTasks 1`] = `
               </View>
               <TextInput
                 editable={false}
-                placeholder="Input Title"
                 style={
-                  {
-                    "backgroundColor": "transparent",
-                    "flex": 1,
-                    "fontFamily": "NunitoSans",
-                    "fontSize": 14,
-                    "fontStyle": "normal",
-                    "lineHeight": 20,
-                    "padding": 10,
-                  }
+                  [
+                    {
+                      "backgroundColor": "transparent",
+                      "flexBasis": 0,
+                      "flexGrow": 1,
+                      "flexShrink": 1,
+                      "fontFamily": "NunitoSans",
+                      "fontSize": 14,
+                      "fontStyle": "normal",
+                      "lineHeight": 20,
+                    },
+                    undefined,
+                  ]
                 }
                 value="Task 6"
               />
@@ -3310,19 +3366,27 @@ exports[`Storyshots PureTaskList withArchivedTasks 1`] = `
               </View>
               <TextInput
                 editable={false}
-                placeholder="Input Title"
                 style={
-                  {
-                    "color": "#aaa",
-                    "flex": 1,
-                    "fontFamily": "NunitoSans",
-                    "fontSize": 14,
-                    "fontStyle": "normal",
-                    "lineHeight": 20,
-                    "padding": 10,
-                    "textDecorationLine": "line-through",
-                    "textDecorationStyle": "solid",
-                  }
+                  [
+                    {
+                      "backgroundColor": "transparent",
+                      "flexBasis": 0,
+                      "flexGrow": 1,
+                      "flexShrink": 1,
+                      "fontFamily": "NunitoSans",
+                      "fontSize": 14,
+                      "fontStyle": "normal",
+                      "lineHeight": 20,
+                    },
+                    [
+                      {
+                        "color": "#aaa",
+                        "textDecorationLine": "line-through",
+                        "textDecorationStyle": "solid",
+                      },
+                      undefined,
+                    ],
+                  ]
                 }
                 value="Task 1 (archived)"
               />
@@ -3387,7 +3451,7 @@ exports[`Storyshots PureTaskList withPinnedTasks 1`] = `
           "fontSize": 16,
         },
         {
-          "padding": 42,
+          "padding": 10,
         },
       ]
     }
@@ -3537,17 +3601,20 @@ exports[`Storyshots PureTaskList withPinnedTasks 1`] = `
               </View>
               <TextInput
                 editable={false}
-                placeholder="Input Title"
                 style={
-                  {
-                    "backgroundColor": "transparent",
-                    "flex": 1,
-                    "fontFamily": "NunitoSans",
-                    "fontSize": 14,
-                    "fontStyle": "normal",
-                    "lineHeight": 20,
-                    "padding": 10,
-                  }
+                  [
+                    {
+                      "backgroundColor": "transparent",
+                      "flexBasis": 0,
+                      "flexGrow": 1,
+                      "flexShrink": 1,
+                      "fontFamily": "NunitoSans",
+                      "fontSize": 14,
+                      "fontStyle": "normal",
+                      "lineHeight": 20,
+                    },
+                    undefined,
+                  ]
                 }
                 value="Task 6 (pinned)"
               />
@@ -3655,17 +3722,20 @@ exports[`Storyshots PureTaskList withPinnedTasks 1`] = `
               </View>
               <TextInput
                 editable={false}
-                placeholder="Input Title"
                 style={
-                  {
-                    "backgroundColor": "transparent",
-                    "flex": 1,
-                    "fontFamily": "NunitoSans",
-                    "fontSize": 14,
-                    "fontStyle": "normal",
-                    "lineHeight": 20,
-                    "padding": 10,
-                  }
+                  [
+                    {
+                      "backgroundColor": "transparent",
+                      "flexBasis": 0,
+                      "flexGrow": 1,
+                      "flexShrink": 1,
+                      "fontFamily": "NunitoSans",
+                      "fontSize": 14,
+                      "fontStyle": "normal",
+                      "lineHeight": 20,
+                    },
+                    undefined,
+                  ]
                 }
                 value="Task 1"
               />
@@ -3773,17 +3843,20 @@ exports[`Storyshots PureTaskList withPinnedTasks 1`] = `
               </View>
               <TextInput
                 editable={false}
-                placeholder="Input Title"
                 style={
-                  {
-                    "backgroundColor": "transparent",
-                    "flex": 1,
-                    "fontFamily": "NunitoSans",
-                    "fontSize": 14,
-                    "fontStyle": "normal",
-                    "lineHeight": 20,
-                    "padding": 10,
-                  }
+                  [
+                    {
+                      "backgroundColor": "transparent",
+                      "flexBasis": 0,
+                      "flexGrow": 1,
+                      "flexShrink": 1,
+                      "fontFamily": "NunitoSans",
+                      "fontSize": 14,
+                      "fontStyle": "normal",
+                      "lineHeight": 20,
+                    },
+                    undefined,
+                  ]
                 }
                 value="Task 2"
               />
@@ -3891,17 +3964,20 @@ exports[`Storyshots PureTaskList withPinnedTasks 1`] = `
               </View>
               <TextInput
                 editable={false}
-                placeholder="Input Title"
                 style={
-                  {
-                    "backgroundColor": "transparent",
-                    "flex": 1,
-                    "fontFamily": "NunitoSans",
-                    "fontSize": 14,
-                    "fontStyle": "normal",
-                    "lineHeight": 20,
-                    "padding": 10,
-                  }
+                  [
+                    {
+                      "backgroundColor": "transparent",
+                      "flexBasis": 0,
+                      "flexGrow": 1,
+                      "flexShrink": 1,
+                      "fontFamily": "NunitoSans",
+                      "fontSize": 14,
+                      "fontStyle": "normal",
+                      "lineHeight": 20,
+                    },
+                    undefined,
+                  ]
                 }
                 value="Task 3"
               />
@@ -4009,17 +4085,20 @@ exports[`Storyshots PureTaskList withPinnedTasks 1`] = `
               </View>
               <TextInput
                 editable={false}
-                placeholder="Input Title"
                 style={
-                  {
-                    "backgroundColor": "transparent",
-                    "flex": 1,
-                    "fontFamily": "NunitoSans",
-                    "fontSize": 14,
-                    "fontStyle": "normal",
-                    "lineHeight": 20,
-                    "padding": 10,
-                  }
+                  [
+                    {
+                      "backgroundColor": "transparent",
+                      "flexBasis": 0,
+                      "flexGrow": 1,
+                      "flexShrink": 1,
+                      "fontFamily": "NunitoSans",
+                      "fontSize": 14,
+                      "fontStyle": "normal",
+                      "lineHeight": 20,
+                    },
+                    undefined,
+                  ]
                 }
                 value="Task 4"
               />
@@ -4127,17 +4206,20 @@ exports[`Storyshots PureTaskList withPinnedTasks 1`] = `
               </View>
               <TextInput
                 editable={false}
-                placeholder="Input Title"
                 style={
-                  {
-                    "backgroundColor": "transparent",
-                    "flex": 1,
-                    "fontFamily": "NunitoSans",
-                    "fontSize": 14,
-                    "fontStyle": "normal",
-                    "lineHeight": 20,
-                    "padding": 10,
-                  }
+                  [
+                    {
+                      "backgroundColor": "transparent",
+                      "flexBasis": 0,
+                      "flexGrow": 1,
+                      "flexShrink": 1,
+                      "fontFamily": "NunitoSans",
+                      "fontSize": 14,
+                      "fontStyle": "normal",
+                      "lineHeight": 20,
+                    },
+                    undefined,
+                  ]
                 }
                 value="Task 5"
               />
@@ -4248,19 +4330,27 @@ exports[`Storyshots Task archived 1`] = `
       </View>
       <TextInput
         editable={false}
-        placeholder="Input Title"
         style={
-          {
-            "color": "#aaa",
-            "flex": 1,
-            "fontFamily": "NunitoSans",
-            "fontSize": 14,
-            "fontStyle": "normal",
-            "lineHeight": 20,
-            "padding": 10,
-            "textDecorationLine": "line-through",
-            "textDecorationStyle": "solid",
-          }
+          [
+            {
+              "backgroundColor": "transparent",
+              "flexBasis": 0,
+              "flexGrow": 1,
+              "flexShrink": 1,
+              "fontFamily": "NunitoSans",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "lineHeight": 20,
+            },
+            [
+              {
+                "color": "#aaa",
+                "textDecorationLine": "line-through",
+                "textDecorationStyle": "solid",
+              },
+              undefined,
+            ],
+          ]
         }
         value="Test Task"
       />
@@ -4391,17 +4481,20 @@ exports[`Storyshots Task default 1`] = `
       </View>
       <TextInput
         editable={false}
-        placeholder="Input Title"
         style={
-          {
-            "backgroundColor": "transparent",
-            "flex": 1,
-            "fontFamily": "NunitoSans",
-            "fontSize": 14,
-            "fontStyle": "normal",
-            "lineHeight": 20,
-            "padding": 10,
-          }
+          [
+            {
+              "backgroundColor": "transparent",
+              "flexBasis": 0,
+              "flexGrow": 1,
+              "flexShrink": 1,
+              "fontFamily": "NunitoSans",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "lineHeight": 20,
+            },
+            undefined,
+          ]
         }
         value="Test Task"
       />
@@ -4532,17 +4625,20 @@ exports[`Storyshots Task pinned 1`] = `
       </View>
       <TextInput
         editable={false}
-        placeholder="Input Title"
         style={
-          {
-            "backgroundColor": "transparent",
-            "flex": 1,
-            "fontFamily": "NunitoSans",
-            "fontSize": 14,
-            "fontStyle": "normal",
-            "lineHeight": 20,
-            "padding": 10,
-          }
+          [
+            {
+              "backgroundColor": "transparent",
+              "flexBasis": 0,
+              "flexGrow": 1,
+              "flexShrink": 1,
+              "fontFamily": "NunitoSans",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "lineHeight": 20,
+            },
+            undefined,
+          ]
         }
         value="Test Task"
       />

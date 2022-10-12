@@ -25,6 +25,7 @@ const getStories = () => {
     require('../app/components/Button/Button.stories.tsx'),
     require('../app/components/Task/Task.stories.tsx'),
     require('../app/components/TaskList/components/PureTaskList.stories.tsx'),
+    require('../app/components/AddTaskButton/AddTaskButton.stories.tsx'),
   ];
 };
 

@@ -14,7 +14,12 @@ type Props = {
 } &
   Pick<TaskProps, 'onArchiveTask'>
   &
-  Pick<TaskProps, 'onPinTask'>;
+  Pick<TaskProps, 'onPinTask'>
+  &
+  Pick<TaskProps, 'onUpdateTaskTitle'>
+  &
+  Pick<TaskProps, 'onSaveTask'>
+;
 
 const ListItemsEmpty = styled(SafeAreaView)`
   flex: 1;
@@ -28,10 +33,19 @@ const ListItems = styled(SafeAreaView)`
   background-color: 'white';
 `;
 
-export default function PureTaskList({ loading, tasks, onArchiveTask, onPinTask }: Props) {
+export default function PureTaskList({
+  loading,
+  tasks,
+  onArchiveTask,
+  onPinTask,
+  onSaveTask,
+  onUpdateTaskTitle,
+}: Props) {
   const events = {
     onPinTask,
     onArchiveTask,
+    onSaveTask,
+    onUpdateTaskTitle,
   };
 
   if (loading) {

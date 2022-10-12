@@ -37,7 +37,7 @@ export const withArchivedAndPinnedTasks = [
 ];
 
 storiesOf('PureTaskList', module)
-  .addDecorator(story => <View style={[styles.TaskBox, { padding: 42 }]}>{story()}</View>)
+  .addDecorator(story => <View style={[styles.TaskBox, { padding: 10 }]}>{story()}</View>)
   .add('default', () => <TaskList {...taskList} tasks={defaultTasks} {...actions} />)
   .add('withArchivedTasks', () => <TaskList {...taskList} tasks={withArchivedTasks} {...actions} />)
   .add('withPinnedTasks', () => <TaskList {...taskList} tasks={withPinnedTasks} {...actions} />)
