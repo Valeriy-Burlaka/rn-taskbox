@@ -128,17 +128,20 @@ export default function TaskList() {
 
   const onSaveTask = (id: string) => {
     // console.log('Saving task:', tasks[id]);
+
     if (!tasks[id].title) {
-      onArchiveTask(id);
+      delete tasks[id];
+      setTasks({...tasks});
+    } else {
+      setTasks({
+        ...tasks,
+        [id]: {
+          ...tasks[id],
+          state: TaskStates.TASK_INBOX,
+        },
+      });
     }
 
-    setTasks({
-      ...tasks,
-      [id]: {
-        ...tasks[id],
-        state: TaskStates.TASK_INBOX,
-      },
-    });
   };
 
   const onPressAddButton = () => {
