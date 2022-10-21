@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "react-native-calculator",
-    "slug": "react-native-calculator",
-    "version": "1.0.0",
+    "name": "react-native-taskbox",
+    "slug": "react-native-taskbox",
+    "version": "0.0.1",
     "orientation": "portrait",
     "icon": "./app/assets/images/icon.png",
     "userInterfaceStyle": "light",
