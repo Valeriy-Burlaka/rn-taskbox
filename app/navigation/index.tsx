@@ -61,10 +61,18 @@ function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="TabOne"
+      initialRouteName="TasksScreen"
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme].tint,
       }}>
+      <BottomTab.Screen
+        name="TasksScreen"
+        component={TasksScreen}
+        options={{
+          title: 'Tasks',
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      />
       <BottomTab.Screen
         name="TabOne"
         component={TabOneScreen}
@@ -86,14 +94,6 @@ function BottomTabNavigator() {
             </Pressable>
           ),
         })}
-      />
-      <BottomTab.Screen
-        name="TasksScreen"
-        component={TasksScreen}
-        options={{
-          title: 'Tasks',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
       />
       <BottomTab.Screen
         name="Storybook"
