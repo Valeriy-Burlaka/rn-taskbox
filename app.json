@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "react-native-taskbox",
-    "slug": "react-native-taskbox",
+    "name": "rn-taskbox",
+    "slug": "rn-taskbox",
+    "owner": "val-bu",
     "version": "0.0.1",
     "orientation": "portrait",
     "icon": "./app/assets/images/icon.png",
