@@ -1,12 +1,13 @@
 import 'utils/logbox';
-import { registerRootComponent } from 'expo';
+// import { registerRootComponent } from 'expo';
 
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import useCachedResources from './hooks/useCachedResources';
-import useColorScheme from './hooks/useColorScheme';
-import Navigation from './navigation';
+import useCachedResources from './app/hooks/useCachedResources';
+import useColorScheme from './app/hooks/useColorScheme';
+// import Navigation from './app/navigation';
+import Navigation from 'navigation';
 
 function App() {
   const isLoadingComplete = useCachedResources();
@@ -25,4 +26,5 @@ function App() {
 }
 
 
-export default registerRootComponent(App);
+// export default registerRootComponent(App);
+export default App;

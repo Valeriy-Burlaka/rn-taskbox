@@ -1,7 +1,6 @@
 {
   "name": "react-native-taskbox",
   "version": "1.0.0",
-  "main": "app/App",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
