@@ -3,6 +3,7 @@
     "name": "rn-taskbox",
     "slug": "rn-taskbox",
     "owner": "val-bu",
+    "privacy": "public",
     "version": "0.0.1",
     "orientation": "portrait",
     "icon": "./app/assets/images/icon.png",

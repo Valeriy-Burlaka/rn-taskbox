@@ -88,5 +88,5 @@
   "resolutions": {
     "react-test-renderer": "18.1.0"
   },
-  "private": true
+  "private": false
 }
