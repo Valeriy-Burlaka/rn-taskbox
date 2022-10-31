@@ -4,19 +4,7 @@ import { TextInput, TouchableOpacity, SafeAreaView, View } from 'react-native';
 import styled from '@emotion/native';
 
 import PercolateIcons from 'constants/Percolate';
-
-export enum TaskStates {
-  TASK_PINNED = 0,
-  TASK_INBOX = 1,
-  TASK_NEW = 2,
-  TASK_ARCHIVED = 3,
-}
-
-export interface TaskData {
-  id: string;
-  title: string;
-  state: TaskStates;
-}
+import { TaskData, TaskStates } from 'types/task';
 
 export interface Props {
   task: TaskData;

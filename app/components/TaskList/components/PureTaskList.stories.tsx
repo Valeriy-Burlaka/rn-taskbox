@@ -3,7 +3,8 @@ import { View } from 'react-native';
 import { storiesOf } from '@storybook/react-native';
 
 import { styles } from 'constants/globalStyles';
-import { task, actions, TaskStates } from 'components/Task';
+import { task, actions } from 'components/Task';
+import { TaskStates } from 'types/task';
 
 import TaskList from './PureTaskList';
 

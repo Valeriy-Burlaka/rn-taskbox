@@ -4,7 +4,9 @@ import { storiesOf } from '@storybook/react-native';
 import { action } from '@storybook/addon-actions';
 
 import { styles } from 'constants/globalStyles';
-import Task, { TaskStates } from './Task';
+import { TaskStates } from 'types/task';
+
+import Task from './Task';
 
 export const task = {
   id: '1',

@@ -2,9 +2,11 @@ import * as React from 'react';
 import { FlatList, View, Text, SafeAreaView } from 'react-native';
 import styled from '@emotion/native';
 
+import { TaskData } from 'types/task';
+
 import PercolateIcons from 'constants/Percolate';
 import { styles } from 'constants/globalStyles';
-import { Task, TaskData, Props as TaskProps } from 'components/Task';
+import { Task, Props as TaskProps } from 'components/Task';
 
 import LoadingRow from './LoadingRow';
 
