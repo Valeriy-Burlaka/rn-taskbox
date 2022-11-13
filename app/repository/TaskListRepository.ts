@@ -3,7 +3,7 @@ import localStorage from 'utils/localStorage';
 
 import { TaskListModel } from 'model/TaskList';
 import { TaskData } from 'types/task';
-import { TaskList } from 'types/taskList';
+import { NewTaskList, TaskList } from 'types/taskList';
 
 export class TaskListRepository {
 
@@ -26,9 +26,11 @@ export class TaskListRepository {
     return result;
   }
     
-  async createNewList(listData: TaskList): Promise<void> {
+  async createNewList(listData: NewTaskList): Promise<string> {
     const list = new TaskListModel(listData);
-    await localStorage.setItem(list.id, TaskListModel.toJson(list))
+    await localStorage.setItem(list.id, TaskListModel.toJson(list));
+
+    return list.id;
   }
   
   // createInitialListIfNotExist

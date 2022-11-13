@@ -2,7 +2,45 @@ import localStorage from 'utils/localStorage';
 
 import { TaskListRepository } from './TaskListRepository';
 
-describe('TaskListRepository', () => {
+describe('TaskListRepository - empty storage', () => {
+  const repository = new TaskListRepository();
+  const initialListId = 'list-initial';
+
+  afterAll(async () => {
+    await localStorage.removeItem(initialListId);
+  });
+
+  test('getAllLists', async () => {
+    const lists = await repository.getLists();
+    expect(lists).toEqual([]);
+  });
+
+  test('getListTasks', async () => {
+    const tasks = await repository.getListTasks('list-not-exists');
+    expect(tasks).toEqual([]);
+  });
+
+  test('createNewList', async () => {
+    const newListData = {
+      id: initialListId,
+      name: 'ToDo',
+      color: 'yellow',
+      icon: 'check-mark',
+    };
+    const newListId = await repository.createNewList(newListData);
+    expect(newListId).toEqual(initialListId);
+
+    const storedLists = await repository.getLists();
+    expect(storedLists.length).toEqual(1);
+    expect(storedLists[0].id).toEqual(newListId);
+    expect(storedLists[0].name).toEqual(newListData.name);
+    expect(storedLists[0].color).toEqual(newListData.color);
+    expect(storedLists[0].icon).toEqual(newListData.icon);
+    expect(storedLists[0].tasks).toEqual([]);
+  });
+});
+
+describe('TaskListRepository - storage with data', () => {
   const listData_1 = {
     id: 'list-0',
     name: 'Shopping List',
@@ -22,12 +60,22 @@ describe('TaskListRepository', () => {
       { id: 'task-001', title: 'Socks', state: 1 },
     ],
   };
+  const notList = {
+    id: 'unrelated-key',
+    data: 'unrelated-data',
+  };
   const repository = new TaskListRepository();
 
   beforeAll(async () => {
-    await localStorage.setItem('list-0', JSON.stringify(listData_1));
-    await localStorage.setItem('list-1', JSON.stringify(listData_2));
-    await localStorage.setItem('unrelated-key', 'unrelated-data');
+    await localStorage.setItem(listData_1.id, JSON.stringify(listData_1));
+    await localStorage.setItem(listData_2.id, JSON.stringify(listData_2));
+    await localStorage.setItem(notList.id, notList.data);
+  });
+
+  afterAll(async () => {
+    await localStorage.removeItem(listData_1.id);
+    await localStorage.removeItem(listData_2.id);
+    await localStorage.removeItem(notList.id);
   });
 
   test('getAllListIds', async () => {
@@ -58,5 +106,10 @@ describe('TaskListRepository', () => {
       tasks: list_2.tasks,
     })
     .toEqual(listData_2);
+  });
+
+  test('getListTasks', async () => {
+    const tasks = await repository.getListTasks(listData_1.id);
+    expect(tasks).toEqual(listData_1.tasks);
   });
 });

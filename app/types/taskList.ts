@@ -7,3 +7,8 @@ export interface TaskList {
   icon: string;  // iconSet member
   tasks: TaskData[];
 }
+
+// omg.. do something with this
+export type NewTaskList =
+  Pick<TaskList, 'name' | 'color' | 'icon'> &
+  Partial<Pick<TaskList, 'id' | 'tasks'>>;

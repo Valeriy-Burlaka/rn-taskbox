@@ -1,4 +1,4 @@
-import { TaskList } from 'types/taskList';
+import { NewTaskList, TaskList } from 'types/taskList';
 import { TaskData } from 'types/task';
 import { idGenerator } from 'utils/id';
 
@@ -59,11 +59,7 @@ export class TaskListModel implements TaskList {
     return tasksInOrder;
   }
   
-  constructor(
-    taskList:
-      Pick<TaskList, 'name' | 'color' | 'icon'> &
-      Partial<Pick<TaskList, 'id' | 'tasks'>>
-  ) {
+  constructor(taskList: NewTaskList) {
     this.name = taskList.name;
     this.color = taskList.color;
     this.icon = taskList.icon;
