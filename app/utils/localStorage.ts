@@ -34,11 +34,15 @@ export default {
     }
   },
 
-  setItem: async function(key: string, value: string): Promise<void> {
+  setItem: async function(key: string, value: string): Promise<boolean> {
     try {
       await AsyncStorage.setItem(key, value);
+
+      return true;
     } catch (e) {
+      console.error(`Failed to save item "${key}" to the storage!`, e);
       // save/report an error
+      return false;
     }
   },
 

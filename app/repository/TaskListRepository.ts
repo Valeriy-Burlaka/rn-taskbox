@@ -5,6 +5,10 @@ import { TaskListModel } from 'model/TaskList';
 import { TaskData } from 'types/task';
 import { NewTaskList, TaskList } from 'types/taskList';
 
+export const STORAGE_KEYS = {
+  initialListCreationMarker: 'initialListCreated',
+};
+
 export class TaskListRepository {
 
   private async getAllListIds(): Promise<string[]> {
@@ -24,6 +28,32 @@ export class TaskListRepository {
       .map(([_listId, listData]) => TaskListModel.fromJson(listData))
 
     return result;
+  }
+
+  async createInitialListIfNeeded(): Promise<void> {
+    // Initial todo list is just a usual list and it can be deleted by the user.
+    // We don't want to re-create this list if we already did this.
+    const hasBeenCreatedBefore = await localStorage.getItem(STORAGE_KEYS.initialListCreationMarker);
+    if (hasBeenCreatedBefore && JSON.parse(hasBeenCreatedBefore)) {
+      return;
+    }
+
+    const listIds = await this.getAllListIds();
+    if (!listIds.length) {
+      const data = TaskListModel.INITIAL_TASKLIST_PARAMETERS;
+      const result = await localStorage.setItem(
+        data.id,
+        JSON.stringify(data),
+      );
+      if (result) {
+        // theoretically, can fail too
+        await localStorage.setItem(STORAGE_KEYS.initialListCreationMarker, JSON.stringify(true));
+      } else {
+        // TODO: Leaving this alone for now because I don't actually believe in AsyncStorage failures.
+        // Maybe I will want to re-try this operation in future.
+        console.error('Failed to create the initial task list!');
+      }
+    }
   }
     
   async createNewList(listData: NewTaskList): Promise<string> {

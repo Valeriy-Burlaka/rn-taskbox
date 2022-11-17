@@ -1,13 +1,16 @@
 import localStorage from 'utils/localStorage';
 
-import { TaskListRepository } from './TaskListRepository';
+import { TaskListRepository, STORAGE_KEYS } from './TaskListRepository';
+import { TaskListModel } from 'model/TaskList';
 
 describe('TaskListRepository - empty storage', () => {
   const repository = new TaskListRepository();
-  const initialListId = 'list-initial';
+  const testListId = 'list-xyz';
+  const initialListData = TaskListModel.INITIAL_TASKLIST_PARAMETERS;
 
-  afterAll(async () => {
-    await localStorage.removeItem(initialListId);
+  afterEach(async () => {
+    await localStorage.removeItem(testListId);
+    await localStorage.removeItem(initialListData.id);
   });
 
   test('getAllLists', async () => {
@@ -22,13 +25,13 @@ describe('TaskListRepository - empty storage', () => {
 
   test('createNewList', async () => {
     const newListData = {
-      id: initialListId,
-      name: 'ToDo',
+      id: testListId,
+      name: 'Groceries',
       color: 'yellow',
-      icon: 'check-mark',
+      icon: 'shopping-cart',
     };
     const newListId = await repository.createNewList(newListData);
-    expect(newListId).toEqual(initialListId);
+    expect(newListId).toEqual(testListId);
 
     const storedLists = await repository.getLists();
     expect(storedLists.length).toEqual(1);
@@ -37,6 +40,34 @@ describe('TaskListRepository - empty storage', () => {
     expect(storedLists[0].color).toEqual(newListData.color);
     expect(storedLists[0].icon).toEqual(newListData.icon);
     expect(storedLists[0].tasks).toEqual([]);
+  });
+
+  test('createInitialListIfNeeded', async () => {
+    await repository.createInitialListIfNeeded();
+
+    let storedLists = await repository.getLists();
+    // Should have create the initial list in empty storage
+    expect(storedLists.length).toEqual(1);
+    expect(storedLists[0].id).toEqual(initialListData.id);
+    expect(storedLists[0].name).toEqual(initialListData.name);
+    expect(storedLists[0].color).toEqual(initialListData.color);
+    expect(storedLists[0].icon).toEqual(initialListData.icon);
+    expect(storedLists[0].tasks).toEqual([]);
+    // Should also set the marker to prevent creating this list again, if the user deletes it manually.
+    let markerValue = await localStorage.getItem(STORAGE_KEYS.initialListCreationMarker);
+    expect(markerValue).toBeTruthy();
+    expect(JSON.parse(markerValue)).toEqual(true);
+
+    // Delete list but leave the marker. Then, ask the repository to "createInitialListIfNeeded" (not needed anymore)
+    await localStorage.removeItem(initialListData.id);
+    await repository.createInitialListIfNeeded();
+
+    storedLists = await repository.getLists();
+    expect(storedLists).toEqual([]);
+    // Marker should remain untouched
+    markerValue = await localStorage.getItem(STORAGE_KEYS.initialListCreationMarker);
+    expect(markerValue).toBeTruthy();
+    expect(JSON.parse(markerValue)).toEqual(true);
   });
 });
 

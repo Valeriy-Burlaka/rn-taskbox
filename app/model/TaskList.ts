@@ -18,6 +18,10 @@ class TaskListId {
     return 'list-';
   }
 
+  public static get INITIAL_ID() {
+    return `${TaskListId.COMMON_PREFIX}initial`;
+  }
+
   public toString() {
     return this._id;
   }
@@ -108,6 +112,16 @@ export class TaskListModel implements TaskList {
     const result = new TaskListModel(parsed as TaskList);
 
     return result;
+  }
+
+  public static get INITIAL_TASKLIST_PARAMETERS(): TaskList {
+    return {
+      id: TaskListId.INITIAL_ID,
+      name: 'To Do',
+      color: '', // todo, nice color from  a palette
+      icon: '', // todo, iconset (checkmark)
+      tasks: [],
+    };
   }
 
   public static detectTaskListIdsFromStringArray(input: string[]): string[] {
