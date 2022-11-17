@@ -7,14 +7,18 @@ class TaskListId {
   private _id;
   
   private generateId () {
-    return `list-${idGenerator()}`;
+    return `${TaskListId.COMMON_PREFIX}${idGenerator()}`;
   }
-  
+
   constructor () {
     this._id = this.generateId();
   }
   
-  toString() {
+  public static get COMMON_PREFIX() {
+    return 'list-';
+  }
+
+  public toString() {
     return this._id;
   }
 }
@@ -104,6 +108,10 @@ export class TaskListModel implements TaskList {
     const result = new TaskListModel(parsed as TaskList);
 
     return result;
+  }
+
+  public static detectTaskListIdsFromStringArray(input: string[]): string[] {
+    return input.filter(s => s.startsWith(TaskListId.COMMON_PREFIX));
   }
 }
 

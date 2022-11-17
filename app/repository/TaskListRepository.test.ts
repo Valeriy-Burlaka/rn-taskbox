@@ -78,11 +78,6 @@ describe('TaskListRepository - storage with data', () => {
     await localStorage.removeItem(notList.id);
   });
 
-  test('getAllListIds', async () => {
-    const listIds = await repository.getAllListIds();
-    expect(listIds).toEqual([listData_1.id, listData_2.id]);
-  });
-
   test('getAllLists', async () => {
     const lists = await repository.getLists();
     expect(lists.length).toEqual(2);

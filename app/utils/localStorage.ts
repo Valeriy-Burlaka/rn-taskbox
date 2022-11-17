@@ -3,11 +3,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // https://react-native-async-storage.github.io/async-storage/docs/api/
 export default {
 
-  getAllKeys: async function(): Promise<readonly string[] | null> {
+  getAllKeys: async function(): Promise<string[] | null> {
     try {
       const result = await AsyncStorage.getAllKeys();
 
-      return result;
+      return result.slice();
     } catch (e) {
       return null;
     }

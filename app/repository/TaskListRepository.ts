@@ -7,13 +7,13 @@ import { NewTaskList, TaskList } from 'types/taskList';
 
 export class TaskListRepository {
 
-  async getAllListIds(): Promise<string[]> {
+  private async getAllListIds(): Promise<string[]> {
     const allKeys = await localStorage.getAllKeys();
-    
-    return allKeys?.filter(k => k.startsWith('list-')) || [];
+
+    return allKeys && TaskListModel.detectTaskListIdsFromStringArray(allKeys) || [];
   }
 
-  async getLists(): Promise<TaskList[]> {
+  public async getLists(): Promise<TaskList[]> {
     const listIds = await this.getAllListIds();
     const lists = await localStorage.getItems(listIds);
     if (!lists) return [];
