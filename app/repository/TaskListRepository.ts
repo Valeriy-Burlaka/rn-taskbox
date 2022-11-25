@@ -17,20 +17,20 @@ export class TaskListRepository {
     return allKeys && TaskListModel.detectTaskListIdsFromStringArray(allKeys) || [];
   }
 
-  public async getLists(): Promise<TaskList[]> {
+  public async getLists(): Promise<{ [key: string]: TaskListModel }> {
     const listIds = await this.getAllListIds();
     const lists = await localStorage.getItems(listIds);
-    if (!lists) return [];
+    if (!lists) return {};
 
     const result = lists
       .filter(([_listId, listData]) => !!listData)
       // @ts-ignore - complains on "listData possibly `null`" despite the .filter() above
-      .map(([_listId, listData]) => TaskListModel.fromJson(listData))
+      .map(([listId, listData]) => [listId, TaskListModel.fromJson(listData)])
 
-    return result;
+    return Object.fromEntries(result);
   }
 
-  async createInitialListIfNeeded(): Promise<void> {
+  public async createInitialListIfNeeded(): Promise<void> {
     // Initial todo list is just a usual list and it can be deleted by the user.
     // We don't want to re-create this list if we already did this.
     const hasBeenCreatedBefore = await localStorage.getItem(STORAGE_KEYS.initialListCreationMarker);
@@ -56,28 +56,14 @@ export class TaskListRepository {
     }
   }
     
-  async createNewList(listData: NewTaskList): Promise<string> {
+  public async createNewList(listData: NewTaskList): Promise<string> {
     const list = new TaskListModel(listData);
     await localStorage.setItem(list.id, TaskListModel.toJson(list));
 
     return list.id;
   }
   
-  // createInitialListIfNotExist
-  // .getAllLists() -> .isEmpty? -> create & save the first list (App defines list parameters)
-  // 
-
-  // getList ?
-
-  // updateListTassks ?
-
-  // deleteList
-
-  // deleteTaskFromList
-
-  // addTaskToList
-  
-  async getListTasks(listId: string): Promise<TaskData[]> {
+  public async getListTasks(listId: string): Promise<TaskData[]> {
     const jsonResult = await localStorage.getItem(listId);
     // const jsonResult = await localStorage.getItem(`list-0`);
     if (jsonResult) {
@@ -90,9 +76,18 @@ export class TaskListRepository {
     // something is wrong if we requested a task list by ID but didn't get a result
   }
   
-  async setListTasks(listId: string, tasks: TaskData[]): Promise<void> {
+  public async setListTasks(listId: string, tasks: TaskData[]): Promise<void> {
   
   }
+  // getList ?
+
+  // updateListTassks ?
+
+  // deleteList
+
+  // deleteTaskFromList
+
+  // addTaskToList
 }
 
 // Couple of reasons to enforce a limit:

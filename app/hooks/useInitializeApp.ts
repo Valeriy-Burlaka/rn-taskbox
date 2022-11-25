@@ -4,14 +4,12 @@ import * as Font from 'expo-font';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import * as SplashScreen from 'expo-splash-screen';
 
-import { TaskListModel } from 'model/TaskList';
 import { TaskListRepository } from 'repository/TaskListRepository';
 import { useAppData } from 'providers/DataProvider';
 
 SplashScreen.preventAutoHideAsync();
 
 export function useInitializeApp() {
-  console.log('in useInitializeApp hook')
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
   const { setTaskLists } = useAppData();
@@ -50,18 +48,16 @@ export function useInitializeApp() {
     async function loadData() {
       try {
         const repository = new TaskListRepository();
+
+        await repository.createInitialListIfNeeded();
+
         const taskLists = await repository.getLists();
-        setTaskLists({
-          'list-initial': new TaskListModel({
-            id: 'list-initial',
-            name: 'test-list',
-            icon: 'test-icon',
-            color: 'test-color',
-          }),
-        })
+        console.log('useInitializeApp: Task lists from AsyncStorage:', taskLists);
+
+        setTaskLists(taskLists);
 
       } catch (e) {
-
+        console.error('useInitializeApp: App initialization failed:', e);
       } finally {
         setDataLoaded(true);
       }

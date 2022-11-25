@@ -13,9 +13,9 @@ describe('TaskListRepository - empty storage', () => {
     await localStorage.removeItem(initialListData.id);
   });
 
-  test('getAllLists', async () => {
+  test('getLists', async () => {
     const lists = await repository.getLists();
-    expect(lists).toEqual([]);
+    expect(Object.values(lists)).toEqual([]);
   });
 
   test('getListTasks', async () => {
@@ -33,7 +33,7 @@ describe('TaskListRepository - empty storage', () => {
     const newListId = await repository.createNewList(newListData);
     expect(newListId).toEqual(testListId);
 
-    const storedLists = await repository.getLists();
+    const storedLists = Object.values(await repository.getLists());
     expect(storedLists.length).toEqual(1);
     expect(storedLists[0].id).toEqual(newListId);
     expect(storedLists[0].name).toEqual(newListData.name);
@@ -45,7 +45,7 @@ describe('TaskListRepository - empty storage', () => {
   test('createInitialListIfNeeded', async () => {
     await repository.createInitialListIfNeeded();
 
-    let storedLists = await repository.getLists();
+    let storedLists = Object.values(await repository.getLists());
     // Should have create the initial list in empty storage
     expect(storedLists.length).toEqual(1);
     expect(storedLists[0].id).toEqual(initialListData.id);
@@ -62,7 +62,7 @@ describe('TaskListRepository - empty storage', () => {
     await localStorage.removeItem(initialListData.id);
     await repository.createInitialListIfNeeded();
 
-    storedLists = await repository.getLists();
+    storedLists = Object.values(await repository.getLists());
     expect(storedLists).toEqual([]);
     // Marker should remain untouched
     markerValue = await localStorage.getItem(STORAGE_KEYS.initialListCreationMarker);
@@ -109,11 +109,12 @@ describe('TaskListRepository - storage with data', () => {
     await localStorage.removeItem(notList.id);
   });
 
-  test('getAllLists', async () => {
+  test('getLists', async () => {
     const lists = await repository.getLists();
-    expect(lists.length).toEqual(2);
-    
-    const list_1 = lists.filter(item => item.id === listData_1.id)[0];
+    expect(Object.values(lists).length).toEqual(2);
+
+    const list_1 = lists[listData_1.id];
+    expect(list_1).toBeTruthy();
     expect({
       id: list_1.id,
       name: list_1.name,
@@ -123,7 +124,8 @@ describe('TaskListRepository - storage with data', () => {
     })
     .toEqual(listData_1);
 
-    const list_2 = lists.filter(item => item.id === listData_2.id)[0];
+    const list_2 = lists[listData_2.id];
+    expect(list_2).toBeTruthy();
     expect({
       id: list_2.id,
       name: list_2.name,
