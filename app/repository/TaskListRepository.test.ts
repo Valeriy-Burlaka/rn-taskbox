@@ -30,7 +30,7 @@ describe('TaskListRepository - empty storage', () => {
       color: 'yellow',
       icon: 'shopping-cart',
     };
-    const newListId = await repository.createNewList(newListData);
+    const newListId = await repository.createList(newListData);
     expect(newListId).toEqual(testListId);
 
     const storedLists = Object.values(await repository.getLists());

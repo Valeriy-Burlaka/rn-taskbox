@@ -1,162 +1,135 @@
 import React, { useEffect, useState } from 'react';
 
+import { useAppData } from 'providers/DataProvider';
+import { TaskData, TaskStates } from 'types/task';
+import { idGenerator } from 'utils/id';
+
 import { AddTaskButton } from 'components/AddTaskButton';
-import { TaskData, TaskStates } from 'components/Task';
 
 import PureTaskList from './components/PureTaskList';
 
-function getTasks():{[key: string]: TaskData} {
-  const result = {
-    '1': {
-      id: '1',
-      title: 'Add real handlers',
-      state: TaskStates.TASK_ARCHIVED,
-    },
-    '2': {
-      id: '2',
-      title: '"Create task" button & handler',
-      state: TaskStates.TASK_PINNED,
-    },
-    '3': {
-      id: '3',
-      title: 'Use local storage to store tasks',
-      state: TaskStates.TASK_INBOX,
-    },
-    '4': {
-      id: '4',
-      title: 'Error screen',
-      state: TaskStates.TASK_INBOX,
-    },
-    '5': {
-      id: '5',
-      title: 'Marry styled-components & storybook',
-      state: TaskStates.TASK_INBOX,
-    },
-    '6': {
-      id: '6',
-      title: 'deploy web?',
-      state: TaskStates.TASK_INBOX,
-    },
-    '7': {
-      id: '7',
-      title: 'deploy app-dev?',
-      state: TaskStates.TASK_INBOX,
-    },
-    '8': {
-      id: '8',
-      title: 'Setup storybook on-device',
-      state: TaskStates.TASK_ARCHIVED,
-    },
-    '9': {
-      id: '9',
-      title: 'Test Placeholder',
-      state: TaskStates.TASK_ARCHIVED,
-    },
-    '10': {
-      id: '10',
-      title: 'Test Placeholder',
-      state: TaskStates.TASK_ARCHIVED,
-    },
-    '11': {
-      id: '11',
-      title: 'Test Placeholder',
-      state: TaskStates.TASK_ARCHIVED,
-    },
-  };
+// async function setTasks(listId: string, tasks: {[key: string]: TaskData}): Promise<void> {
+//   const initialTasks = {
+//     '1': {
+//       id: '1',
+//       title: 'Add real handlers',
+//       state: TaskStates.TASK_ARCHIVED,
+//     },
+//     '2': {
+//       id: '2',
+//       title: '"Create task" button & handler',
+//       state: TaskStates.TASK_PINNED,
+//     },
+//     '3': {
+//       id: '3',
+//       title: 'Use local storage to store tasks',
+//       state: TaskStates.TASK_INBOX,
+//     },
+//     '4': {
+//       id: '4',
+//       title: 'Error screen',
+//       state: TaskStates.TASK_INBOX,
+//     },
+//     '5': {
+//       id: '5',
+//       title: 'Marry styled-components & storybook',
+//       state: TaskStates.TASK_INBOX,
+//     },
+//     '6': {
+//       id: '6',
+//       title: 'deploy web?',
+//       state: TaskStates.TASK_INBOX,
+//     },
+//     '7': {
+//       id: '7',
+//       title: 'deploy app-dev?',
+//       state: TaskStates.TASK_INBOX,
+//     },
+//     '8': {
+//       id: '8',
+//       title: 'Setup storybook on-device',
+//       state: TaskStates.TASK_ARCHIVED,
+//     },
+//     '9': {
+//       id: '9',
+//       title: 'Test Placeholder',
+//       state: TaskStates.TASK_ARCHIVED,
+//     },
+//     '10': {
+//       id: '10',
+//       title: 'Test Placeholder',
+//       state: TaskStates.TASK_ARCHIVED,
+//     },
+//     '11': {
+//       id: '11',
+//       title: 'Test Placeholder',
+//       state: TaskStates.TASK_ARCHIVED,
+//     },
+//   };
+// }
 
-  return result;
-}
+export function TaskList({ listId }: { listId: string }) {
+  const { taskLists, createTask, updateTask, deleteTask } = useAppData();
 
-export default function TaskList() {
-  
-  const [tasks, setTasks] = useState<ReturnType<typeof getTasks>>({});
+  console.log(`TasksList: ID: ${listId}`);
+  console.log(`TasksList: Data from context:`, taskLists[listId]);
+
+  const thisList = taskLists[listId];
+  const tasks = thisList.tasks;
 
   useEffect(() => {
-    const tasks = getTasks();
-
-    setTasks(tasks);
+    return () => {
+      console.log('Unmounting TaskList:', listId);
+    };
   }, []);
 
-  const onArchiveTask = (id: string) => {
-    const t = tasks[id];
-    const tasksCopy = { ...tasks };
-
-    // console.log('Archiving task id: ', id, 'task: ', t);
-    // console.log('Current tasks:', JSON.stringify(tasksCopy, null, 2));
+  const onArchiveTask = (taskId: string) => {
+    const t = thisList.getTaskById(taskId);
+    console.log('Archiving task id: ', taskId, 'task: ', t);
 
     if (!t.title) {
-      // console.log("Can't archive a task with an empty title, deleting permanently instead");
-      delete tasksCopy[id];
-      // console.log('Tasks after:', JSON.stringify(tasksCopy, null, 2));
+      deleteTask(listId, t.id);
     } else {
-      tasksCopy[t.id] = {
-        ...t,
+      updateTask(listId, t.id, {
         state: t.state !== TaskStates.TASK_ARCHIVED ? TaskStates.TASK_ARCHIVED : TaskStates.TASK_INBOX,
-      };
+      });
     }
-    // console.log('Setting tasks to:', JSON.stringify(tasksCopy, null, 2));
-
-    setTasks(tasksCopy);
   };
   
-  const onPinTask = (id: string) => {
-    const t = tasks[id];
-    // console.log('Pinning task. id: ', id, 'task: ', t);
-    // console.log('All tasks:', JSON.stringify(tasks, null, 2));
+  const onPinTask = (taskId: string) => {
+    const t = thisList.getTaskById(taskId);
+    console.log('Pinning task. id: ', taskId, 'task: ', t);
+    console.log('All tasks:', JSON.stringify(tasks, null, 2));
     if (t.state === TaskStates.TASK_ARCHIVED) {
       return;
     }
 
-    const tasksCopy = { ...tasks };
-    tasksCopy[t.id] = {
-      ...t,
+    updateTask(listId, t.id, {
       state: t.state === TaskStates.TASK_INBOX ? TaskStates.TASK_PINNED : TaskStates.TASK_INBOX,
-    };
-
-    setTasks(tasksCopy);
-  };
-
-  const onUpdateTaskTitle = (id: string, title: string) => {
-    setTasks({
-      ...tasks,
-      [id]: {
-        ...tasks[id],
-        title,
-      },
     });
   };
 
-  const onSaveTask = (id: string) => {
-    // console.log('Saving task:', tasks[id]);
+  const onUpdateTaskTitle = (taskId: string, title: string) => {
+    updateTask(listId, taskId, { title });
+  };
 
-    if (!tasks[id].title) {
-      delete tasks[id];
-      setTasks({...tasks});
+  const onSaveTask = (taskId: string) => {
+    console.log(`Saving task ${taskId}`);
+    const t = thisList.getTaskById(taskId);
+    if (!t.title) {
+      deleteTask(listId, taskId);
     } else {
-      setTasks({
-        ...tasks,
-        [id]: {
-          ...tasks[id],
-          state: TaskStates.TASK_INBOX,
-        },
-      });
+      updateTask(listId, taskId, { state: TaskStates.TASK_INBOX });
     }
-
   };
 
   const onPressAddButton = () => {
-    const currentMaxId = Math.max(...Object.keys(tasks).map(Number));
-    const newId = (currentMaxId + 1).toString();
-    // console.log('Pressed Add Button. New ID:', newId);
-    setTasks({
-      ...tasks,
-      [newId]: {
-        id: newId,
-        title: '',
-        state: TaskStates.TASK_NEW,
-      }
-    })
-  };
+    createTask(listId, {
+      id: `task-${idGenerator()}`,
+      title: '',
+      state: TaskStates.TASK_NEW,
+    });
+  }
 
   return (
     <>

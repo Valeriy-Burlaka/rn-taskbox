@@ -5,9 +5,10 @@ import { View } from 'components/Themed';
 import { TaskList } from 'components/TaskList';
 
 export default function TasksScreen() {
+  const listId = "list-initial";
   return (
     <View style={styles.container}>
-      <TaskList />
+      <TaskList listId={listId} />
     </View>
   );
 }

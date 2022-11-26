@@ -54,7 +54,7 @@ describe('TaskListModel', () => {
         }
       ],
     });
-    const json = TaskListModel.toJson(m);
+    const json = m.toJson();
     const restored = TaskListModel.fromJson(json);
 
     expect(restored.id).toEqual(m.id);
@@ -65,5 +65,38 @@ describe('TaskListModel', () => {
     
     // won't work w/o consistent JSON formatting
     // expect(json).toEqual('{"name":"Shopping List","icon":"shopping-cart","color":"pink","id":"list-f3h5f25339684","tasks":[{"id":"task-abc123","title":"Buy zippo","state":0},{"id":"task-xyz321","title":"Buy T-Shirt with JS Evolution","state":1}]}');
+  });
+
+  test('updateTask', () => {
+    const m = new TaskListModel({
+      name: 'Shopping List',
+      icon: 'shopping-cart',
+      color: 'pink',
+      id: 'list-f3h5f25339684',
+      tasks: [
+        { id: 'task-abc123', title: 'Buy zippo', state: TaskStates.TASK_PINNED },
+        {
+          id: 'task-xyz321',
+          title: 'Buy T-Shirt with JS Evolution',
+          state: TaskStates.TASK_INBOX
+        }
+      ],
+    });
+
+    m.updateTask('not-a-task', { title: 'title', state: TaskStates.TASK_INBOX });
+    expect(m.tasks.length).toEqual(2);
+    expect(m.tasks.map(t => t.id)).toEqual(['task-abc123', 'task-xyz321']);
+
+    const updatingId = 'task-abc123';
+    m.updateTask(updatingId, { title: 'Quit smoking' });
+    expect(m.tasks.length).toEqual(2);
+    expect(m.tasks.map(t => t.id)).toEqual([updatingId, 'task-xyz321']);
+    let updatedTask = m.tasks.filter(t => t.id === updatingId)[0];
+    expect(updatedTask.title).toEqual('Quit smoking');
+
+    m.updateTask(updatingId, { title: 'Quit quitting', state: TaskStates.TASK_ARCHIVED });
+    updatedTask = m.tasks.filter(t => t.id === updatingId)[0];
+    expect(updatedTask.title).toEqual('Quit quitting');
+    expect(updatedTask.state).toEqual(TaskStates.TASK_ARCHIVED);
   });
 });

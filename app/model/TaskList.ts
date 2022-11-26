@@ -1,7 +1,6 @@
 import { NewTaskList, TaskList } from 'types/taskList';
-import { TaskData } from 'types/task';
+import { TaskData, TaskDataUpdate } from 'types/task';
 import { idGenerator } from 'utils/id';
-
 
 class TaskListId {
   private _id;
@@ -94,17 +93,57 @@ export class TaskListModel implements TaskList {
     return this.orderTasks([...this._tasks.values()]);
   }
 
-  // Why this one is static? :thinking-face:
-  public static toJson(taskList: TaskListModel): string {
+  public getTaskById(taskId: string): TaskData {
+    const t = this._tasks.get(taskId);
+    if (!t) throw new Error(`Unknown task "${taskId}"`);
+
+    return t;
+  }
+
+  public createTask(taskData: TaskData): void {
+    this._tasks.set(taskData.id, taskData);
+  }
+
+  public updateTask(taskId: string, taskData: TaskDataUpdate): void {
+    if (!this._tasks.get(taskId)) {
+      console.error(`No task with id "${taskId}" exists in list "${this.id}"`);
+
+      return;
+    }
+
+    this._tasks.set(
+      taskId,
+      {
+        ...this._tasks.get(taskId),
+        ...taskData,
+      } as TaskData,
+    )
+  }
+
+  public deleteTask(taskId: string): void {
+    this._tasks.delete(taskId);
+  }
+
+  public toJson(): string {
     const result = JSON.stringify({
-      id: taskList.id,
-      name: taskList.name,
-      color: taskList.color,
-      icon: taskList.icon,
-      tasks: taskList.tasks,
+      id: this.id,
+      name: this.name,
+      color: this.color,
+      icon: this.icon,
+      tasks: this.tasks,
     });
 
     return result;
+  }
+
+  public toObject(): TaskList {
+    return {
+      id: this.id,
+      name: this.name,
+      color: this.color,
+      icon: this.icon,
+      tasks: this.tasks,
+    };
   }
 
   public static fromJson(value: string): TaskListModel {

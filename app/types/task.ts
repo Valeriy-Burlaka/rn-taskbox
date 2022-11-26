@@ -28,3 +28,5 @@ export interface TaskData {
   title: string;
   state: TaskStates;
 }
+
+export type TaskDataUpdate = Pick<TaskData, 'title'> | Pick<TaskData, 'state'>;

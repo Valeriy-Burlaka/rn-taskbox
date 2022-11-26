@@ -1,10 +1,11 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 
+import Navigation from 'navigation';
+
 import { useAppData } from 'providers/DataProvider';
 import { useInitializeApp } from 'hooks/useInitializeApp';
 import { useColorScheme } from 'hooks/useColorScheme';
-import Navigation from 'navigation';
 
 export function Main() {
   const colorScheme = useColorScheme();

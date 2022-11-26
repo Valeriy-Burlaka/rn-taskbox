@@ -9,6 +9,7 @@ export default {
 
       return result.slice();
     } catch (e) {
+      console.error('localStorage: Error in "getAllKeys":', e);
       return null;
     }
   },
@@ -19,7 +20,7 @@ export default {
 
       return result;
     } catch (e) {
-      // save/report an error
+      console.error(`localStorage: Failed to "getItem" "${key}":`, e);
       return null;
     }
   },
@@ -30,18 +31,30 @@ export default {
 
       return items;
     } catch (e) {
+      console.error('localStorage: Error in "getItems":', e);
       return null;
     }
   },
 
   setItem: async function(key: string, value: string): Promise<boolean> {
     try {
+      console.log(`localStorage: "setItem" "${key}":`, value);
       await AsyncStorage.setItem(key, value);
 
       return true;
     } catch (e) {
-      console.error(`Failed to save item "${key}" to the storage!`, e);
-      // save/report an error
+      console.error(`localStorage: Failed to "setItem" "${key}":`, e);
+      return false;
+    }
+  },
+
+  setAllItems: async function (items: [string, string][]) {
+    try {
+      await AsyncStorage.multiSet(items);
+
+      return true;
+    } catch (e) {
+      console.error('localStorage: Error in "setAllItems":', e);
       return false;
     }
   },
@@ -50,7 +63,7 @@ export default {
     try {
       await AsyncStorage.removeItem(key);
     } catch (e) {
-      // save/report an error
+      console.error(`localStorage: Failed to "removeItem" "${key}":`, e);
     }
   },
 }
