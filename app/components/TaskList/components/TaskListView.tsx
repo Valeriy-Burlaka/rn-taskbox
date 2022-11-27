@@ -35,7 +35,7 @@ const ListItems = styled(SafeAreaView)`
   background-color: 'white';
 `;
 
-export default function PureTaskList({
+export function TaskListView({
   loading,
   tasks,
   onArchiveTask,

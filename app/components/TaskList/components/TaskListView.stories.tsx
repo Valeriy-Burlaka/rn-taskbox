@@ -6,7 +6,7 @@ import { styles } from 'constants/globalStyles';
 import { task, actions } from 'components/Task';
 import { TaskStates } from 'types/task';
 
-import TaskList from './PureTaskList';
+import { TaskListView } from './TaskListView';
 
 const taskList = {
   loading: false,
@@ -37,11 +37,11 @@ export const withArchivedAndPinnedTasks = [
   { id: '6', title: 'Task 6 (pinned)', state: TaskStates.TASK_PINNED },
 ];
 
-storiesOf('PureTaskList', module)
+storiesOf('TaskListView', module)
   .addDecorator(story => <View style={[styles.TaskBox, { padding: 10 }]}>{story()}</View>)
-  .add('default', () => <TaskList {...taskList} tasks={defaultTasks} {...actions} />)
-  .add('withArchivedTasks', () => <TaskList {...taskList} tasks={withArchivedTasks} {...actions} />)
-  .add('withPinnedTasks', () => <TaskList {...taskList} tasks={withPinnedTasks} {...actions} />)
-  .add('withArchivedAndPinnedTasks', () => <TaskList {...taskList} tasks={withArchivedAndPinnedTasks} {...actions} />)
-  .add('loading', () => <TaskList loading tasks={[]} {...actions} />)
-  .add('empty', () => <TaskList {...taskList} tasks={[]} {...actions} />);
+  .add('default', () => <TaskListView {...taskList} tasks={defaultTasks} {...actions} />)
+  .add('withArchivedTasks', () => <TaskListView {...taskList} tasks={withArchivedTasks} {...actions} />)
+  .add('withPinnedTasks', () => <TaskListView {...taskList} tasks={withPinnedTasks} {...actions} />)
+  .add('withArchivedAndPinnedTasks', () => <TaskListView {...taskList} tasks={withArchivedAndPinnedTasks} {...actions} />)
+  .add('loading', () => <TaskListView loading tasks={[]} {...actions} />)
+  .add('empty', () => <TaskListView {...taskList} tasks={[]} {...actions} />);

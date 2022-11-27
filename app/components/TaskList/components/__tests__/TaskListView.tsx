@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { create } from 'react-test-renderer';
 
-import PureTaskList from '../PureTaskList';
-import { withArchivedTasks, withPinnedTasks } from '../PureTaskList.stories';
 import { Task } from 'components/Task';
+
+import { TaskListView } from '../TaskListView';
+import { withArchivedTasks, withPinnedTasks } from '../TaskListView.stories';
 
 describe('PureTaskList', () => {
   it('renders pinned tasks at the start of the list', () => {
@@ -12,7 +13,7 @@ describe('PureTaskList', () => {
       onArchiveTask: jest.fn(),
     };
     const tree = create(
-      <PureTaskList loading={false} tasks={withPinnedTasks} {...events} />
+      <TaskListView loading={false} tasks={withPinnedTasks} {...events} />
     );
     const rootElement = tree.root;
     const listofTasks = rootElement.findAllByType(Task);
@@ -25,7 +26,7 @@ describe('PureTaskList', () => {
       onArchiveTask: jest.fn(),
     };
     const tree = create(
-      <PureTaskList loading={false} tasks={withArchivedTasks} {...events} />
+      <TaskListView loading={false} tasks={withArchivedTasks} {...events} />
     );
     const rootElement = tree.root;
     const listofTasks = rootElement.findAllByType(Task);
