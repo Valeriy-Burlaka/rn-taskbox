@@ -76,18 +76,10 @@ export function TaskListView({
     );
   }
 
-  const tasksInOrder = [ ...tasks ].sort((t1: TaskData, t2: TaskData) => {
-    if (t1.state === t2.state) {
-      return t1.title.toLowerCase().charCodeAt(0) - t2.title.toLowerCase().charCodeAt(0);
-    } else {
-      return t1.state - t2.state;
-    }
-  });
-
   return (
     <ListItems>
       <FlatList
-        data={tasksInOrder}
+        data={tasks}
         keyExtractor={task => task.id}
         renderItem={({ item }) => <Task key={item.id} task={item} {...events} />}
       />
