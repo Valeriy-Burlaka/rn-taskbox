@@ -4,6 +4,7 @@ import styled from '@emotion/native';
 
 import { Text, View } from 'components/Themed';
 import { useAppData } from 'providers/DataProvider';
+import { type RootTabScreenProps } from 'types/navigation';
 
 const styles = StyleSheet.create({
   container: {
@@ -23,7 +24,7 @@ const StyledList = styled(TouchableOpacity)`
   width: 182px;
 `;
 
-export function ListsScreen({ navigation }) {
+export function ListsScreen({ navigation }: RootTabScreenProps<'ListsScreen'>) {
   const { taskLists } = useAppData();
 
   // console.log('ListsScreen: taskLists recevied from DataContext:', taskLists);
