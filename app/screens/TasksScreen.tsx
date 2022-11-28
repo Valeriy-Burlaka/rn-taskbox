@@ -4,8 +4,10 @@ import { StyleSheet } from 'react-native';
 import { View } from 'components/Themed';
 import { TaskList } from 'components/TaskList';
 
-export default function TasksScreen() {
-  const listId = "list-initial";
+export default function TasksScreen({ route }) {
+  const { listId } = route.params;
+  console.log('TasksScreen: listId: ', listId);
+
   return (
     <View style={styles.container}>
       <TaskList listId={listId} />

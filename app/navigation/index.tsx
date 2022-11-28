@@ -22,6 +22,8 @@ import TabOneScreen from '../screens/TabOneScreen';
 import TasksScreen from '../screens/TasksScreen';
 import StorybookScreen from '../screens/StorybookScreen';
 
+import { ListsScreen } from 'screens/ListsScreen';
+
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
     <NavigationContainer
@@ -46,6 +48,13 @@ function RootNavigator() {
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="Modal" component={ModalScreen} />
       </Stack.Group>
+      <Stack.Screen
+        name="TasksScreen"
+        component={TasksScreen}
+        options={{
+          title: 'Tasks',
+        }}
+      />
     </Stack.Navigator>
   );
 }
@@ -61,15 +70,15 @@ function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="TasksScreen"
+      initialRouteName="ListsScreen"
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme].tint,
       }}>
       <BottomTab.Screen
-        name="TasksScreen"
-        component={TasksScreen}
+        name="ListsScreen"
+        component={ListsScreen}
         options={{
-          title: 'Tasks',
+          title: 'Lists',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />
