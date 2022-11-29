@@ -103,7 +103,11 @@ export default function Task({
       {(state === TaskStates.TASK_PINNED || state === TaskStates.TASK_INBOX) && (
         <TaskTitle
           value={title}
-          editable={false}
+          onEndEditing={() => {
+            // console.log(`Ended editing "${id}""`);
+            onSaveTask(id);
+          }}
+          onChange={(e) => onUpdateTaskTitle(id, e.nativeEvent.text)}
         />
       )}
 
