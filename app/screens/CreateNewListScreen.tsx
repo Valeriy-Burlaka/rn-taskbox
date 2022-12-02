@@ -14,7 +14,6 @@ const OuterContainer = styled.View<{ backgroundColor: string }>`
 const StyledTextInput = styled.TextInput`
   background-color: white;
   border-radius: 8px;
-  color: red;
   height: 48px;
   margin-bottom: 48px;
   text-align: center;
@@ -87,15 +86,18 @@ const palette = [
 
 export function CreateNewListScreen() {
   const [activeColor, setActiveColor] = useState(palette[0]);
+  const [listTitle, setListTitle] = useState('');
 
   return (
     <OuterContainer backgroundColor={activeColor}>
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
 
-      {/* TextInput (list title) */}
-      <StyledTextInput selectionColor={activeColor} />
+      <StyledTextInput
+        selectionColor={activeColor}
+        value={listTitle}
+        onChangeText={setListTitle}
+      />
 
-      {/* ColorPalette picker */}
       <PaletteContainer>
         {palette.map((color, index) => {
           return (
