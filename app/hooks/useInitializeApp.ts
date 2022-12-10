@@ -31,6 +31,7 @@ export function useInitializeApp() {
           'NunitoSans-Italic': require('../assets/fonts/NunitoSans-Italic.ttf'),
           'NunitoSans': require('../assets/fonts/NunitoSans-Regular.ttf'),
           'space-mono': require('../assets/fonts/SpaceMono-Regular.ttf'),
+          'fontello': require('../assets/icon/fontello/fontello.ttf'),
           'percolate': require('../assets/icon/percolate.ttf'),
         });
       } catch (e) {

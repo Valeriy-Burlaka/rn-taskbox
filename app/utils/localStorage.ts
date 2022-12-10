@@ -38,7 +38,7 @@ export default {
 
   setItem: async function(key: string, value: string): Promise<boolean> {
     try {
-      console.log(`localStorage: "setItem" "${key}":`, value);
+      // console.log(`localStorage: "setItem" "${key}":`, value);
       await AsyncStorage.setItem(key, value);
 
       return true;

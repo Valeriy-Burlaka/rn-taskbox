@@ -10,11 +10,11 @@ import { useColorScheme } from 'hooks/useColorScheme';
 export function Main() {
   const colorScheme = useColorScheme();
 
-  const { taskLists } = useAppData();
+  // const { taskLists } = useAppData();
   const { isAppReady } = useInitializeApp();
 
-  console.log(isAppReady);
-  console.log(taskLists);
+  // console.log(isAppReady);
+  // console.log(taskLists);
 
   if (!isAppReady) {
     return null;
