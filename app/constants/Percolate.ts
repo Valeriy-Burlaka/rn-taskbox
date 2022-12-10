@@ -137,12 +137,7 @@
    meteor: 58992,
  };
  
- const PercolateIcons = createIconSet(glyphMap, 'percolate');
- 
+ export const PercolateIcons = createIconSet(glyphMap, 'percolate', 'percolate-icons');
+ export const Button = PercolateIcons.Button;
  export default PercolateIcons;
  
- export const Button = PercolateIcons.Button;
- export const TabBarItem = PercolateIcons.TabBarItem;
- export const TabBarItemIOS = PercolateIcons.TabBarItemIOS;
- export const ToolbarAndroid = PercolateIcons.ToolbarAndroid;
- export const getImageSource = PercolateIcons.getImageSource;
