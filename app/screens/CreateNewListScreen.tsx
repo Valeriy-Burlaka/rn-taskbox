@@ -1,18 +1,35 @@
 import { useMemo, useState } from 'react';
-import { Platform } from 'react-native';
+import { Platform, Text, TouchableOpacity } from 'react-native';
 import styled from '@emotion/native';
 import * as Haptics from 'expo-haptics';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { StatusBar } from 'expo-status-bar';
 import { rgba } from 'polished';
 
 import { FontelloIcon, glyphMap as fontelloGlyphMap } from 'constants/Fontello';
 import { spacings } from 'constants/Spacings';
+import { type RootStackScreenProps } from 'types/navigation';
 import { SCREEN_WIDTH } from 'utils/dimensions';
 
 const OuterContainer = styled.View<{ backgroundColor: string }>`
   background-color: ${({ backgroundColor }) => rgba(backgroundColor, 0.2)};
   flex: 1;
   padding: ${spacings.space100};
+`;
+
+const ModalHeader = styled.View<{}>`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  /* border: 1px solid red; */
+  margin-bottom: ${spacings.space200};
+`;
+
+const CloseButton = styled.TouchableOpacity<{ backgroundColor: string }>`
+  border-radius: 100px;
+  background-color: ${({ backgroundColor }) => rgba(backgroundColor, 0.2)};
+  color: black;
+  padding: 2px;
 `;
 
 const StyledTextInput = styled.TextInput`
@@ -169,18 +186,16 @@ const glyphsInOrder: Array<keyof typeof fontelloGlyphMap> = [
   'attach',
 ];
 
-export function CreateNewListScreen() {
+export function CreateNewListScreen({ navigation }: RootStackScreenProps<'CreateNewListScreen'>) {
   const [activeColor, setActiveColor] = useState(palette[0]);
   const [activeIcon, setActiveIcon] = useState(glyphsInOrder[0]);
   const [listTitle, setListTitle] = useState('');
 
   const selectableItemsPerRow = 6;
   const selectableItemSize = useMemo(() => {
-    return getNumberAsPixels(
-      getItemSizeOnScreen(
-        selectableItemsPerRow,
-        getPixelsAsNumber(spacings.space100)
-      )
+    return getItemSizeOnScreen(
+      selectableItemsPerRow,
+      getPixelsAsNumber(spacings.space100)
     );
   }, [selectableItemsPerRow]);
 
@@ -189,10 +204,25 @@ export function CreateNewListScreen() {
       {/* Use a light status bar on iOS to account for the black space above the modal */}
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
 
-      {/* Modal Header */}
-
-      {/* * cross-button (close modal) -- <Icon name="list" /> -- "Save" button (saves new list; disabled when title is empty)
-        (Icon is the current one selected by Icon-picker) */}
+      {/* fixme: the header shouldn't be scrollable */}
+      <ModalHeader>
+        <CloseButton
+          backgroundColor={'#696969'}
+          onPress={() => navigation.goBack()}
+        >
+          <Ionicons name="close" size={20} color={'#696969'} />
+        </CloseButton>
+        <FontelloIcon
+          name={activeIcon}
+          color={activeColor}
+          size={selectableItemSize * 0.9}
+        />
+        <TouchableOpacity>
+          <Text>
+            Save
+          </Text>
+        </TouchableOpacity>
+      </ModalHeader>
 
       <StyledTextInput
         selectionColor={activeColor}
@@ -212,7 +242,7 @@ export function CreateNewListScreen() {
                 setActiveColor(color);
               }}
               selected={color === activeColor}
-              size={selectableItemSize}
+              size={getNumberAsPixels(selectableItemSize)}
             />
           );
         })}
@@ -226,7 +256,7 @@ export function CreateNewListScreen() {
             <IconItem
               activeOpacity={1}
               backgroundColor={isActive ? activeColor : 'white'}
-              size={selectableItemSize}
+              size={getNumberAsPixels(selectableItemSize)}
               key={id}
               onPress={() => {
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -236,53 +266,12 @@ export function CreateNewListScreen() {
               <FontelloIcon
                 name={glyphName}
                 color={isActive ? activeColor : 'grey'}
-                size={28}
+                size={28} // ?? how it relates with the calculated item size?? (fixme!)
               />
             </IconItem>
           );
         })}
       </IconContainer>
-
-      {/* Icon picker */}
-      {/*
-        - 6 in a row
-        - Essentially a button (round, same size as palette picker item). which has background color only when it's selected
-        - bg color is the same as "activeColor"
-
-        Icon set:
-        - bullet list ("todo")
-        - shopping cart (groceries)
-        - shopping bag (personal shopping)
-        - portfel (work)
-        - bachelor cap (education)
-        - house
-        - plane (trip)
-        - car
-        - bicycle
-        - scooter
-        - portfel (yes, another)
-        - apartment block
-        - fork-and-knife
-        - a cup
-        - joystick
-        - a tune (musical note)
-        - a compass
-        - a wrench
-        - a banknote
-        - a bitcoin symbol
-        - a dollar symbol
-        - a person
-        - a group of people
-        - a stadium
-        - a walking man
-        - a star
-        - the Sun
-        - the Moon
-        - a heart
-        - pills
-        - a paw
-        - hands applauding
-      */}
     </OuterContainer>
   );
 }
