@@ -45,7 +45,7 @@ const repository = new TaskListRepository();
 /**
  * In-memory tree of lists and tasks. Needed to provide immediate availability of the data
  * when navigating between screens.
- * 
+ *
  */
 export const DataProvider = ({ children }: Props) => {
   const [taskLists, setTaskLists] = useState<AppData['taskLists']>({});
