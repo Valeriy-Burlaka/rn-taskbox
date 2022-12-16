@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Platform, Text, TouchableOpacity } from 'react-native';
+import { Platform, Text, TouchableOpacity, View } from 'react-native';
 import styled from '@emotion/native';
 import * as Haptics from 'expo-haptics';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -7,9 +7,12 @@ import { StatusBar } from 'expo-status-bar';
 import { rgba } from 'polished';
 
 import { FontelloIcon, glyphMap as fontelloGlyphMap } from 'constants/Fontello';
-import { spacings } from 'constants/Spacings';
 import { type RootStackScreenProps } from 'types/navigation';
 import { SCREEN_WIDTH } from 'utils/dimensions';
+import { useAppData } from 'providers/DataProvider';
+
+import { spacings } from 'theme/Spacings';
+import { textSizes } from 'theme/Typography';
 
 const OuterContainer = styled.View<{ backgroundColor: string }>`
   background-color: ${({ backgroundColor }) => rgba(backgroundColor, 0.2)};
@@ -20,7 +23,7 @@ const OuterContainer = styled.View<{ backgroundColor: string }>`
 const ModalHeader = styled.View<{}>`
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
   /* border: 1px solid red; */
   margin-bottom: ${spacings.space200};
 `;
@@ -32,9 +35,16 @@ const CloseButton = styled.TouchableOpacity<{ backgroundColor: string }>`
   padding: 2px;
 `;
 
+const SaveButtonText = styled.Text<{ color: string }>`
+  color: ${({ color }) => color};
+  font-family: NunitoSans-Bold;
+  font-size: ${textSizes.regular};
+`;
+
 const StyledTextInput = styled.TextInput`
   background-color: white;
   border-radius: ${spacings.space50};
+  font-size: ${textSizes.medium};
   height: ${spacings.space300};
   margin-bottom: ${spacings.space300};
   text-align: center;
@@ -101,6 +111,7 @@ const IconItem = styled.TouchableOpacity<{
 `;
 
 // https://www.w3schools.com/tags/ref_colornames.asp
+const dimGrayColor = '#696969';
 export const palette = [
   // 1st row
   '#32CD32', // LimeGreen
@@ -112,7 +123,7 @@ export const palette = [
   // 2nd row
   '#8A2BE2', // BlueViolet
   '#FFB6C1', // LightPink
-  '#696969', // DimGray
+  dimGrayColor, // DimGray
   '#ADFF2F', // GreenYellow
   '#FF4500', // OrangeRed
   '#FFA500', // Orange
@@ -187,9 +198,12 @@ const glyphsInOrder: Array<keyof typeof fontelloGlyphMap> = [
 ];
 
 export function CreateNewListScreen({ navigation }: RootStackScreenProps<'CreateNewListScreen'>) {
+  const { createList } = useAppData();
   const [activeColor, setActiveColor] = useState(palette[0]);
   const [activeIcon, setActiveIcon] = useState(glyphsInOrder[0]);
-  const [listTitle, setListTitle] = useState('');
+  const [listName, setListName] = useState('');
+
+  const canSaveList = Boolean(listName);
 
   const selectableItemsPerRow = 6;
   const selectableItemSize = useMemo(() => {
@@ -207,27 +221,42 @@ export function CreateNewListScreen({ navigation }: RootStackScreenProps<'Create
       {/* fixme: the header shouldn't be scrollable */}
       <ModalHeader>
         <CloseButton
-          backgroundColor={'#696969'}
+          backgroundColor={dimGrayColor}
           onPress={() => navigation.goBack()}
         >
-          <Ionicons name="close" size={20} color={'#696969'} />
+          <Ionicons name="close" size={20} color={dimGrayColor} />
         </CloseButton>
-        <FontelloIcon
-          name={activeIcon}
-          color={activeColor}
-          size={selectableItemSize * 0.9}
-        />
-        <TouchableOpacity>
-          <Text>
+
+        {/* Fixme: Make the icon more centered. It's a bit scewed to the left becuase "Save" button takes more space than the "Close" button */}
+        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+          <FontelloIcon
+            name={activeIcon}
+            color={activeColor}
+            // size={selectableItemSize * 0.9}
+            size={32}
+          />
+        </View>
+        <TouchableOpacity
+          disabled={!canSaveList}
+          onPress={() => {
+            createList({
+              name: listName,
+              color: activeColor,
+              icon: activeIcon,
+            })
+            .then(() => navigation.goBack())
+          }}
+        >
+          <SaveButtonText color={!canSaveList ? dimGrayColor : activeColor}>
             Save
-          </Text>
+          </SaveButtonText>
         </TouchableOpacity>
       </ModalHeader>
 
       <StyledTextInput
         selectionColor={activeColor}
-        value={listTitle}
-        onChangeText={setListTitle}
+        value={listName}
+        onChangeText={setListName}
       />
 
       <PaletteContainer>
@@ -265,7 +294,7 @@ export function CreateNewListScreen({ navigation }: RootStackScreenProps<'Create
             >
               <FontelloIcon
                 name={glyphName}
-                color={isActive ? activeColor : 'grey'}
+                color={isActive ? activeColor : dimGrayColor}
                 size={28} // ?? how it relates with the calculated item size?? (fixme!)
               />
             </IconItem>

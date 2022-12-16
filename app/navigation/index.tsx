@@ -4,13 +4,12 @@
  *
  */
 import * as React from 'react';
-import { ColorSchemeName, Pressable } from 'react-native';
+import { ColorSchemeName } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import Colors from '../constants/Colors';
 import { useColorScheme } from '../hooks/useColorScheme';
 import { RootStackParamList, RootTabParamList } from '../types';
 
@@ -18,11 +17,11 @@ import LinkingConfiguration from './LinkingConfiguration';
 
 import { CreateNewListScreen } from 'screens/CreateNewListScreen';
 import { ListsScreen } from 'screens/ListsScreen';
-
 import TasksScreen from 'screens/TasksScreen';
 import NotFoundScreen from 'screens/NotFoundScreen';
 import StorybookScreen from 'screens/StorybookScreen';
 
+import Colors from 'theme/Colors';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -91,20 +90,6 @@ function BottomTabNavigator() {
         options={{
           title: 'Lists',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          // headerStyle: {
-          //   backgroundColor: '#f4511e',
-          // },
-          // headerTintColor: '#fff',
-          // headerTitleStyle: {
-          //   fontWeight: 'bold',
-          // },
-          // headerRight: () => (
-          //   <Button
-          //     onPress={() => alert('This is a button!')}
-          //     title="Info"
-          //     color="#fff"
-          //   />
-          // ),
         }}
       />
       <BottomTab.Screen

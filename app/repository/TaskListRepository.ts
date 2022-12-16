@@ -56,11 +56,11 @@ export class TaskListRepository {
     }
   }
     
-  public async createList(listData: NewTaskList): Promise<string> {
+  public async createList(listData: NewTaskList): Promise<TaskListModel> {
     const list = new TaskListModel(listData);
     await localStorage.setItem(list.id, list.toJson());
 
-    return list.id;
+    return list;
   }
 
   public async saveList(list: TaskListModel): Promise<void> {
