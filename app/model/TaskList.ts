@@ -1,3 +1,5 @@
+import { type GlyphIcon } from 'constants/Fontello';
+import { palette, type PaletteColor } from 'theme/Colors';
 import { NewTaskList, TaskList } from 'types/taskList';
 import { TaskData, TaskDataUpdate } from 'types/task';
 import { idGenerator } from 'utils/id';
@@ -46,8 +48,8 @@ class TaskListId {
 export class TaskListModel implements TaskList {
   public id: string;
   public name: string;
-  public color: string;
-  public icon: string;
+  public color: PaletteColor;
+  public icon: GlyphIcon;
   private _tasks: Map<string, TaskData>;
   private _tasksOrder: 'legacy' | 'by-date-added' = 'legacy';
 
@@ -157,8 +159,8 @@ export class TaskListModel implements TaskList {
     return {
       id: TaskListId.INITIAL_ID,
       name: 'To Do',
-      color: '', // todo, nice color from  a palette
-      icon: '', // todo, iconset (checkmark)
+      color: palette.DimGray,
+      icon: 'list-bullet',
       tasks: [],
     };
   }

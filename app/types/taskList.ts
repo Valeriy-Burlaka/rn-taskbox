@@ -1,10 +1,13 @@
+import { type GlyphIcon } from 'constants/Fontello';
+import { type PaletteColor } from 'theme/Colors';
+
 import { TaskData } from './task';
 
 export interface TaskList {
   id: string;
   name: string;
-  color: string; // Hex | theme/palette member
-  icon: string;  // iconSet member
+  color: PaletteColor;
+  icon: GlyphIcon;
   tasks: TaskData[];
 }
 

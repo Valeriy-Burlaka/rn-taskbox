@@ -1,16 +1,17 @@
 import { useMemo, useState } from 'react';
-import { Platform, Text, TouchableOpacity, View } from 'react-native';
+import { Platform, TouchableOpacity, View } from 'react-native';
 import styled from '@emotion/native';
 import * as Haptics from 'expo-haptics';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { StatusBar } from 'expo-status-bar';
 import { rgba } from 'polished';
 
-import { FontelloIcon, glyphMap as fontelloGlyphMap } from 'constants/Fontello';
+import { FontelloIcon, type GlyphIcon } from 'constants/Fontello';
 import { type RootStackScreenProps } from 'types/navigation';
 import { SCREEN_WIDTH } from 'utils/dimensions';
 import { useAppData } from 'providers/DataProvider';
 
+import { palette, type PaletteColor } from 'theme/Colors';
 import { spacings } from 'theme/Spacings';
 import { textSizes } from 'theme/Typography';
 
@@ -110,31 +111,29 @@ const IconItem = styled.TouchableOpacity<{
   margin: ${spacings.space50};
 `;
 
-// https://www.w3schools.com/tags/ref_colornames.asp
-const dimGrayColor = '#696969';
-export const palette = [
+const palletteInCustomOrder: Array<PaletteColor> = [
   // 1st row
-  '#32CD32', // LimeGreen
-  '#F08080', // LightCoral
-  '#F4A460', // SandyBrown
-  '#DAA520', // GoldenRod
-  '#ADD8E6', // LightBlue
-  '#87CEFA', // LightSkyBlue
+  palette.LimeGreen,
+  palette.LightCoral,
+  palette.SandyBrown,
+  palette.GoldenRod,
+  palette.LightBlue,
+  palette.LightSkyBlue,
   // 2nd row
-  '#8A2BE2', // BlueViolet
-  '#FFB6C1', // LightPink
-  dimGrayColor, // DimGray
-  '#ADFF2F', // GreenYellow
-  '#FF4500', // OrangeRed
-  '#FFA500', // Orange
+  palette.BlueViolet,
+  palette.LightPink,
+  palette.DimGray,
+  palette.GreenYellow,
+  palette.OrangeRed,
+  palette.Orange,
   // 3rd row
-  '#FFD700', // Gold
-  '#87CEEB', // SkyBlue
-  '#4682B4', // SteelBlue
-  '#800080', // Purple
-  '#DC143C', // Crimson
-  '#B8860B', // DarkGoldenRod
-];
+  palette.Gold,
+  palette.SkyBlue,
+  palette.SteelBlue,
+  palette.Purple,
+  palette.Crimson,
+  palette.DarkGoldenRod,
+]
 
 const getItemSizeOnScreen = (numItemsPerRow: number, itemPadding: number): number => {
   const itemSize = Math.floor(
@@ -158,7 +157,7 @@ const getPixelsAsNumber = (pixels: string): number => {
   return Number(spacings.space100.replace('px', ''));
 };
 
-const glyphsInOrder: Array<keyof typeof fontelloGlyphMap> = [
+const glyphsInCustomOrder: Array<GlyphIcon> = [
   'list-bullet',
   'shopping-cart',
   'home',
@@ -199,8 +198,8 @@ const glyphsInOrder: Array<keyof typeof fontelloGlyphMap> = [
 
 export function CreateNewListScreen({ navigation }: RootStackScreenProps<'CreateNewListScreen'>) {
   const { createList } = useAppData();
-  const [activeColor, setActiveColor] = useState(palette[0]);
-  const [activeIcon, setActiveIcon] = useState(glyphsInOrder[0]);
+  const [activeColor, setActiveColor] = useState(palletteInCustomOrder[0]);
+  const [activeIcon, setActiveIcon] = useState(glyphsInCustomOrder[0]);
   const [listName, setListName] = useState('');
 
   const canSaveList = Boolean(listName);
@@ -221,10 +220,10 @@ export function CreateNewListScreen({ navigation }: RootStackScreenProps<'Create
       {/* fixme: the header shouldn't be scrollable */}
       <ModalHeader>
         <CloseButton
-          backgroundColor={dimGrayColor}
+          backgroundColor={palette.DimGray}
           onPress={() => navigation.goBack()}
         >
-          <Ionicons name="close" size={20} color={dimGrayColor} />
+          <Ionicons name="close" size={20} color={palette.DimGray} />
         </CloseButton>
 
         {/* Fixme: Make the icon more centered. It's a bit scewed to the left becuase "Save" button takes more space than the "Close" button */}
@@ -247,7 +246,7 @@ export function CreateNewListScreen({ navigation }: RootStackScreenProps<'Create
             .then(() => navigation.goBack())
           }}
         >
-          <SaveButtonText color={!canSaveList ? dimGrayColor : activeColor}>
+          <SaveButtonText color={!canSaveList ? palette.DimGray : activeColor}>
             Save
           </SaveButtonText>
         </TouchableOpacity>
@@ -260,7 +259,7 @@ export function CreateNewListScreen({ navigation }: RootStackScreenProps<'Create
       />
 
       <PaletteContainer>
-        {palette.map((color, index) => {
+        {palletteInCustomOrder.map((color, index) => {
           return (
             <PaletteItem
               activeOpacity={1}
@@ -278,7 +277,7 @@ export function CreateNewListScreen({ navigation }: RootStackScreenProps<'Create
       </PaletteContainer>
 
       <IconContainer>
-        {glyphsInOrder.map((glyphName, id) => {
+        {glyphsInCustomOrder.map((glyphName, id) => {
           const isActive = glyphName === activeIcon;
 
           return (
@@ -294,7 +293,7 @@ export function CreateNewListScreen({ navigation }: RootStackScreenProps<'Create
             >
               <FontelloIcon
                 name={glyphName}
-                color={isActive ? activeColor : dimGrayColor}
+                color={isActive ? activeColor : palette.DimGray}
                 size={28} // ?? how it relates with the calculated item size?? (fixme!)
               />
             </IconItem>
