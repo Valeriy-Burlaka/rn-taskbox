@@ -9,6 +9,7 @@
     "web": "expo start --web",
     "eject": "expo eject",
     "lint": "eslint . --ext .tsx",
+    "prebuild:ios": "expo prebuild --clean --platform ios",
     "test": "jest",
     "update-stories": "sb-rn-get-stories --config-path storybook-ondevice",
     "storybook-watcher": "sb-rn-watcher --config-path storybook-ondevice",
