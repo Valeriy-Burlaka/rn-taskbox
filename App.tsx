@@ -1,8 +1,11 @@
 import 'utils/logbox';
 
+import { HoldMenuProvider } from 'react-native-hold-menu';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { FontelloIcon } from 'constants/Fontello';
 import { DataProvider } from 'providers/DataProvider';
+
 import { Main } from 'components/Main';
 
 function App() {
@@ -12,7 +15,9 @@ function App() {
   return (
     <DataProvider>
       <SafeAreaProvider>
-        <Main />
+        <HoldMenuProvider iconComponent={FontelloIcon}>
+          <Main />
+        </HoldMenuProvider>
       </SafeAreaProvider>
     </DataProvider>
   );
