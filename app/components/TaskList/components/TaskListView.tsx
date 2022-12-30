@@ -1,11 +1,9 @@
 import * as React from 'react';
-import { FlatList, View, Text, SafeAreaView } from 'react-native';
+import { FlatList, SafeAreaView } from 'react-native';
 import styled from '@emotion/native';
 
 import { TaskData } from 'types/task';
 
-import PercolateIcons from 'constants/Percolate';
-import { styles } from 'constants/globalStyles';
 import { Task, Props as TaskProps } from 'components/Task';
 
 import LoadingRow from './LoadingRow';
@@ -23,14 +21,7 @@ type Props = {
   Pick<TaskProps, 'onSaveTask'>
 ;
 
-const ListItemsEmpty = styled(SafeAreaView)`
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-  background-color: white;
-`;
-
-const ListItems = styled(SafeAreaView)`
+const ListItemsContainer = styled(SafeAreaView)`
   flex: 1;
   background-color: 'white';
 `;
@@ -52,7 +43,7 @@ export function TaskListView({
 
   if (loading) {
     return (
-      <ListItems>
+      <ListItemsContainer>
         <LoadingRow />
         <LoadingRow />
         <LoadingRow />
@@ -60,29 +51,17 @@ export function TaskListView({
         <LoadingRow />
         <LoadingRow />
         <LoadingRow />
-      </ListItems>
-    );
-  }
-
-  if (tasks.length === 0) {
-    return (
-      <ListItemsEmpty>
-        <View>
-          <PercolateIcons name="check" size={64} color={'#2cc5d2'} />
-          <Text style={styles.TitleMessage}>You have no tasks</Text>
-          <Text style={styles.SubtitleMessage}>Sit back and relax</Text>
-        </View>
-      </ListItemsEmpty>
+      </ListItemsContainer>
     );
   }
 
   return (
-    <ListItems>
+    <ListItemsContainer>
       <FlatList
         data={tasks}
         keyExtractor={task => task.id}
         renderItem={({ item }) => <Task key={item.id} task={item} {...events} />}
       />
-    </ListItems>
+    </ListItemsContainer>
   );
 }
