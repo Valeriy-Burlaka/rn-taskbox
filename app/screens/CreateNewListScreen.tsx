@@ -21,7 +21,7 @@ const OuterContainer = styled.View<{ backgroundColor: string }>`
   padding: ${spacings.space100};
 `;
 
-const ModalHeader = styled.View<{}>`
+const HeaderContainer = styled.View<{}>`
   flex-direction: row;
   align-items: center;
   justify-content: space-around;
@@ -218,7 +218,7 @@ export function CreateNewListScreen({ navigation }: RootStackScreenProps<'Create
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
 
       {/* fixme: the header shouldn't be scrollable */}
-      <ModalHeader>
+      <HeaderContainer>
         <CloseButton
           backgroundColor={palette.DimGray}
           onPress={() => navigation.goBack()}
@@ -250,7 +250,7 @@ export function CreateNewListScreen({ navigation }: RootStackScreenProps<'Create
             Save
           </SaveButtonText>
         </TouchableOpacity>
-      </ModalHeader>
+      </HeaderContainer>
 
       <StyledTextInput
         selectionColor={activeColor}
