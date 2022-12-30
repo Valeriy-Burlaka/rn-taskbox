@@ -3,7 +3,6 @@ import { rgba } from 'polished';
 import styled from '@emotion/native';
 
 import ContextMenu from 'react-native-context-menu-view';
-import { HoldItem } from 'react-native-hold-menu';
 
 import { TaskListModel } from 'model/TaskList';
 
@@ -55,8 +54,7 @@ const ListCardTitle = styled.Text<{ color: string }>`
 
 export type Props =
   Pick<TaskListModel, 'id' | 'name' | 'icon' | 'color'> &
-  { onPress: () => void, numTasks: number, width: number } &
-  { contextMenuImplementation: 'hold-menu' | 'context-menu' | 'menu' }
+  { onPress: () => void, numTasks: number, width: number }
 ;
 
 export function ListCard({
@@ -67,118 +65,72 @@ export function ListCard({
   onPress,
   numTasks,
   width,
-  contextMenuImplementation,
 }: Props) {
-  if (contextMenuImplementation === 'hold-menu') {
-    return (
-      <HoldItem
-        items={[
-          {
-            text: 'Edit List Info',
-            icon: 'wrench',
-            onPress: () => {
-              alert(`Editing List Info #${id}`);
-            },
-            // withSeparator: true,
-          },
-          {
-            text: 'Delete',
-            icon: 'trash-empty',
-            isDestructive: true,
-            onPress: () => {
-              alert(`Deleting List #${id}`)
-            }
-          }
-        ]}
-      >
+  return (
+    <ContextMenu
+      actions={[
+        // Example of defining an item group (with a separator)
+        // {
+        //   inlineChildren: true,
+        //   actions: [
+        //     {
+        //       title: 'Edit List Info',
+        //       subtitletitle: 'WAT',
+        //       systemIcon: 'pencil',
+        //     },
+        //   ],
+        // },
+        {
+          title: 'Edit List Info',
+          subtitletitle: 'WAT', // Don't know what this does
+          systemIcon: 'pencil',
+        },
+        {
+          title: 'Delete',
+          subtitletitle: 'WAT?',
+          systemIcon: 'trash',
+          destructive: true,
+        },
+      ]}
+      preview={
         <ListCardContainer
           backgroundColor={color}
           onPress={onPress}
           width={width}
+          preview={true}
         >
-          <ListCardStatusRow>
-            <FontelloIcon name={icon} color={color} size={28}/>
-            <ListCardTaskCounter>
-              {numTasks}
-            </ListCardTaskCounter>
-          </ListCardStatusRow>
-          <ListCardTitleRow>
-            <ListCardTitle color={color}>
-              {name}
-            </ListCardTitle>
-          </ListCardTitleRow>
-        </ListCardContainer>
-      </HoldItem>
-    )
-  } else if (contextMenuImplementation === 'context-menu') {
-    return (
-      <ContextMenu
-        actions={[
-          // Example of defining an item group (with a separator)
-          // {
-          //   inlineChildren: true,
-          //   actions: [
-          //     {
-          //       title: 'Edit List Info',
-          //       subtitletitle: 'WAT',
-          //       systemIcon: 'pencil',
-          //     },
-          //   ],
-          // },
-          {
-            title: 'Edit List Info',
-            subtitletitle: 'WAT', // Don't know what this does
-            systemIcon: 'pencil',
-          },
-          {
-            title: 'Delete',
-            subtitletitle: 'WAT?',
-            systemIcon: 'trash',
-            destructive: true,
-          },
-        ]}
-        preview={
-          <ListCardContainer
-            backgroundColor={color}
-            onPress={onPress}
-            width={width}
-            preview={true}
-          >
-          <ListCardStatusRow>
-            <FontelloIcon name={icon} color={color} size={28}/>
-            <ListCardTaskCounter>
-              {numTasks}
-            </ListCardTaskCounter>
-          </ListCardStatusRow>
-          <ListCardTitleRow>
-            <ListCardTitle color={color}>
-              {name}
-            </ListCardTitle>
-          </ListCardTitleRow>
-        </ListCardContainer>
-        }
-        previewBackgroundColor="transparent"
+        <ListCardStatusRow>
+          <FontelloIcon name={icon} color={color} size={28}/>
+          <ListCardTaskCounter>
+            {numTasks}
+          </ListCardTaskCounter>
+        </ListCardStatusRow>
+        <ListCardTitleRow>
+          <ListCardTitle color={color}>
+            {name}
+          </ListCardTitle>
+        </ListCardTitleRow>
+      </ListCardContainer>
+      }
+      previewBackgroundColor="transparent"
+    >
+      <ListCardContainer
+        backgroundColor={color}
+        onPress={onPress}
+        width={width}
       >
-        <ListCardContainer
-          backgroundColor={color}
-          onPress={onPress}
-          width={width}
-        >
-          <ListCardStatusRow>
-            <FontelloIcon name={icon} color={color} size={28}/>
-            <ListCardTaskCounter>
-              {numTasks}
-            </ListCardTaskCounter>
-          </ListCardStatusRow>
-          <ListCardTitleRow>
-            <ListCardTitle color={color}>
-              {name}
-            </ListCardTitle>
-          </ListCardTitleRow>
-        </ListCardContainer>
-      </ContextMenu>
-    )
-  } else {
-    return null;
-  }
+        <ListCardStatusRow>
+          <FontelloIcon name={icon} color={color} size={28}/>
+          <ListCardTaskCounter>
+            {numTasks}
+          </ListCardTaskCounter>
+        </ListCardStatusRow>
+        <ListCardTitleRow>
+          <ListCardTitle color={color}>
+            {name}
+          </ListCardTitle>
+        </ListCardTitleRow>
+      </ListCardContainer>
+    </ContextMenu>
+  );
 }

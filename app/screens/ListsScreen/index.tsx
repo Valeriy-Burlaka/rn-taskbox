@@ -89,7 +89,6 @@ export function ListsScreen({ navigation }: RootTabScreenProps<'ListsScreen'>) {
               onPress={() => navigation.navigate('TasksScreen', { listId: list.id })}
               numTasks={list.tasks.length}
               width={listWidth}
-              contextMenuImplementation="context-menu"
             />
           )
         })}
