@@ -1,10 +1,40 @@
+import { Entypo } from '@expo/vector-icons';
+import styled from '@emotion/native';
+
 import { useAppData } from 'providers/DataProvider';
 import { TaskStates } from 'types/task';
 import { idGenerator } from 'utils/id';
 
-import { AddTaskButton } from 'components/AddTaskButton';
+import { spacings } from 'theme/Spacings';
+import { textSizes } from 'theme/Typography';
 
 import { TaskListView } from './components/TaskListView';
+
+const AddTaskButtonContainer = styled.View`
+  position: absolute;
+  bottom: 40px;
+  right: 30px;
+
+  flex-direction: row;
+  align-items: center;
+`;
+
+const AddTaskButton = styled.TouchableOpacity<{ backgroundColor: string; size: number }>
+`
+  background-color: ${({ backgroundColor }) => backgroundColor};
+  border-radius: ${({ size }) => `${size / 2}px`};
+  align-items: center;
+  justify-content: center;
+  margin-right: ${spacings.space50};
+  height: ${({ size }) => `${size}px`};
+  width: ${({ size }) => `${size}px`};
+`;
+
+const AddTaskText = styled.Text<{ color: string }>`
+  color: ${({ color }) => color};
+  font-family: NunitoSans-Bold;
+  font-size: ${textSizes.regular};
+`;
 
 export function TaskList({ listId }: { listId: string }) {
   const { taskLists, createTask, updateTask, deleteTask } = useAppData();
@@ -27,7 +57,7 @@ export function TaskList({ listId }: { listId: string }) {
       });
     }
   };
-  
+
   const onPinTask = (taskId: string) => {
     const t = thisList.getTaskById(taskId);
     // console.log('Pinning task. id: ', taskId, 'task: ', t);
@@ -75,14 +105,18 @@ export function TaskList({ listId }: { listId: string }) {
         onUpdateTaskTitle={onUpdateTaskTitle}
         tasks={Object.values(tasks)}
       />
-      <AddTaskButton
-        onPress={onPressAddButton}
-        styles={{
-          position: 'absolute',
-          bottom: 20,
-          right: 20,
-        }}
-      />
+      <AddTaskButtonContainer>
+        <AddTaskButton
+          backgroundColor={thisList.color}
+          onPress={onPressAddButton}
+          size={32}
+        >
+          <Entypo name="plus" size={24} color="white" />
+        </AddTaskButton>
+        <AddTaskText color={thisList.color}>
+          New Reminder
+        </AddTaskText>
+      </AddTaskButtonContainer>
     </>
   );
 }
