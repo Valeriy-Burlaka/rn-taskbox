@@ -78,4 +78,28 @@ Choosing a library that would satisfy all these requirements turned out to be a 
 
 #### @react-native-menu/menu
 
-**TODO:** let's try this beast
+Tried this one briefly. On a first glance, it's somewhat similar to `react-native-context-menu-view` (native, with system fonts, colors and icons).
+It uses this weird imperative handler for all menu actions at once as well.
+Also, it should have the same issue with navigation from what I see from the source code.
+
+Also, a few things seem missing:
+
+1. (!) An ability to customise an anchor position [open issue](https://github.com/react-native-menu/menu/issues/173).
+2. (!) Separators (dividers) for menu items [open issue](https://github.com/react-native-menu/menu/issues/271).
+3. An ability to customise a preview item.
+
+Has a few extras:
+
+1. An ability to customise a font color of a menu item.
+2. Sub-menus (discouraged practice overall but stil an option)
+
+After reading the issues page, decided to not waste time trying to create an implementation with this library.
+
+### Decision
+
+An accidental discovery has been made when I installed _both_ `react-native-context-menu-view` and `react-native-hold-menu` libraries at the same time and tested their components under a switch.
+Wrapping the `<App />` component in the `<HoldMenuProvider>` auto-magically fixed the issue with navigation for `<ContextMenu>`.
+This 99.9% happens because `<HoldMenuProvider>` uses `react-native-gesture-handler.GestureHandlerRootView` internally and properly declares all gesture handlers (press, long press, etc.), preventing a multiple handlers to trigger simultaneously.
+This means that I should be able to implement my own small solution for the issue without pulling in the entire library and use it only as a hacky fix for another library.
+
+For now, though, I decided to use his setup (`react-native-context-menu-view` for actual context menu component, `react-native-hold-menu` for fixing the gesture handling and the issue with triggering on-press navigation after a long press).
