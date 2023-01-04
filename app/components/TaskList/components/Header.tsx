@@ -11,7 +11,7 @@ import { textSizes } from 'theme/Typography';
 const HeaderContainer = styled.View<{}>`
   flex-direction: row;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
   border: 1px solid red;
   margin-bottom: ${spacings.space200};
   padding: ${spacings.space100};
@@ -39,13 +39,11 @@ export function Header({ name, color, onPressBack }: Props) {
         <Ionicons name="chevron-back" size={30} color={color} />
       </TouchableOpacity>
 
-      <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-        <ListName
-          color={color}
-        >
-          {name}
-        </ListName>
-      </View>
+      <ListName
+        color={color}
+      >
+        {name}
+      </ListName>
 
       {/* 3-dots menu */}
       <ContextMenu
