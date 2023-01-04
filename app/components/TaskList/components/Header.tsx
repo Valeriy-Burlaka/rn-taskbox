@@ -23,18 +23,22 @@ const ListName = styled.Text<{ color: string }>`
   font-size: ${textSizes.regular};
 `;
 
-export type Props = Pick<TaskList, 'name' | 'color'>
+export type Props = Pick<TaskList, 'name' | 'color'> &
+  {
+    onPressBack: () => void;
+  }
+;
 
-export function Header({ name, color }: Props) {
+export function Header({ name, color, onPressBack }: Props) {
   return (
     <HeaderContainer>
-      {/* Back button */}
+
       <TouchableOpacity
+        onPress={onPressBack}
       >
         <Ionicons name="chevron-back" size={30} color={color} />
       </TouchableOpacity>
 
-      {/* List name */}
       <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
         <ListName
           color={color}

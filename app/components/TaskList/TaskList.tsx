@@ -1,6 +1,6 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
-
+import { useNavigation } from '@react-navigation/native';
 
 import { useAppData } from 'providers/DataProvider';
 import { TaskStates } from 'types/task';
@@ -12,6 +12,7 @@ import { AddTaskButton } from './components/AddTaskButton';
 import { TaskListView } from './components/TaskListView';
 
 export function TaskList({ listId }: { listId: string }) {
+  const navigation = useNavigation();
   const { taskLists, createTask, updateTask, deleteTask } = useAppData();
 
   // console.log(`TasksList: ID: ${listId}`);
@@ -77,6 +78,7 @@ export function TaskList({ listId }: { listId: string }) {
       <Header
         name={thisList.name}
         color={thisList.color}
+        onPressBack={() => navigation.goBack()}
       />
 
       <TaskListView
