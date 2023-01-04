@@ -1,44 +1,15 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
-import { Entypo } from '@expo/vector-icons';
 
-import styled from '@emotion/native';
 
 import { useAppData } from 'providers/DataProvider';
 import { TaskStates } from 'types/task';
 import { idGenerator } from 'utils/id';
 
-import { spacings } from 'theme/Spacings';
-import { textSizes } from 'theme/Typography';
 
 import { Header } from './components/Header';
+import { AddTaskButton } from './components/AddTaskButton';
 import { TaskListView } from './components/TaskListView';
-
-const AddTaskButtonContainer = styled.View`
-  position: absolute;
-  bottom: 40px;
-  right: 30px;
-
-  flex-direction: row;
-  align-items: center;
-`;
-
-const AddTaskButton = styled.TouchableOpacity<{ backgroundColor: string; size: number }>
-`
-  background-color: ${({ backgroundColor }) => backgroundColor};
-  border-radius: ${({ size }) => `${size / 2}px`};
-  align-items: center;
-  justify-content: center;
-  margin-right: ${spacings.space50};
-  height: ${({ size }) => `${size}px`};
-  width: ${({ size }) => `${size}px`};
-`;
-
-const AddTaskText = styled.Text<{ color: string }>`
-  color: ${({ color }) => color};
-  font-family: NunitoSans-Bold;
-  font-size: ${textSizes.regular};
-`;
 
 export function TaskList({ listId }: { listId: string }) {
   const { taskLists, createTask, updateTask, deleteTask } = useAppData();
@@ -116,18 +87,12 @@ export function TaskList({ listId }: { listId: string }) {
         onUpdateTaskTitle={onUpdateTaskTitle}
         tasks={Object.values(tasks)}
       />
-      <AddTaskButtonContainer>
-        <AddTaskButton
-          backgroundColor={thisList.color}
-          onPress={onPressAddButton}
-          size={32}
-        >
-          <Entypo name="plus" size={24} color="white" />
-        </AddTaskButton>
-        <AddTaskText color={thisList.color}>
-          New Reminder
-        </AddTaskText>
-      </AddTaskButtonContainer>
+
+      <AddTaskButton
+        color={thisList.color}
+        onPress={onPressAddButton}
+      />
+
     </SafeAreaView>
   );
 }
