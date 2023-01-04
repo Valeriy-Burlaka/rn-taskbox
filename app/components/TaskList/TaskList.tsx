@@ -1,4 +1,10 @@
+import { TouchableOpacity, View } from 'react-native';
+
+import ContextMenu from 'react-native-context-menu-view';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { StatusBar } from 'expo-status-bar';
 import { Entypo } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import styled from '@emotion/native';
 
 import { useAppData } from 'providers/DataProvider';
@@ -9,6 +15,21 @@ import { spacings } from 'theme/Spacings';
 import { textSizes } from 'theme/Typography';
 
 import { TaskListView } from './components/TaskListView';
+
+const HeaderContainer = styled.View<{}>`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  border: 1px solid red;
+  margin-bottom: ${spacings.space200};
+  padding: ${spacings.space100};
+`;
+
+const ListName = styled.Text<{ color: string }>`
+  color: ${({ color }) => color};
+  font-family: NunitoSans-Bold;
+  font-size: ${textSizes.regular};
+`;
 
 const AddTaskButtonContainer = styled.View`
   position: absolute;
@@ -96,7 +117,47 @@ export function TaskList({ listId }: { listId: string }) {
   }
 
   return (
-    <>
+    <SafeAreaView style={{ flex: 1}}>
+      <StatusBar />
+
+      <HeaderContainer>
+        {/* Back button */}
+        <TouchableOpacity
+          // onPress={() => navigation.goBack()}
+        >
+          <Ionicons name="chevron-back" size={30} color={thisList.color} />
+        </TouchableOpacity>
+
+        {/* List name */}
+        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+          <ListName
+            color={thisList.color}
+          >
+            {thisList.name}
+          </ListName>
+        </View>
+
+        {/* 3-dots menu */}
+        <ContextMenu
+          actions={[
+            {
+              title: 'Edit List Info',
+              subtitletitle: 'WAT',
+              systemIcon: 'pencil',
+            },
+            {
+              title: 'Delete',
+              subtitletitle: 'WAT?',
+              systemIcon: 'trash',
+              destructive: true,
+            },
+          ]}
+          dropdownMenuMode={true}
+        >
+          <Ionicons name="ios-ellipsis-horizontal-circle" size={26} color={thisList.color} />
+        </ContextMenu>
+      </HeaderContainer>
+
       <TaskListView
         loading={false}
         onArchiveTask={onArchiveTask}
@@ -117,6 +178,6 @@ export function TaskList({ listId }: { listId: string }) {
           New Reminder
         </AddTaskText>
       </AddTaskButtonContainer>
-    </>
+    </SafeAreaView>
   );
 }

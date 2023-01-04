@@ -53,16 +53,13 @@ function RootNavigator() {
         <Stack.Screen
           name="CreateNewListScreen"
           component={CreateNewListScreen}
-          options={{
-            title: 'New List',
-          }}
         />
       </Stack.Group>
       <Stack.Screen
         name="TasksScreen"
         component={TasksScreen}
         options={{
-          title: 'Tasks',
+          headerShown: false,
         }}
       />
     </Stack.Navigator>
