@@ -1,6 +1,6 @@
-import { TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 
-import ContextMenu from 'react-native-context-menu-view';
+import { ContextMenu } from 'components/ContextMenu';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import styled from '@emotion/native';
 
@@ -45,19 +45,36 @@ export function Header({ name, color, onPressBack }: Props) {
         {name}
       </ListName>
 
-      {/* 3-dots menu */}
       <ContextMenu
         actions={[
           {
-            title: 'Edit List Info',
-            subtitletitle: 'WAT',
-            systemIcon: 'pencil',
+            name: 'Blue',
+            icon: 'pencil',
+            isDisabled: true,
+            onPress: () => alert('Blue'),
           },
           {
-            title: 'Delete',
-            subtitletitle: 'WAT?',
-            systemIcon: 'trash',
-            destructive: true,
+            name: 'Red',
+            icon: 'trash',
+            isDestructive: true,
+            onPress: () => alert('Red'),
+          },
+          {
+            name: 'Green',
+            icon: 'eye',
+            onPress: () => alert('Green'),
+            hasDelimiter: true,
+          },
+          {
+            name: 'Yellow',
+            icon: 'sun',
+            onPress: () => alert('Yellow'),
+            hasDelimiter: true,
+          },
+          {
+            name: 'Black',
+            icon: 'moon',
+            onPress: () => alert('Black'),
           },
         ]}
         dropdownMenuMode={true}
