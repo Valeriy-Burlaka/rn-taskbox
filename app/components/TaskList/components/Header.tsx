@@ -12,9 +12,10 @@ const HeaderContainer = styled.View<{}>`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  border: 1px solid red;
   margin-bottom: ${spacings.space200};
-  padding: ${spacings.space100};
+  padding-top: ${spacings.space50};
+  padding-left: ${spacings.space50};
+  padding-right: ${spacings.space50};
 `;
 
 const ListName = styled.Text<{ color: string }>`
@@ -48,33 +49,16 @@ export function Header({ name, color, onPressBack }: Props) {
       <ContextMenu
         actions={[
           {
-            name: 'Blue',
+            name: 'Edit List Details',
             icon: 'pencil',
-            isDisabled: true,
-            onPress: () => alert('Blue'),
+            hasDelimiter: true,
+            onPress: () => alert('Edit details!'),
           },
           {
-            name: 'Red',
+            name: 'Delete List',
             icon: 'trash',
             isDestructive: true,
-            onPress: () => alert('Red'),
-          },
-          {
-            name: 'Green',
-            icon: 'eye',
-            onPress: () => alert('Green'),
-            hasDelimiter: true,
-          },
-          {
-            name: 'Yellow',
-            icon: 'sun',
-            onPress: () => alert('Yellow'),
-            hasDelimiter: true,
-          },
-          {
-            name: 'Black',
-            icon: 'moon',
-            onPress: () => alert('Black'),
+            onPress: () => alert('Deleting List!'),
           },
         ]}
         dropdownMenuMode={true}
