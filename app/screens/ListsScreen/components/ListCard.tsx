@@ -22,6 +22,7 @@ const ListCardContainer = styled(TouchableOpacity)<{
   border-radius: 12px;
   align-items: center;
   justify-content: center;
+  margin-bottom: ${spacings.space100};
   padding: ${spacings.space100};
   width: ${({width}) => `${width}px`};
   opacity: ${({ preview }) => preview ? '0.2' : '1'};
