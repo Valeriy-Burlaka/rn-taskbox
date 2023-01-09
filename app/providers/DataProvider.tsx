@@ -26,6 +26,7 @@ interface AppData {
   taskLists: { [key: string]: TaskListModel };
   setTaskLists: (taskLists: { [key: string]: TaskListModel }) => void;
   createList: (listData: NewTaskList) => Promise<void>;
+  deleteList: (listId: string) => Promise<void>;
   createTask: (listId: string, taskData: TaskData) => void;
   updateTask: (listId: string, taskId: string, taskData: TaskDataUpdate) => void;
   deleteTask: (listId: string, taskId: string) => void;
@@ -57,7 +58,7 @@ export const DataProvider = ({ children }: Props) => {
     });
 
     repository.saveList(list);
-  }
+  };
 
   const createList = (listData: NewTaskList): Promise<void> => {
     console.log('Creating new list:', listData);
@@ -68,6 +69,17 @@ export const DataProvider = ({ children }: Props) => {
           ...taskLists,
           [newList.id]: newList,
         });
+      });
+  };
+
+  const deleteList = (listId: string): Promise<void> => {
+    console.log(`Deleting list "${listId}"`);
+    return repository
+      .deleteList(listId)
+      .then(() => {
+        const _taskLists = { ...taskLists };
+        delete _taskLists[listId];
+        setTaskLists(_taskLists);
       });
   };
 
@@ -103,6 +115,7 @@ export const DataProvider = ({ children }: Props) => {
     taskLists,
     setTaskLists,
     createList,
+    deleteList,
     createTask,
     updateTask,
     deleteTask,

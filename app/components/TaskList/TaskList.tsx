@@ -1,9 +1,10 @@
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 
 import { useAppData } from 'providers/DataProvider';
 import { TaskStates } from 'types/task';
+import { createDeleteAlert } from 'utils/deleteListAlert';
 import { idGenerator } from 'utils/id';
 
 
@@ -13,7 +14,8 @@ import { TaskListView } from './components/TaskListView';
 
 export function TaskList({ listId }: { listId: string }) {
   const navigation = useNavigation();
-  const { taskLists, createTask, updateTask, deleteTask } = useAppData();
+
+  const { taskLists, deleteList, createTask, updateTask, deleteTask } = useAppData();
 
   // console.log(`TasksList: ID: ${listId}`);
   // console.log(`TasksList: Data from context:`, taskLists[listId]);
@@ -69,7 +71,16 @@ export function TaskList({ listId }: { listId: string }) {
       title: '',
       state: TaskStates.TASK_NEW,
     });
-  }
+  };
+
+  const onPressDeleteList = () => {
+    const onConfirmDelete = () => {
+      deleteList(thisList.id);
+      navigation.navigate('ListsScreen');
+    };
+
+    createDeleteAlert(thisList.name, onConfirmDelete);
+  };
 
   return (
     <SafeAreaView style={{ flex: 1}}>
@@ -79,6 +90,7 @@ export function TaskList({ listId }: { listId: string }) {
         name={thisList.name}
         color={thisList.color}
         onPressBack={() => navigation.goBack()}
+        onPressDeleteList={onPressDeleteList}
       />
 
       <TaskListView

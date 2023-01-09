@@ -55,7 +55,7 @@ export class TaskListRepository {
       }
     }
   }
-    
+
   public async createList(listData: NewTaskList): Promise<TaskListModel> {
     const list = new TaskListModel(listData);
     await localStorage.setItem(list.id, list.toJson());
@@ -66,28 +66,23 @@ export class TaskListRepository {
   public async saveList(list: TaskListModel): Promise<void> {
     await localStorage.setItem(list.id, list.toJson());
   }
-  
+
   public async getListTasks(listId: string): Promise<TaskData[]> {
     const jsonResult = await localStorage.getItem(listId);
     // const jsonResult = await localStorage.getItem(`list-0`);
     if (jsonResult) {
       const taskList = TaskListModel.fromJson(jsonResult);
-  
+
       return taskList.tasks;
     } else {
       return [];
     }
     // something is wrong if we requested a task list by ID but didn't get a result
   }
-  
-  public async setListTasks(listId: string, tasks: TaskData[]): Promise<void> {
-  
+
+  public async deleteList(listId: string): Promise<void> {
+    return localStorage.removeItem(listId);
   }
-  // getList ?
-
-  // updateListTassks ?
-
-  // deleteList
 
   // deleteTaskFromList
 
@@ -95,7 +90,7 @@ export class TaskListRepository {
 }
 
 // Couple of reasons to enforce a limit:
-// 
+//
 // 1. The app will likely become un-usable with hundreds of ToDO lists (not tasks, but tasks lists!)
 // 2. The Async Storage limit is 6MB (https://react-native-async-storage.github.io/async-storage/docs/limits),
 //    without dancing with platform feature flags. And 6MB is a very sane limit for string-like data.
@@ -106,7 +101,7 @@ export class TaskListRepository {
 //      * Add 100% for possible new features (e.g., detailed notes for each task), ~= 5,000,000 bytes ~= 4.9MB
 //      * Leaves a safety buffer of ~20%, - not too much.
 // 3. Allows pre-generating list IDs and use type-checking.
-// 
+//
 // The only remainig question: is this a storage concern?
 // Only the "business" layer knows what we will plan store (items, size), -- storage itself can't calculate this limit.
 // export const MAX_LISTS_STORED = 100;
