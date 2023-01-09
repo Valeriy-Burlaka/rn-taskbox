@@ -57,7 +57,7 @@ export const DataProvider = ({ children }: Props) => {
       [list.id]: list,
     });
 
-    repository.saveList(list);
+    repository.updateList(list);
   };
 
   const createList = (listData: NewTaskList): Promise<void> => {

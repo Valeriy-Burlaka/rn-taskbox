@@ -63,8 +63,12 @@ export class TaskListRepository {
     return list;
   }
 
-  public async saveList(list: TaskListModel): Promise<void> {
+  public async updateList(list: TaskListModel): Promise<void> {
     await localStorage.setItem(list.id, list.toJson());
+  }
+
+  public async deleteList(listId: string): Promise<void> {
+    return localStorage.removeItem(listId);
   }
 
   public async getListTasks(listId: string): Promise<TaskData[]> {
@@ -80,9 +84,6 @@ export class TaskListRepository {
     // something is wrong if we requested a task list by ID but didn't get a result
   }
 
-  public async deleteList(listId: string): Promise<void> {
-    return localStorage.removeItem(listId);
-  }
 
   // deleteTaskFromList
 
