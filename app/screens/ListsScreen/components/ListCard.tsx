@@ -2,13 +2,13 @@ import { TouchableOpacity } from 'react-native';
 import { rgba } from 'polished';
 import styled from '@emotion/native';
 
-import ContextMenu from 'react-native-context-menu-view';
-
 import { TaskListModel } from 'model/TaskList';
 
 import { FontelloIcon } from 'constants/Fontello';
 import { spacings } from 'theme/Spacings';
 import { textSizes } from 'theme/Typography';
+
+import { ContextMenu } from 'components/ContextMenu';
 
 const ListCardContainer = styled(TouchableOpacity)<{
   backgroundColor: string;
@@ -54,8 +54,12 @@ const ListCardTitle = styled.Text<{ color: string }>`
 
 export type Props =
   Pick<TaskListModel, 'id' | 'name' | 'icon' | 'color'> &
-  { onPress: () => void, numTasks: number, width: number }
-;
+  {
+    onPress: () => void,
+    onPressDeleteList: () => void;
+    numTasks: number,
+    width: number
+  };
 
 export function ListCard({
   id,
@@ -63,33 +67,24 @@ export function ListCard({
   icon,
   color,
   onPress,
+  onPressDeleteList,
   numTasks,
   width,
 }: Props) {
   return (
     <ContextMenu
       actions={[
-        // Example of defining an item group (with a separator)
-        // {
-        //   inlineChildren: true,
-        //   actions: [
-        //     {
-        //       title: 'Edit List Info',
-        //       subtitletitle: 'WAT',
-        //       systemIcon: 'pencil',
-        //     },
-        //   ],
-        // },
         {
-          title: 'Edit List Info',
-          subtitletitle: 'WAT', // Don't know what this does
-          systemIcon: 'pencil',
+          name: 'Edit List Details',
+          icon: 'pencil',
+          hasDelimiter: true,
+          onPress: () => alert('Edit details!'),
         },
         {
-          title: 'Delete',
-          subtitletitle: 'WAT?',
-          systemIcon: 'trash',
-          destructive: true,
+          name: 'Delete List',
+          icon: 'trash',
+          isDestructive: true,
+          onPress: onPressDeleteList,
         },
       ]}
       preview={

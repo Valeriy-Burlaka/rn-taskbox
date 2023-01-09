@@ -10,6 +10,7 @@ import { type RootTabScreenProps } from 'types/navigation';
 import { spacings } from 'theme/Spacings';
 import { textSizes } from 'theme/Typography';
 import { SCREEN_WIDTH } from 'utils/dimensions';
+import { createDeleteAlert } from 'utils/deleteListAlert';
 
 import { ListCard } from './components/ListCard';
 
@@ -52,13 +53,18 @@ const getListWidthOnScreen = (numItemsPerRow = 2, gapBetween = 16, outerPaddings
 };
 
 export function ListsScreen({ navigation }: RootTabScreenProps<'ListsScreen'>) {
-  const { taskLists } = useAppData();
+  const { taskLists, deleteList } = useAppData();
 
-  // console.log('ListsScreen: taskLists recevied from DataContext:', taskLists);
+  const listWidth = React.useMemo(() => getListWidthOnScreen(), []);
 
-  // console.log('Calculated list width:', getListWidthOnScreen());
+  const onPressDeleteList = (listId: string, listName: string) => {
+    const onConfirmDelete = () => {
+      deleteList(listId);
+      navigation.navigate('ListsScreen');
+    };
 
-  const listWidth = React.useMemo(() => getListWidthOnScreen(), [])
+    createDeleteAlert(listName, onConfirmDelete);
+  };
 
   return (
     <OuterContainer>
@@ -87,6 +93,7 @@ export function ListsScreen({ navigation }: RootTabScreenProps<'ListsScreen'>) {
               icon={list.icon}
               color={list.color}
               onPress={() => navigation.navigate('TasksScreen', { listId: list.id })}
+              onPressDeleteList={() => onPressDeleteList(list.id, list.name)}
               numTasks={list.tasks.length}
               width={listWidth}
             />
