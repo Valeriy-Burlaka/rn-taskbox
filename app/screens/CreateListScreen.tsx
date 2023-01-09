@@ -4,7 +4,7 @@ import { useAppData } from 'providers/DataProvider';
 import { EditListForm } from 'components/EditListForm';
 
 
-export function CreateNewListScreen({ navigation }: RootStackScreenProps<'CreateNewListScreen'>) {
+export function CreateListScreen({ navigation }: RootStackScreenProps<'CreateListScreen'>) {
   const { createList } = useAppData();
 
   return (

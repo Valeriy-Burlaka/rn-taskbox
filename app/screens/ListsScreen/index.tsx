@@ -73,7 +73,7 @@ export function ListsScreen({ navigation }: RootTabScreenProps<'ListsScreen'>) {
           My lists
         </HeaderText>
         <AddListButton
-          onPress={() => navigation.navigate('CreateNewListScreen')}
+          onPress={() => navigation.navigate('CreateListScreen')}
         >
           <PercolateIcon
             color={'white'}
