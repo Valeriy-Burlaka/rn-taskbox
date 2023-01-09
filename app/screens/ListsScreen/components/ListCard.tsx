@@ -87,26 +87,30 @@ export function ListCard({
           onPress: onPressDeleteList,
         },
       ]}
-      preview={
-        <ListCardContainer
-          backgroundColor={color}
-          onPress={onPress}
-          width={width}
-          preview={true}
-        >
-        <ListCardStatusRow>
-          <FontelloIcon name={icon} color={color} size={28}/>
-          <ListCardTaskCounter>
-            {numTasks}
-          </ListCardTaskCounter>
-        </ListCardStatusRow>
-        <ListCardTitleRow>
-          <ListCardTitle color={color}>
-            {name}
-          </ListCardTitle>
-        </ListCardTitleRow>
-      </ListCardContainer>
-      }
+      // Meh! Preview is buggy. The preview node breaks layout.
+      // Ut takes its full size on the screen despite being invisible, so it visually looks like there is
+      // a giant padding between list cards.
+      //
+      // preview={
+      //   <ListCardContainer
+      //     backgroundColor={color}
+      //     onPress={onPress}
+      //     width={width}
+      //     preview={true}
+      //   >
+      //   <ListCardStatusRow>
+      //     <FontelloIcon name={icon} color={color} size={28}/>
+      //     <ListCardTaskCounter>
+      //       {numTasks}
+      //     </ListCardTaskCounter>
+      //   </ListCardStatusRow>
+      //   <ListCardTitleRow>
+      //     <ListCardTitle color={color}>
+      //       {name}
+      //     </ListCardTitle>
+      //   </ListCardTitleRow>
+      // </ListCardContainer>
+      // }
       previewBackgroundColor="transparent"
     >
       <ListCardContainer
