@@ -57,7 +57,8 @@ export type Props =
   Pick<TaskListModel, 'id' | 'name' | 'icon' | 'color'> &
   {
     onPress: () => void,
-    onPressDeleteList: () => void;
+    onPressDelete: () => void;
+    onPressEdit: () => void;
     numTasks: number,
     width: number
   };
@@ -68,7 +69,8 @@ export function ListCard({
   icon,
   color,
   onPress,
-  onPressDeleteList,
+  onPressDelete,
+  onPressEdit,
   numTasks,
   width,
 }: Props) {
@@ -79,13 +81,13 @@ export function ListCard({
           name: 'Edit List Details',
           icon: 'pencil',
           hasDelimiter: true,
-          onPress: () => alert('Edit details!'),
+          onPress: onPressEdit,
         },
         {
           name: 'Delete List',
           icon: 'trash',
           isDestructive: true,
-          onPress: onPressDeleteList,
+          onPress: onPressDelete,
         },
       ]}
       // Meh! Preview is buggy. The preview node breaks layout.

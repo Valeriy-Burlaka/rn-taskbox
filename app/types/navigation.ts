@@ -17,6 +17,7 @@ export type RootStackParamList = {
   Root: NavigatorScreenParams<RootTabParamList> | undefined;
   TasksScreen: { listId: string };
   CreateListScreen: undefined;
+  UpdateListScreen: { listId: string };
   NotFound: undefined;
 };
 

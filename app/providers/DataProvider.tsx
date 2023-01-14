@@ -8,7 +8,7 @@ import React, {
 import { TaskListModel } from 'model/TaskList';
 import { TaskListRepository } from 'repository/TaskListRepository';
 import { TaskData, TaskDataUpdate } from 'types/task';
-import { NewTaskList } from 'types';
+import { NewTaskList, TaskList, TaskListUpdate } from 'types';
 
 function useContextStrict<T>(context: Context<T | undefined>): T {
   const contextValue = useContext(context);
@@ -27,9 +27,10 @@ interface AppData {
   setTaskLists: (taskLists: { [key: string]: TaskListModel }) => void;
   createList: (listData: NewTaskList) => Promise<void>;
   deleteList: (listId: string) => Promise<void>;
-  createTask: (listId: string, taskData: TaskData) => void;
-  updateTask: (listId: string, taskId: string, taskData: TaskDataUpdate) => void;
-  deleteTask: (listId: string, taskId: string) => void;
+  updateList: (listId: string, { name, icon, color }: TaskListUpdate) => Promise<void>;
+  createTask: (listId: string, taskData: TaskData) => Promise<void>;
+  updateTask: (listId: string, taskId: string, taskData: TaskDataUpdate) => Promise<void>;
+  deleteTask: (listId: string, taskId: string) => Promise<void>;
 }
 
 export const DataContext = createContext<AppData | undefined>(undefined);
@@ -52,15 +53,17 @@ export const DataProvider = ({ children }: Props) => {
   const [taskLists, setTaskLists] = useState<AppData['taskLists']>({});
 
   const _updateTreeAndSyncStorage = (list: TaskListModel) => {
-    setTaskLists({
-      ...taskLists,
-      [list.id]: list,
-    });
-
-    repository.updateList(list);
+    return repository
+      .updateList(list)
+      .then(() => {
+        setTaskLists({
+          ...taskLists,
+          [list.id]: list,
+        });
+      });
   };
 
-  const createList = (listData: NewTaskList): Promise<void> => {
+  const createList = async (listData: NewTaskList): Promise<void> => {
     console.log('Creating new list:', listData);
     return repository
       .createList(listData)
@@ -72,7 +75,7 @@ export const DataProvider = ({ children }: Props) => {
       });
   };
 
-  const deleteList = (listId: string): Promise<void> => {
+  const deleteList = async (listId: string): Promise<void> => {
     console.log(`Deleting list "${listId}"`);
     return repository
       .deleteList(listId)
@@ -83,7 +86,16 @@ export const DataProvider = ({ children }: Props) => {
       });
   };
 
-  const createTask = (listId: string, taskData: TaskData) => {
+  const updateList = async (listId: string, { name, icon, color }: TaskListUpdate): Promise<void> => {
+    const list = taskLists[listId];
+    list.name = name;
+    list.icon = icon;
+    list.color = color;
+
+    return _updateTreeAndSyncStorage(list);
+  };
+
+  const createTask = async (listId: string, taskData: TaskData): Promise<void> => {
     console.log(`Creating new task in list "${listId}":`, taskData);
     const list = taskLists[listId];
     list.createTask(taskData);
@@ -97,18 +109,18 @@ export const DataProvider = ({ children }: Props) => {
     // may or may not be edited yet.
   };
 
-  const updateTask = (listId: string, taskId: string, taskData: TaskDataUpdate) => {
+  const updateTask = async (listId: string, taskId: string, taskData: TaskDataUpdate): Promise<void> => {
     const list = taskLists[listId];
     list.updateTask(taskId, taskData);
 
-    _updateTreeAndSyncStorage(list);
+    return _updateTreeAndSyncStorage(list);
   };
 
-  const deleteTask = (listId: string, taskId: string) => {
+  const deleteTask = async (listId: string, taskId: string): Promise<void> => {
     const list = taskLists[listId];
     list.deleteTask(taskId);
 
-    _updateTreeAndSyncStorage(list);
+    return _updateTreeAndSyncStorage(list);
   }
 
   const contextValue = {
@@ -116,6 +128,7 @@ export const DataProvider = ({ children }: Props) => {
     setTaskLists,
     createList,
     deleteList,
+    updateList,
     createTask,
     updateTask,
     deleteTask,

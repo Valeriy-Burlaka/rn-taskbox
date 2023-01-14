@@ -66,6 +66,10 @@ export function ListsScreen({ navigation }: RootTabScreenProps<'ListsScreen'>) {
     createDeleteAlert(listName, onConfirmDelete);
   };
 
+  const onPressEditList = (listId: string) => {
+    navigation.navigate('UpdateListScreen', { listId });
+  };
+
   return (
     <OuterContainer>
       <ListsHeaderContainer>
@@ -93,7 +97,8 @@ export function ListsScreen({ navigation }: RootTabScreenProps<'ListsScreen'>) {
               icon={list.icon}
               color={list.color}
               onPress={() => navigation.navigate('TasksScreen', { listId: list.id })}
-              onPressDeleteList={() => onPressDeleteList(list.id, list.name)}
+              onPressDelete={() => onPressDeleteList(list.id, list.name)}
+              onPressEdit={() => onPressEditList(list.id)}
               numTasks={list.tasks.length}
               width={listWidth}
             />

@@ -16,6 +16,7 @@ import { RootStackParamList, RootTabParamList } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 
 import { CreateListScreen } from 'screens/CreateListScreen';
+import { UpdateListScreen } from 'screens/UpdateListScreen';
 import { ListsScreen } from 'screens/ListsScreen';
 import TasksScreen from 'screens/TasksScreen';
 import NotFoundScreen from 'screens/NotFoundScreen';
@@ -53,6 +54,10 @@ function RootNavigator() {
         <Stack.Screen
           name="CreateListScreen"
           component={CreateListScreen}
+        />
+        <Stack.Screen
+          name="UpdateListScreen"
+          component={UpdateListScreen}
         />
       </Stack.Group>
       <Stack.Screen

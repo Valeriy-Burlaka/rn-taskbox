@@ -16,3 +16,5 @@ export interface TaskList {
 export type NewTaskList =
   Pick<TaskList, 'name' | 'color' | 'icon'> &
   Partial<Pick<TaskList, 'id' | 'tasks'>>;
+
+export type TaskListUpdate = Pick<TaskList, 'name' | 'color' | 'icon'>;

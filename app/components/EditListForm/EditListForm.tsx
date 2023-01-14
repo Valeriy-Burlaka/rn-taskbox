@@ -7,7 +7,7 @@ import { StatusBar } from 'expo-status-bar';
 import { rgba } from 'polished';
 
 import { FontelloIcon, type GlyphIcon } from 'constants/Fontello';
-import { TaskList } from 'types';
+import { TaskList, TaskListUpdate } from 'types';
 import { SCREEN_WIDTH } from 'utils/dimensions';
 
 import { palette, type PaletteColor } from 'theme/Colors';
@@ -195,14 +195,21 @@ const glyphsInCustomOrder: Array<GlyphIcon> = [
 ];
 
 interface Props {
+  initialValues?: TaskListUpdate;
   onPressClose: () => void;
-  onPressSave: ({ name, color, icon }: Pick<TaskList, 'name' | 'color' | 'icon'>) => Promise<void>;
+  onPressSave: ({ name, color, icon }: TaskListUpdate) => Promise<void>;
 }
 
-export function EditListForm({ onPressClose, onPressSave }: Props) {
-  const [activeColor, setActiveColor] = useState(palletteInCustomOrder[0]);
-  const [activeIcon, setActiveIcon] = useState(glyphsInCustomOrder[0]);
-  const [listName, setListName] = useState('');
+export function EditListForm({ initialValues, onPressClose, onPressSave }: Props) {
+  const [activeColor, setActiveColor] = useState(
+    initialValues && initialValues.color || palletteInCustomOrder[0]
+  );
+  const [activeIcon, setActiveIcon] = useState(
+    initialValues && initialValues.icon || glyphsInCustomOrder[0]
+  );
+  const [listName, setListName] = useState(
+    initialValues && initialValues.name || ''
+  );
 
   const canSaveList = Boolean(listName);
 
