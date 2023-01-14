@@ -27,11 +27,12 @@ const ListName = styled.Text<{ color: string }>`
 export type Props = Pick<TaskList, 'name' | 'color'> &
   {
     onPressBack: () => void;
-    onPressDeleteList: () => void;
+    onPressDelete: () => void;
+    onPressEdit: () => void;
   }
 ;
 
-export function Header({ name, color, onPressBack, onPressDeleteList }: Props) {
+export function Header({ name, color, onPressBack, onPressDelete, onPressEdit }: Props) {
   return (
     <HeaderContainer>
 
@@ -53,13 +54,13 @@ export function Header({ name, color, onPressBack, onPressDeleteList }: Props) {
             name: 'Edit List Details',
             icon: 'pencil',
             hasDelimiter: true,
-            onPress: () => alert('Edit details!'),
+            onPress: onPressEdit,
           },
           {
             name: 'Delete List',
             icon: 'trash',
             isDestructive: true,
-            onPress: onPressDeleteList,
+            onPress: onPressDelete,
           },
         ]}
         dropdownMenuMode={true}

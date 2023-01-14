@@ -82,6 +82,10 @@ export function TaskList({ listId }: { listId: string }) {
     createDeleteAlert(thisList.name, onConfirmDelete);
   };
 
+  const onPressEditList = () => {
+    navigation.navigate('UpdateListScreen', { listId: thisList.id });
+  };
+
   return (
     <SafeAreaView style={{ flex: 1}}>
       <StatusBar />
@@ -90,7 +94,8 @@ export function TaskList({ listId }: { listId: string }) {
         name={thisList.name}
         color={thisList.color}
         onPressBack={() => navigation.goBack()}
-        onPressDeleteList={onPressDeleteList}
+        onPressDelete={onPressDeleteList}
+        onPressEdit={onPressEditList}
       />
 
       <TaskListView
