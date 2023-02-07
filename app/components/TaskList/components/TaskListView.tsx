@@ -8,18 +8,16 @@ import { Task, Props as TaskProps } from 'components/Task';
 
 import LoadingRow from './LoadingRow';
 
-type Props = {
+export type Props = {
+  color: string;
   loading: boolean;
   tasks: TaskData[];
-} &
-  Pick<TaskProps, 'onArchiveTask'>
-  &
-  Pick<TaskProps, 'onPinTask'>
-  &
-  Pick<TaskProps, 'onUpdateTaskTitle'>
-  &
-  Pick<TaskProps, 'onSaveTask'>
-;
+  onArchiveTask: TaskProps['onArchive'];
+  onPinTask: TaskProps['onPin'];
+  onEndEditingTask: TaskProps['onEndEditing'];
+  onFocusTask: TaskProps['onFocus'];
+  onSubmitEditingTask: TaskProps['onSubmitEditing'];
+};
 
 const ListItemsContainer = styled(SafeAreaView)`
   flex: 1;
@@ -27,19 +25,15 @@ const ListItemsContainer = styled(SafeAreaView)`
 `;
 
 export function TaskListView({
+  color,
   loading,
   tasks,
   onArchiveTask,
+  onEndEditingTask,
+  onFocusTask,
   onPinTask,
-  onSaveTask,
-  onUpdateTaskTitle,
+  onSubmitEditingTask,
 }: Props) {
-  const events = {
-    onPinTask,
-    onArchiveTask,
-    onSaveTask,
-    onUpdateTaskTitle,
-  };
 
   if (loading) {
     return (
@@ -60,7 +54,20 @@ export function TaskListView({
       <FlatList
         data={tasks}
         keyExtractor={task => task.id}
-        renderItem={({ item }) => <Task key={item.id} task={item} {...events} />}
+        renderItem={({ item }) => {
+          return (
+            <Task
+              key={item.id}
+              color={color}
+              task={item}
+              onArchive={onArchiveTask}
+              onEndEditing={onEndEditingTask}
+              onFocus={onFocusTask}
+              onPin={onPinTask}
+              onSubmitEditing={onSubmitEditingTask}
+            />
+          );
+        }}
       />
     </ListItemsContainer>
   );

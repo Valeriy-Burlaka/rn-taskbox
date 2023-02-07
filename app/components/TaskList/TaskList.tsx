@@ -1,12 +1,15 @@
+import { useRef, useState } from 'react';
+import { Keyboard } from 'react-native';
+
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 
+import { TaskId } from 'model/Task';
+
 import { useAppData } from 'providers/DataProvider';
 import { TaskStates } from 'types/task';
 import { createDeleteAlert } from 'utils/deleteListAlert';
-import { idGenerator } from 'utils/id';
-
 
 import { Header } from './components/Header';
 import { AddTaskButton } from './components/AddTaskButton';
@@ -17,11 +20,35 @@ export function TaskList({ listId }: { listId: string }) {
 
   const { taskLists, deleteList, createTask, updateTask, deleteTask } = useAppData();
 
+  const [editing, setEditing] = useState(false);
+  const taskInEditId = useRef<string | null>(null);
+
+  // console.log('Is editing?', editing);
+  // console.log('Task in edit:', taskInEditId.current);
+
   // console.log(`TasksList: ID: ${listId}`);
   // console.log(`TasksList: Data from context:`, taskLists[listId]);
 
   const thisList = taskLists[listId];
   const tasks = thisList.tasks;
+
+  const onPressDeleteList = () => {
+    const onConfirmDelete = () => {
+      deleteList(thisList.id);
+      navigation.navigate('ListsScreen');
+    };
+
+    createDeleteAlert(thisList.name, onConfirmDelete);
+  };
+
+  const onPressEditList = () => {
+    navigation.navigate('UpdateListScreen', { listId: thisList.id });
+  };
+
+  const onPressAddButton = () => {
+    // enterEditTaskMode();
+    createNewTaskForEditing();
+  };
 
   const onArchiveTask = (taskId: string) => {
     const t = thisList.getTaskById(taskId);
@@ -50,40 +77,54 @@ export function TaskList({ listId }: { listId: string }) {
     });
   };
 
-  const onUpdateTaskTitle = (taskId: string, title: string) => {
-    updateTask(listId, taskId, { title });
+  // inout ended
+  const onEndEditingTask = (taskId: string, taskTitle: string, taskState?: TaskStates) => {
+    saveTask(taskId, taskTitle, taskState);
   };
 
-  const onSaveTask = (taskId: string) => {
-    // console.log(`Saving task ${taskId}`);
-
-    const t = thisList.getTaskById(taskId);
-    if (!t.title) {
-      deleteTask(listId, taskId);
+  // keyboard's "Submit" button pressed
+  const onSubmitEditingTask = (taskId: string, taskTitle: string) => {
+    console.log(`onSubmitEditingTask, task title: "${taskTitle}"`);
+    if (taskTitle) {
+      console.log('Can create a new task for editing');
+      createNewTaskForEditing();
     } else {
-      updateTask(listId, taskId, { state: TaskStates.TASK_INBOX });
+      exitEditTaskMode();
     }
   };
 
-  const onPressAddButton = () => {
+  const createNewTaskForEditing = () => {
+    const newId = new TaskId().toString();
     createTask(listId, {
-      id: `task-${idGenerator()}`,
+      id: newId,
       title: '',
       state: TaskStates.TASK_NEW,
     });
   };
 
-  const onPressDeleteList = () => {
-    const onConfirmDelete = () => {
-      deleteList(thisList.id);
-      navigation.navigate('ListsScreen');
-    };
+  const saveTask = (taskId: string, title: string, state?: TaskStates): boolean => {
+    console.log(`Saving task ${taskId}; title: "${title}"; state: "${state}"`);
 
-    createDeleteAlert(thisList.name, onConfirmDelete);
+    if (!title) {
+      console.log('Task with no title - deleting it');
+      deleteTask(listId, taskId);
+
+      return false;
+    } else {
+      const t = thisList.getTaskById(taskId);
+      updateTask(listId, taskId, { title, state: state || t.state });
+
+      return true;
+    }
   };
 
-  const onPressEditList = () => {
-    navigation.navigate('UpdateListScreen', { listId: thisList.id });
+  const enterEditTaskMode = () => {
+    setEditing(true);
+  };
+
+  const exitEditTaskMode = () => {
+    setEditing(false);
+    Keyboard.dismiss();
   };
 
   return (
@@ -93,18 +134,23 @@ export function TaskList({ listId }: { listId: string }) {
       <Header
         name={thisList.name}
         color={thisList.color}
+        isEditingTasks={editing}
+        onPressDone={exitEditTaskMode}
         onPressBack={() => navigation.goBack()}
         onPressDelete={onPressDeleteList}
         onPressEdit={onPressEditList}
       />
 
       <TaskListView
+        color={thisList.color}
         loading={false}
-        onArchiveTask={onArchiveTask}
-        onPinTask={onPinTask}
-        onSaveTask={onSaveTask}
-        onUpdateTaskTitle={onUpdateTaskTitle}
         tasks={Object.values(tasks)}
+
+        onArchiveTask={onArchiveTask}
+        onEndEditingTask={onEndEditingTask}
+        onFocusTask={enterEditTaskMode}
+        onPinTask={onPinTask}
+        onSubmitEditingTask={onSubmitEditingTask}
       />
 
       <AddTaskButton

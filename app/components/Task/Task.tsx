@@ -1,18 +1,20 @@
 import * as React from 'react';
 import * as Haptics from 'expo-haptics';
-import { TextInput, TouchableOpacity, SafeAreaView, View } from 'react-native';
+import { TouchableOpacity, SafeAreaView } from 'react-native';
 import styled from '@emotion/native';
 
 import PercolateIcons from 'constants/Percolate';
 import { TaskData, TaskStates } from 'types/task';
 
-export interface Props {
+import { TaskCheckmark } from './components/TaskCheckmark';
+import { Props as TaskTitleProps, TaskTitle } from './components/TaskTitle';
+
+export type Props = {
+  color: string;
   task: TaskData;
-  onArchiveTask: (id: string) => void;
-  onPinTask: (id: string) => void;
-  onSaveTask: (id: string) => void;
-  onUpdateTaskTitle: (id: string, title: string) => void;
-}
+  onArchive: (id: string) => void;
+  onPin: (id: string) => void;
+} & TaskTitleProps;
 
 const Container = styled(SafeAreaView)`
   background-color: white;
@@ -23,93 +25,33 @@ const Container = styled(SafeAreaView)`
   height: 48px;
 `;
 
-const Checkbox = styled(View)`
-  border-color: #26c6da;
-  border-style: solid;
-  border-width: 2px;
-  border-radius: 100px;
-  background-color: transparent;
-  height: 24px;
-  width: 24px;
-`;
-
-const TaskTitle = styled(TextInput)`
-  background-color: transparent;
-  flex: 1;
-  font-family: 'NunitoSans';
-  font-size: 14px;
-  font-style: normal;
-  line-height: 20px;
-`;
-
-const TaskTitle__Archived = styled(TaskTitle)`
-  color: #aaa;
-  text-decoration-line: line-through;
-  text-decoration-style: solid;
-`;
-
 export default function Task({
-  task: { id, title, state },
-  onArchiveTask,
-  onPinTask,
-  onSaveTask,
-  onUpdateTaskTitle,
+  color,
+  task,
+  onArchive,
+  onPin,
+  onEndEditing,
+  onSubmitEditing,
+  onFocus,
 }: Props) {
+
+  const { id, title, state } = task;
+
   return (
     <Container>
 
-      <TouchableOpacity
-        hitSlop={{
-          left: 10,
-          right: 10,
-          top: 10,
-          bottom: 10,
-        }}
-        style={{
-          paddingHorizontal: 12,
-        }}
-        onPress={() => {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-          onArchiveTask(id);
-        }}
-      >
-        {state !== TaskStates.TASK_ARCHIVED ? (
-          <Checkbox />
-        ) : (
-          <PercolateIcons name="check" size={26} color={'#2cc5d2'} />
-        )}
-      </TouchableOpacity>
+      <TaskCheckmark
+        checked={state === TaskStates.TASK_ARCHIVED}
+        color={color}
+        onPress={() => onArchive(id)}
+      />
 
-      {state === TaskStates.TASK_NEW && (
-        <TaskTitle
-          autoFocus={true}
-          // onBlur={() => console.log('Input blurred')}
-          // onFocus={() => console.log('Input focused')}
-          onEndEditing={() => {
-            // console.log('Ended editing the task title');
-            onSaveTask(id);
-          }}
-          onChange={(e) => onUpdateTaskTitle(id, e.nativeEvent.text)}
-        />
-      )}
-
-      {state === TaskStates.TASK_ARCHIVED && (
-        <TaskTitle__Archived
-          value={title}
-          editable={false}
-        />
-      )}
-
-      {(state === TaskStates.TASK_PINNED || state === TaskStates.TASK_INBOX) && (
-        <TaskTitle
-          value={title}
-          onEndEditing={() => {
-            // console.log(`Ended editing "${id}""`);
-            onSaveTask(id);
-          }}
-          onChange={(e) => onUpdateTaskTitle(id, e.nativeEvent.text)}
-        />
-      )}
+      <TaskTitle
+        task={task}
+        onFocus={onFocus}
+        onEndEditing={onEndEditing}
+        onSubmitEditing={onSubmitEditing}
+      />
 
       {state !== TaskStates.TASK_NEW && (
         <TouchableOpacity
@@ -121,7 +63,7 @@ export default function Task({
           }}
           onPress={() => {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            onPinTask(id);
+            onPin(id);
           }}
           style={{
             paddingHorizontal: 12,
