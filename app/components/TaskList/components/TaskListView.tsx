@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { FlatList, SafeAreaView } from 'react-native';
+import { SafeAreaView } from 'react-native';
+import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import styled from '@emotion/native';
 
 import { TaskData } from 'types/task';
@@ -51,7 +52,7 @@ export function TaskListView({
 
   return (
     <ListItemsContainer>
-      <FlatList
+      <KeyboardAwareFlatList
         data={tasks}
         keyExtractor={task => task.id}
         renderItem={({ item }) => {
