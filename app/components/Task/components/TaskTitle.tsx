@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { TextInput } from 'react-native';
 import styled from '@emotion/native';
 
@@ -33,10 +33,33 @@ export function TaskTitle({
   onSubmitEditing,
 }: Props) {
   const [title, setTitle] = useState(task.title);
+  const titleRef = useRef(task.title);
 
   const { id, state } = task;
 
   const returnKeyType = title ? 'next' : 'done';
+
+  useEffect(() => {
+    // When a 'Back' button pressed, we navigate to the Home screen and unmount the TaskList component immediately.
+    // When this happens, the `TextInput` component won't fire any of its "exit" events, i.e., `onBlur`, `onEndEditing`,
+    // `onSubmitEditing`, - no of these events will be triggered. If the user edited some task and then pressed "Back",
+    // they will lose this last edit, so we attempt to save their work before the TaskTitle component unmounts.
+    //
+    // We call for save only if there are any unsaved changes to avoid the waste work (otherwise, if the list contains many tasks,
+    // each will call for a save, despite that only one task can be edited at a moment).
+    return () => {
+      console.log(`Unmounting task "${id}" with title "${title}" (previous title = "${task.title}", title Ref: "${titleRef.current}")`);
+      if (titleRef.current !== task.title) {
+        console.log('There are some unsaved changes');
+        onEndEditing(id, titleRef.current);
+      }
+    }
+  }, []);
+
+  const changeTitle = (value: string) => {
+    setTitle(value);
+    titleRef.current = value;
+  };
 
   /**
    * Newly created task.
@@ -61,19 +84,18 @@ export function TaskTitle({
       <StyledInput
         autoFocus={true}
         value={title}
-        onChange={(e) => setTitle(e.nativeEvent.text)}
+        onChange={(e) => changeTitle(e.nativeEvent.text)}
 
-        // Called when text input ends. This is an ideal moment to save our data to persistent storage
+        // Called when text input ends.
         // https://reactnative.dev/docs/textinput?redirected#onendediting
         onEndEditing={() => {
-          console.log(`End editing task "${id}" with title "${title}"`);
+          // console.log(`End editing task "${id}" with title "${title}"`);
           onEndEditing(id, title, TaskStates.TASK_INBOX);
         }}
         onFocus={onFocus}
         // This event means the text input's submit button is pressed
         onSubmitEditing={() => {
-          console.log(`Submit edit task "${id}" with title "${title}"`);
-          // Add new task for editing or delete this one and exit the edit mode
+          // console.log(`Submit edit task "${id}" with title "${title}"`);
           onSubmitEditing(id, title);
         }}
         returnKeyType={returnKeyType}
@@ -102,19 +124,16 @@ export function TaskTitle({
     return (
       <StyledInput
         value={title}
-        onChange={(e) => setTitle(e.nativeEvent.text)}
+        onChange={(e) => changeTitle(e.nativeEvent.text)}
         onEndEditing={() => {
-          console.log(`End editing task "${id}" with title "${title}"`);
-          // onEndEditingTask(id);
-          // Save task (or delete if empty)
+          // console.log(`End editing task "${id}" with title "${title}"`);
           onEndEditing(id, title);
         }}
         onSubmitEditing={() => {
-          console.log(`Submit edit task "${id}" with title "${title}"`);
-          // Add new task for editing or delete this one and exit the edit mode
+          // console.log(`Submit edit task "${id}" with title "${title}"`);
           onSubmitEditing(id, title);
         }}
-        onBlur={() => console.log(`Task blurred: "${id}", title: "${title}"`)}
+        // onBlur={() => console.log(`Task blurred: "${id}", title: "${title}"`)}
         onFocus={onFocus}
         returnKeyType={returnKeyType}
       />
