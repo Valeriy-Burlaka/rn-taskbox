@@ -18,7 +18,7 @@ const HeaderContainer = styled.View<{}>`
   padding-right: ${spacings.space50};
 `;
 
-const ListName = styled.Text<{ color: string }>`
+const HeaderText = styled.Text<{ color: string }>`
   color: ${({ color }) => color};
   font-family: NunitoSans-Bold;
   font-size: ${textSizes.regular};
@@ -52,18 +52,26 @@ export function Header({
         <Ionicons name="chevron-back" size={30} color={color} />
       </TouchableOpacity>
 
-      <ListName
+      <HeaderText
         color={color}
       >
         {name}
-      </ListName>
+      </HeaderText>
 
 
       {isEditingTasks ? (
-        <TouchableOpacity onPress={onPressDone}>
-          <Text>
+        <TouchableOpacity
+          hitSlop={{
+            left: 10,
+            right: 10,
+            top: 10,
+            bottom: 10,
+          }}
+          onPress={onPressDone}
+        >
+          <HeaderText color={color}>
             Done
-          </Text>
+          </HeaderText>
         </TouchableOpacity>
       ) : (
         <ContextMenu

@@ -7,7 +7,7 @@ import { StatusBar } from 'expo-status-bar';
 import { rgba } from 'polished';
 
 import { FontelloIcon, type GlyphIcon } from 'constants/Fontello';
-import { TaskList, TaskListUpdate } from 'types';
+import { TaskListUpdate } from 'types';
 import { SCREEN_WIDTH } from 'utils/dimensions';
 
 import { palette, type PaletteColor } from 'theme/Colors';
