@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 
 import { ContextMenu } from 'components/ContextMenu';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -22,6 +22,12 @@ const HeaderText = styled.Text<{ color: string }>`
   color: ${({ color }) => color};
   font-family: NunitoSans-Bold;
   font-size: ${textSizes.regular};
+`;
+
+const ButtonContainer = styled.View`
+  flex: 0.2;
+  align-items: center;
+  justify-content: flex-end;
 `;
 
 export type Props = Pick<TaskList, 'name' | 'color'> &
@@ -58,46 +64,47 @@ export function Header({
         {name}
       </HeaderText>
 
-
-      {isEditingTasks ? (
-        <TouchableOpacity
-          hitSlop={{
-            left: 10,
-            right: 10,
-            top: 10,
-            bottom: 10,
-          }}
-          onPress={onPressDone}
-        >
-          <HeaderText color={color}>
-            Done
-          </HeaderText>
-        </TouchableOpacity>
-      ) : (
-        <ContextMenu
-          actions={[
-            {
-              name: 'Edit List Details',
-              icon: 'pencil',
-              hasDelimiter: true,
-              onPress: onPressEdit,
-            },
-            {
-              name: 'Delete List',
-              icon: 'trash',
-              isDestructive: true,
-              onPress: onPressDelete,
-            },
-          ]}
-          dropdownMenuMode={true}
-        >
-          <Ionicons
-            color={color}
-            name="ios-ellipsis-horizontal-circle"
-            size={26}
-          />
-      </ContextMenu>
-      )}
+      <ButtonContainer>
+        {isEditingTasks ? (
+          <TouchableOpacity
+            hitSlop={{
+              left: 10,
+              right: 10,
+              top: 10,
+              bottom: 10,
+            }}
+            onPress={onPressDone}
+          >
+            <HeaderText color={color}>
+              Done
+            </HeaderText>
+          </TouchableOpacity>
+        ) : (
+          <ContextMenu
+            actions={[
+              {
+                name: 'Edit List Details',
+                icon: 'pencil',
+                hasDelimiter: true,
+                onPress: onPressEdit,
+              },
+              {
+                name: 'Delete List',
+                icon: 'trash',
+                isDestructive: true,
+                onPress: onPressDelete,
+              },
+            ]}
+            dropdownMenuMode={true}
+          >
+            <Ionicons
+              color={color}
+              name="ios-ellipsis-horizontal-circle"
+              size={26}
+            />
+          </ContextMenu>
+        )}
+      </ButtonContainer>
     </HeaderContainer>
   );
 }
