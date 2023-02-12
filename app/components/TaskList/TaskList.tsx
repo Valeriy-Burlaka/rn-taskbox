@@ -1,6 +1,7 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { Keyboard } from 'react-native';
 
+import * as Haptics from 'expo-haptics';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -20,8 +21,7 @@ export function TaskList({ listId }: { listId: string }) {
 
   const { taskLists, deleteList, createTask, updateTask, deleteTask } = useAppData();
 
-  const [editing, setEditing] = useState(false);
-  const taskInEditId = useRef<string | null>(null);
+  const [isEditingTasks, setEditingTasks] = useState(false);
 
   // console.log('Is editing?', editing);
   // console.log('Task in edit:', taskInEditId.current);
@@ -46,7 +46,10 @@ export function TaskList({ listId }: { listId: string }) {
   };
 
   const onPressAddButton = () => {
-    // enterEditTaskMode();
+    Haptics.impactAsync(
+      Haptics.ImpactFeedbackStyle.Light
+    );
+
     createNewTaskForEditing();
   };
 
@@ -64,6 +67,10 @@ export function TaskList({ listId }: { listId: string }) {
   };
 
   const onPinTask = (taskId: string) => {
+    Haptics.impactAsync(
+      Haptics.ImpactFeedbackStyle.Light
+    );
+
     const t = thisList.getTaskById(taskId);
     // console.log('Pinning task. id: ', taskId, 'task: ', t);
     // console.log('All tasks:', JSON.stringify(tasks, null, 2));
@@ -84,9 +91,9 @@ export function TaskList({ listId }: { listId: string }) {
 
   // keyboard's "Submit" button pressed
   const onSubmitEditingTask = (taskId: string, taskTitle: string) => {
-    console.log(`onSubmitEditingTask, task title: "${taskTitle}"`);
+    // console.log(`onSubmitEditingTask, task title: "${taskTitle}"`);
     if (taskTitle) {
-      console.log('Can create a new task for editing');
+      // console.log('Can create a new task for editing');
       createNewTaskForEditing();
     } else {
       exitEditTaskMode();
@@ -103,10 +110,10 @@ export function TaskList({ listId }: { listId: string }) {
   };
 
   const saveTask = (taskId: string, title: string, state?: TaskStates): boolean => {
-    console.log(`Saving task ${taskId}; title: "${title}"; state: "${state}"`);
+    // console.log(`Saving task ${taskId}; title: "${title}"; state: "${state}"`);
 
     if (!title) {
-      console.log('Task with no title - deleting it');
+      // console.log('Task with no title - deleting it');
       deleteTask(listId, taskId);
 
       return false;
@@ -119,11 +126,11 @@ export function TaskList({ listId }: { listId: string }) {
   };
 
   const enterEditTaskMode = () => {
-    setEditing(true);
+    setEditingTasks(true);
   };
 
   const exitEditTaskMode = () => {
-    setEditing(false);
+    setEditingTasks(false);
     Keyboard.dismiss();
   };
 
@@ -134,7 +141,7 @@ export function TaskList({ listId }: { listId: string }) {
       <Header
         name={thisList.name}
         color={thisList.color}
-        isEditingTasks={editing}
+        isEditingTasks={isEditingTasks}
         onPressDone={exitEditTaskMode}
         onPressBack={() => navigation.goBack()}
         onPressDelete={onPressDeleteList}
