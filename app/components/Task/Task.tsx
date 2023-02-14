@@ -17,7 +17,6 @@ export type Props = {
 } & TaskTitleProps;
 
 const Container = styled(SafeAreaView)`
-  background-color: white;
   align-items: center;
   justify-content: space-around;
   flex-direction: row;
@@ -35,7 +34,7 @@ export default function Task({
   onFocus,
 }: Props) {
 
-  const { id, title, state } = task;
+  const { id, state } = task;
 
   return (
     <Container>

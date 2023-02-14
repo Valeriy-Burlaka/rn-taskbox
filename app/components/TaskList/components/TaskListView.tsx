@@ -1,9 +1,12 @@
 import * as React from 'react';
-import { SafeAreaView } from 'react-native';
+import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import styled from '@emotion/native';
 
 import { TaskData } from 'types/task';
+
+import { FontelloIcon, type GlyphIcon } from 'constants/Fontello';
+import { spacings } from 'theme/Spacings';
 
 import { Task, Props as TaskProps } from 'components/Task';
 
@@ -11,6 +14,7 @@ import LoadingRow from './LoadingRow';
 
 export type Props = {
   color: string;
+  icon: GlyphIcon;
   loading: boolean;
   tasks: TaskData[];
   onArchiveTask: TaskProps['onArchive'];
@@ -22,11 +26,11 @@ export type Props = {
 
 const ListItemsContainer = styled(SafeAreaView)`
   flex: 1;
-  background-color: 'white';
 `;
 
 export function TaskListView({
   color,
+  icon,
   loading,
   tasks,
   onArchiveTask,
@@ -52,6 +56,24 @@ export function TaskListView({
 
   return (
     <ListItemsContainer>
+
+      <View style={[
+        {
+          flex: 1,
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+          opacity: 0.4,
+        },
+        StyleSheet.absoluteFillObject,
+      ]}>
+        <FontelloIcon
+          name={icon}
+          color={color}
+          size={spacings.unitless.space400}
+        />
+      </View>
+
       <KeyboardAwareFlatList
         data={tasks}
         keyExtractor={task => task.id}
@@ -70,6 +92,7 @@ export function TaskListView({
           );
         }}
       />
+
     </ListItemsContainer>
   );
 }

@@ -150,6 +150,7 @@ export function TaskList({ listId }: { listId: string }) {
 
       <TaskListView
         color={thisList.color}
+        icon={thisList.icon}
         loading={false}
         tasks={Object.values(tasks)}
 

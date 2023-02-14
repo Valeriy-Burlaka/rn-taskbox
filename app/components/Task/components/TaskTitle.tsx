@@ -48,9 +48,9 @@ export function TaskTitle({
     // We call for save only if there are any unsaved changes to avoid the waste work (otherwise, if the list contains many tasks,
     // each will call for a save, despite that only one task can be edited at a moment).
     return () => {
-      console.log(`Unmounting task "${id}" with title "${title}" (previous title = "${task.title}", title Ref: "${titleRef.current}")`);
+      // console.log(`Unmounting task "${id}" with title "${title}" (previous title = "${task.title}", title Ref: "${titleRef.current}")`);
       if (titleRef.current !== task.title) {
-        console.log('There are some unsaved changes');
+        // console.log('There are some unsaved changes');
         onEndEditing(id, titleRef.current);
       }
     }
