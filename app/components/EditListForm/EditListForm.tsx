@@ -151,10 +151,6 @@ const getNumberAsPixels = (size: number): string => {
   return `${size}px`;
 };
 
-const getPixelsAsNumber = (pixels: string): number => {
-  return Number(pixels.replace('px', ''));
-};
-
 const glyphsInCustomOrder: Array<GlyphIcon> = [
   'list-bullet',
   'shopping-cart',
@@ -215,10 +211,7 @@ export function EditListForm({ initialValues, onPressClose, onPressSave }: Props
 
   const selectableItemsPerRow = 6;
   const selectableItemSize = useMemo(() => {
-    return getItemSizeOnScreen(
-      selectableItemsPerRow,
-      getPixelsAsNumber(spacings.space100)
-    );
+    return getItemSizeOnScreen(selectableItemsPerRow, spacings.unitless.space100);
   }, [selectableItemsPerRow]);
 
   return (
