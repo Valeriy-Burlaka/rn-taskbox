@@ -4,11 +4,13 @@ import styled from '@emotion/native';
 
 import { TaskData, TaskStates } from 'types/task';
 
+import { textSizes } from 'theme/Typography';
+
 const StyledInput = styled(TextInput)`
   background-color: transparent;
   flex: 1;
   font-family: 'NunitoSans';
-  font-size: 14px;
+  font-size: ${textSizes.regular};
   font-style: normal;
   line-height: 20px;
 `;

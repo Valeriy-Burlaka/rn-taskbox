@@ -4,14 +4,16 @@ import styled from '@emotion/native';
 
 import PercolateIcons from 'constants/Percolate';
 
+import { textSizes } from 'theme/Typography';
+
 const Checkbox = styled.View<{ color: string }>`
   border-color: ${({ color }) => color};
   border-style: solid;
   border-width: 2px;
   border-radius: 100px;
   background-color: transparent;
-  height: 24px;
-  width: 24px;
+  height: ${textSizes.medium};
+  width: ${textSizes.medium};
 `;
 
 export interface Props {
