@@ -37,9 +37,9 @@ class TaskListId {
 // 2. A class constructs itself from input data object, whoch comes from a storage (JSON.parsed(string))
 // 3. We know _nothing_ about what's stored in that object, - it may be corrupted, have missing fields, etc.
 // 4. So, by definition, this input really has the features of _any_ object.
-// 5. Thus, it's reasonable to treat it as `any` type, - don't rely on any properties availability 
+// 5. Thus, it's reasonable to treat it as `any` type, - don't rely on any properties availability
 //    before we validated them.
-// 
+//
 // interface TaskListData {
 //   id?: string;
 //   tasks?: TaskData[];
@@ -54,7 +54,7 @@ export class TaskListModel implements TaskList {
   public color: PaletteColor;
   public icon: GlyphIcon;
   private _tasks: Map<string, TaskData>;
-  private _tasksOrder: 'legacy' | 'by-date-added' = 'legacy';
+  private _tasksOrder: 'legacy' | 'by-date-created' = 'by-date-created';
 
   /**
    * Orders tasks by state (PINNED -> ACTIVE -> ARCHIVED), and then alphabetically
@@ -65,6 +65,22 @@ export class TaskListModel implements TaskList {
         return t1.title.toLowerCase().charCodeAt(0) - t2.title.toLowerCase().charCodeAt(0);
       } else {
         return t1.state - t2.state;
+      }
+    });
+
+    return tasksInOrder;
+  }
+
+  /**
+   * Orders tasks by state (PINNED -> ACTIVE -> ARCHIVED), and then by their creation date, with tasks created later
+   * appearing at the end of the list.
+   */
+  private orderTasksByDateCreated(tasks: TaskData[]): TaskData[] {
+    const tasksInOrder = [ ...tasks ].sort((t1: TaskData, t2: TaskData) => {
+      if (t1.state !== t2.state) {
+        return t1.state - t2.state;
+      } else {
+        return t1.createdAt - t2.createdAt;
       }
     });
 
@@ -87,7 +103,9 @@ export class TaskListModel implements TaskList {
   }
 
   public orderTasks(tasks: TaskData[]): TaskData[] {
-    if (this._tasksOrder === 'legacy') {
+    if (this._tasksOrder === 'by-date-created') {
+      return this.orderTasksByDateCreated(tasks);
+    } else if (this._tasksOrder === 'legacy') {
       return this.orderTasks__Legacy(tasks);
     } else {
       return tasks;
@@ -179,9 +197,9 @@ export class TaskListModel implements TaskList {
 // Don't fully understand the mechanics but it's very neat:
 // https://stackoverflow.com/questions/36382299/is-it-possible-to-define-a-type-string-literal-union-within-a-class-in-typescr
 // https://stackoverflow.com/questions/29844959/enum-inside-class-typescript-definition-file/33301725#33301725
-// 
+//
 // The type can't be defined inside a class, nor can it be returned from a class method. The `module` declaration fixes it:
-// 
+//
 // export module ListId {
 //   export type IndexType = `list-${string}`;
 // }
