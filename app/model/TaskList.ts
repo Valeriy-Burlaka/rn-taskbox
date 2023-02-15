@@ -17,7 +17,7 @@ class TaskListId {
   constructor () {
     this._id = this.generateId();
   }
-  
+
   public static get COMMON_PREFIX() {
     return 'list-';
   }
@@ -70,7 +70,7 @@ export class TaskListModel implements TaskList {
 
     return tasksInOrder;
   }
-  
+
   constructor(taskList: NewTaskList) {
     this.name = taskList.name;
     this.color = taskList.color;
@@ -80,10 +80,10 @@ export class TaskListModel implements TaskList {
 
     this._tasks = new Map();
     if (taskList.tasks) {
-      for (const task of this.orderTasks(taskList.tasks)) {
+      for (const task of taskList.tasks) {
         this._tasks.set(task.id, task);
       }
-    }  
+    }
   }
 
   public orderTasks(tasks: TaskData[]): TaskData[] {
