@@ -7,6 +7,7 @@ import React, {
 
 import { TaskListModel } from 'model/TaskList';
 import { TaskListRepository } from 'repository/TaskListRepository';
+
 import { TaskData, TaskDataUpdate } from 'types/task';
 import { NewTaskList, TaskList, TaskListUpdate } from 'types';
 
@@ -28,7 +29,7 @@ interface AppData {
   createList: (listData: NewTaskList) => Promise<void>;
   deleteList: (listId: string) => Promise<void>;
   updateList: (listId: string, { name, icon, color }: TaskListUpdate) => Promise<void>;
-  createTask: (listId: string, taskData: TaskData) => Promise<void>;
+  createTask: (listId: string) => TaskData;
   updateTask: (listId: string, taskId: string, taskData: TaskDataUpdate) => Promise<void>;
   deleteTask: (listId: string, taskId: string) => Promise<void>;
 }
@@ -95,18 +96,20 @@ export const DataProvider = ({ children }: Props) => {
     return _updateTreeAndSyncStorage(list);
   };
 
-  const createTask = async (listId: string, taskData: TaskData): Promise<void> => {
-    console.log(`Creating new task in list "${listId}":`, taskData);
+  const createTask = (listId: string): TaskData => {
     const list = taskLists[listId];
-    list.createTask(taskData);
+    const newTask = list.createTask();
 
+    // No need to sync with storage here because we've created only a blank task here, which
+    // may or may not be edited yet.
     setTaskLists({
       ...taskLists,
       [list.id]: list,
     });
 
-    // No need to sync with storage here because we've created only a blank task here, which
-    // may or may not be edited yet.
+    console.log(`Created new task in list "${listId}":`, newTask);
+
+    return newTask;
   };
 
   const updateTask = async (listId: string, taskId: string, taskData: TaskDataUpdate): Promise<void> => {

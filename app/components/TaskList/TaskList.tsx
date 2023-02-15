@@ -6,8 +6,6 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 
-import { TaskId } from 'model/Task';
-
 import { useAppData } from 'providers/DataProvider';
 import { TaskStates } from 'types/task';
 import { createDeleteAlert } from 'utils/deleteListAlert';
@@ -101,12 +99,7 @@ export function TaskList({ listId }: { listId: string }) {
   };
 
   const createNewTaskForEditing = () => {
-    const newId = new TaskId().toString();
-    createTask(listId, {
-      id: newId,
-      title: '',
-      state: TaskStates.TASK_NEW,
-    });
+    createTask(listId);
   };
 
   const saveTask = (taskId: string, title: string, state?: TaskStates): boolean => {

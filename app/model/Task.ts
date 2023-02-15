@@ -1,3 +1,4 @@
+import { TaskData, TaskStates } from 'types';
 import { idGenerator } from 'utils/id';
 
 export class TaskId {
@@ -21,5 +22,28 @@ export class TaskId {
 
   public toString() {
     return this._id;
+  }
+}
+
+export class Task {
+  public id: TaskData['id'];
+  public title: TaskData['title'];
+  public state: TaskData['state'];
+  public createdAt: TaskData['createdAt'];
+
+  constructor () {
+    this.id = new TaskId().toString();
+    this.title = '';
+    this.state = TaskStates.TASK_NEW;
+    this.createdAt = Date.now();
+  }
+
+  toJson (): TaskData {
+    return {
+      id: this.id,
+      title: this.title,
+      state: this.state,
+      createdAt: this.createdAt,
+    };
   }
 }

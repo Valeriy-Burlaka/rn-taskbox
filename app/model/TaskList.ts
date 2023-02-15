@@ -1,12 +1,15 @@
 import { type GlyphIcon } from 'constants/Fontello';
 import { palette, type PaletteColor } from 'theme/Colors';
+import { idGenerator } from 'utils/id';
+
+import { Task } from 'model/Task';
+
 import { NewTaskList, TaskList } from 'types/taskList';
 import { TaskData, TaskDataUpdate } from 'types/task';
-import { idGenerator } from 'utils/id';
 
 class TaskListId {
   private _id;
-  
+
   private generateId () {
     return `${TaskListId.COMMON_PREFIX}${idGenerator()}`;
   }
@@ -102,8 +105,11 @@ export class TaskListModel implements TaskList {
     return t;
   }
 
-  public createTask(taskData: TaskData): void {
-    this._tasks.set(taskData.id, taskData);
+  public createTask(): TaskData {
+    const newTask = new Task();
+    this._tasks.set(newTask.id, newTask.toJson());
+
+    return newTask.toJson();
   }
 
   public updateTask(taskId: string, taskData: TaskDataUpdate): void {

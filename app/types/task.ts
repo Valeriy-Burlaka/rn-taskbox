@@ -7,26 +7,11 @@ export enum TaskStates {
   TASK_ARCHIVED = 3,
 }
 
-export class TaskId {
-  private _id;
-
-  private generateId () {
-    return `task-${idGenerator()}`;
-  }
-
-  constructor () {
-    this._id = this.generateId();
-  }
-
-  toString() {
-    return this._id;
-  }
-}
-
 export interface TaskData {
   id: string;
   title: string;
   state: TaskStates;
+  createdAt: number;
 }
 
 export type TaskDataUpdate = Pick<TaskData, 'title'> | Pick<TaskData, 'state'>;
