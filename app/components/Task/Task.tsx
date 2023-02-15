@@ -18,6 +18,7 @@ export type Props = {
 
 const Container = styled(SafeAreaView)`
   align-items: center;
+  background-color: white;
   justify-content: space-around;
   flex-direction: row;
   flex-wrap: nowrap;
