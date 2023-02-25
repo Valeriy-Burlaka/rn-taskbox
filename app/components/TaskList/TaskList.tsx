@@ -12,6 +12,7 @@ import { createDeleteAlert } from 'utils/deleteListAlert';
 
 import { Header } from './components/Header';
 import { AddTaskButton } from './components/AddTaskButton';
+import { SortingTaskListView } from './components/SortingTaskListView';
 import { TaskListView } from './components/TaskListView';
 
 export function TaskList({ listId }: { listId: string }) {
@@ -139,31 +140,42 @@ export function TaskList({ listId }: { listId: string }) {
       <Header
         name={thisList.name}
         color={thisList.color}
-        isEditingTasks={isEditingTasks}
-        onPressDone={exitEditTaskMode}
+        isEditingTasks={isEditingTasks || isSortingTasks}
+        onPressDone={() => {
+          if (isEditingTasks) exitEditTaskMode();
+          if (isSortingTasks) setSortingTasks(false);
+        }}
         onPressBack={() => navigation.goBack()}
         onPressMenuOptionDelete={onPressDeleteList}
         onPressMenuOptionEdit={onPressEditList}
         onPressMenuOptionSort={onPressSortTasks}
       />
 
-      <TaskListView
-        color={thisList.color}
-        icon={thisList.icon}
-        loading={false}
-        tasks={Object.values(tasks)}
+      {isSortingTasks ? (
+        <SortingTaskListView
+          tasks={tasks}
+        />
+      ) : (
+        <TaskListView
+          color={thisList.color}
+          icon={thisList.icon}
+          loading={false}
+          tasks={tasks}
 
-        onArchiveTask={onArchiveTask}
-        onEndEditingTask={onEndEditingTask}
-        onFocusTask={enterEditTaskMode}
-        onPinTask={onPinTask}
-        onSubmitEditingTask={onSubmitEditingTask}
-      />
+          onArchiveTask={onArchiveTask}
+          onEndEditingTask={onEndEditingTask}
+          onFocusTask={enterEditTaskMode}
+          onPinTask={onPinTask}
+          onSubmitEditingTask={onSubmitEditingTask}
+        />
+      )}
 
-      <AddTaskButton
-        color={thisList.color}
-        onPress={onPressAddButton}
-      />
+      {!isSortingTasks ? (
+        <AddTaskButton
+          color={thisList.color}
+          onPress={onPressAddButton}
+        />
+      ) : null}
 
     </SafeAreaView>
   );
