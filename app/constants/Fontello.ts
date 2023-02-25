@@ -7,6 +7,7 @@ export const glyphMap = {
   'bicycle': 61958,
   'bitcoin': 61786,
   'bookmark-empty': 61591,
+  'braille': 59409,
   'building': 61687,
   'cab': 61881,
   'calendar': 59400,
@@ -29,6 +30,7 @@ export const glyphMap = {
   'mail': 59402,
   'map-o': 62072,
   'medkit': 61690,
+  'menu': 61641,
   'mic': 61744,
   'money': 61654,
   'moon': 61830,
@@ -56,19 +58,19 @@ export const glyphMap = {
 export type GlyphIcon = keyof typeof glyphMap;
 
 // Alternatively, can be loaded using `createIconSetFromFontello`, like:
-// 
+//
 // import fontelloConfig from 'assets/icon/fontello/config.json';
-// 
+//
 // and then:
-// 
+//
 // const FontelloIcon = createIconSetFromFontello(fontelloConfig, 'fontello', 'fontello-icons.ttf');
-// 
+//
 // but I don't understand the benefit, because we still have to load and cache the `.ttf` font asset,
 // and the "fontello" config seems a bit redundant.
 export const FontelloIcon = createIconSet(glyphMap, 'fontello', 'fontello-icons.ttf');
 
 /**
  * Script to generate a glyphMap from fontello 'demo.html' page:
- * 
+ *
  * Object.fromEntries(Array.from(document.querySelectorAll('.span3')).map(el => [ el.querySelector('.i-name').innerText, el.querySelector('.i-code').innerText ]).map( ([name, hexCode]) => [name.replace('icon-', ''), parseInt(hexCode, 16)]))
  */

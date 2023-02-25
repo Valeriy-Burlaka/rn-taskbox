@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native';
+import { View, TextInput } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import styled from '@emotion/native';
 
@@ -6,6 +6,8 @@ import { TaskData } from 'types/task';
 
 import { spacings } from 'theme/Spacings';
 import { textSizes } from 'theme/Typography';
+
+import { FontelloIcon } from 'constants/Fontello';
 
 const Container = styled(View)`
   align-items: center;
@@ -17,7 +19,7 @@ const Container = styled(View)`
   padding-horizontal: ${spacings.space75};
 `;
 
-const StyledText = styled(Text)`
+const StyledText = styled(TextInput)`
   background-color: transparent;
   flex: 1;
   font-family: 'NunitoSans';
@@ -33,7 +35,14 @@ interface Props {
 export function SortableTask({ title }: Props) {
   return (
     <Container>
-      <StyledText>{title}</StyledText>
+      <StyledText editable={false}>
+        {title}
+      </StyledText>
+      <FontelloIcon
+        color='lightgrey'
+        name='braille'
+        size={spacings.unitless.space125}
+      />
     </Container>
   )
 }

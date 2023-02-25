@@ -13,7 +13,7 @@ export function SortingTaskListView({ tasks }: Props) {
 
   return (
     <ScrollView>
-      {tasks.map((t) => {
+      {sortableTasks.map((t) => {
         return (
           <SortableTask key={t.id} title={t.title} />
         );
