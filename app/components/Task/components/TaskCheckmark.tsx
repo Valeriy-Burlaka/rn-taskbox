@@ -31,9 +31,6 @@ export function TaskCheckmark({ checked, color, onPress }: Props) {
         top: 10,
         bottom: 10,
       }}
-      style={{
-        paddingHorizontal: 12,
-      }}
       onPress={() => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
         onPress();

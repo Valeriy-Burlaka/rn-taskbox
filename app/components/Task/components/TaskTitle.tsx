@@ -4,6 +4,7 @@ import styled from '@emotion/native';
 
 import { TaskData, TaskStates } from 'types/task';
 
+import { spacings } from 'theme/Spacings';
 import { textSizes } from 'theme/Typography';
 
 const StyledInput = styled(TextInput)`
@@ -13,6 +14,7 @@ const StyledInput = styled(TextInput)`
   font-size: ${textSizes.regular};
   font-style: normal;
   line-height: 20px;
+  padding-horizontal: ${spacings.space75};
 `;
 
 const StyledInput__Archived = styled(StyledInput)`

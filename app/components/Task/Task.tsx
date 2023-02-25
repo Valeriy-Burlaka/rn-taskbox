@@ -1,10 +1,12 @@
 import * as React from 'react';
 import * as Haptics from 'expo-haptics';
-import { TouchableOpacity, SafeAreaView } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import styled from '@emotion/native';
 
 import PercolateIcons from 'constants/Percolate';
 import { TaskData, TaskStates } from 'types/task';
+
+import { spacings } from 'theme/Spacings';
 
 import { TaskCheckmark } from './components/TaskCheckmark';
 import { Props as TaskTitleProps, TaskTitle } from './components/TaskTitle';
@@ -16,13 +18,14 @@ export type Props = {
   onPin: (id: string) => void;
 } & TaskTitleProps;
 
-const Container = styled(SafeAreaView)`
+const Container = styled(View)`
   align-items: center;
   background-color: white;
   justify-content: space-around;
   flex-direction: row;
   flex-wrap: nowrap;
   height: 48px;
+  padding-horizontal: ${spacings.space75};
 `;
 
 export default function Task({
@@ -64,9 +67,6 @@ export default function Task({
           onPress={() => {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             onPin(id);
-          }}
-          style={{
-            paddingHorizontal: 12,
           }}
         >
           <PercolateIcons
