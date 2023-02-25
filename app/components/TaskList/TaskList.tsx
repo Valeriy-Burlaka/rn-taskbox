@@ -20,6 +20,7 @@ export function TaskList({ listId }: { listId: string }) {
   const { taskLists, deleteList, createTask, updateTask, deleteTask } = useAppData();
 
   const [isEditingTasks, setEditingTasks] = useState(false);
+  const [isSortingTasks, setSortingTasks] = useState(false);
 
   // console.log('Is editing?', editing);
   // console.log('Task in edit:', taskInEditId.current);
@@ -42,6 +43,10 @@ export function TaskList({ listId }: { listId: string }) {
   const onPressEditList = () => {
     navigation.navigate('UpdateListScreen', { listId: thisList.id });
   };
+
+  const onPressSortTasks = () => {
+    setSortingTasks(true);
+  }
 
   const onPressAddButton = () => {
     Haptics.impactAsync(
@@ -128,7 +133,7 @@ export function TaskList({ listId }: { listId: string }) {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1}}>
+    <SafeAreaView style={{ flex: 1 }}>
       <StatusBar />
 
       <Header
@@ -137,8 +142,9 @@ export function TaskList({ listId }: { listId: string }) {
         isEditingTasks={isEditingTasks}
         onPressDone={exitEditTaskMode}
         onPressBack={() => navigation.goBack()}
-        onPressDelete={onPressDeleteList}
-        onPressEdit={onPressEditList}
+        onPressMenuOptionDelete={onPressDeleteList}
+        onPressMenuOptionEdit={onPressEditList}
+        onPressMenuOptionSort={onPressSortTasks}
       />
 
       <TaskListView

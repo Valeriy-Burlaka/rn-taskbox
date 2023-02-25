@@ -35,8 +35,9 @@ export type Props = Pick<TaskList, 'name' | 'color'> &
     isEditingTasks: boolean;
     onPressDone: () => void;
     onPressBack: () => void;
-    onPressDelete: () => void;
-    onPressEdit: () => void;
+    onPressMenuOptionDelete: () => void;
+    onPressMenuOptionEdit: () => void;
+    onPressMenuOptionSort: () => void;
   }
 ;
 
@@ -46,8 +47,9 @@ export function Header({
   isEditingTasks,
   onPressDone,
   onPressBack,
-  onPressDelete,
-  onPressEdit,
+  onPressMenuOptionDelete,
+  onPressMenuOptionEdit,
+  onPressMenuOptionSort,
 }: Props) {
   return (
     <HeaderContainer>
@@ -85,14 +87,19 @@ export function Header({
               {
                 name: 'Edit List Details',
                 icon: 'pencil',
+                onPress: onPressMenuOptionEdit,
+              },
+              {
+                name: 'Sort Reminders',
+                icon: 'arrow.up.arrow.down',
                 hasDelimiter: true,
-                onPress: onPressEdit,
+                onPress: onPressMenuOptionSort,
               },
               {
                 name: 'Delete List',
                 icon: 'trash',
                 isDestructive: true,
-                onPress: onPressDelete,
+                onPress: onPressMenuOptionDelete,
               },
             ]}
             dropdownMenuMode={true}
