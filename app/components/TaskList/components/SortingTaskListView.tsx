@@ -9,7 +9,7 @@ import {
 
 import { TaskData, TaskStates } from 'types/task';
 
-import { SortableTask } from './SortableTask';
+import { SortableTask, type TaskPosition } from './SortableTask';
 
 interface Props {
   tasks: TaskData[];
@@ -17,11 +17,10 @@ interface Props {
 
 export function SortingTaskListView({ tasks }: Props) {
   const [isReady, setReady] = useState(false);
-  console.log(isReady);
 
   const sortableTasks = tasks.filter(t => t.state === TaskStates.TASK_INBOX);
 
-  const positions = sortableTasks.map((task) => {
+  const positions: TaskPosition[] = sortableTasks.map((task) => {
     return {
       id: task.id,
       order: useSharedValue(0),
@@ -31,7 +30,7 @@ export function SortingTaskListView({ tasks }: Props) {
       y: useSharedValue(0),
       height: useSharedValue(0),
       width: useSharedValue(0),
-      ready: useSharedValue(false),
+      isReady: useSharedValue(false),
     };
   });
 
@@ -53,11 +52,11 @@ export function SortingTaskListView({ tasks }: Props) {
                 position.originalY.value = y;
                 position.height.value = height;
                 position.width.value = width;
-                position.ready.value = true;
+                position.isReady.value = true;
 
                 runOnUI(() => {
                   "worklet";
-                  if (positions.every((pos) => pos.ready.value === true)) {
+                  if (positions.every((pos) => pos.isReady.value === true)) {
                     runOnJS(setReady)(true);
                   }
                 })();
@@ -75,11 +74,13 @@ export function SortingTaskListView({ tasks }: Props) {
 
   return (
     <ScrollView>
-      {sortableTasks.map((t) => {
+      {sortableTasks.map((task, index) => {
         return (
           <SortableTask
-            key={t.id}
-            title={t.title}
+            key={task.id}
+            title={task.title}
+            positions={positions}
+            index={index}
           />
         );
       })}
