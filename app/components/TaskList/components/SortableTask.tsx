@@ -90,13 +90,20 @@ export function SortableTask({ title, positions, index }: Props) {
   const isReturningToOriginalX = useSharedValue(false);
   const isReturningToOriginalY = useSharedValue(false);
 
+  const hapticsImpact = () => {
+    "worklet";
+    runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Medium);
+  };
+
   const translation = useVector();
   const onGestureEvent = useAnimatedGestureHandler<GestureEvent<PanGestureHandlerEventPayload>>({
     onStart: () => {
+      hapticsImpact();
       translation.x.value = originalX.value;
       translation.y.value = originalY.value;
     },
     onEnd: () => {
+      hapticsImpact();
       isGestureActive.value = false;
     },
     onActive: ({ translationX, translationY }) => {
