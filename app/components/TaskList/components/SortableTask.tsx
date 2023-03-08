@@ -47,8 +47,6 @@ const StyledText = styled(TextInput)`
 export type TaskPosition = {
   id: string,
   order: SharedValue<number>,
-  originalX: SharedValue<number>,
-  originalY: SharedValue<number>,
   x: SharedValue<number>,
   y: SharedValue<number>,
   height: SharedValue<number>,
@@ -92,6 +90,7 @@ export function SortableTask({ title, positions, index }: Props) {
 
   const hapticsImpact = () => {
     "worklet";
+
     runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Medium);
   };
 
@@ -99,8 +98,8 @@ export function SortableTask({ title, positions, index }: Props) {
   const onGestureEvent = useAnimatedGestureHandler<GestureEvent<PanGestureHandlerEventPayload>>({
     onStart: () => {
       hapticsImpact();
-      translation.x.value = originalX.value;
-      translation.y.value = originalY.value;
+      translation.x.value = 0;
+      translation.y.value = 0;
     },
     onEnd: () => {
       hapticsImpact();
@@ -108,8 +107,8 @@ export function SortableTask({ title, positions, index }: Props) {
     },
     onActive: ({ translationX, translationY }) => {
       isGestureActive.value = true;
-      translation.x.value = translationX;
-      translation.y.value = translationY;
+      translation.x.value = translationX + originalX.value;
+      translation.y.value = translationY + originalY.value;
     },
   });
 
@@ -118,7 +117,7 @@ export function SortableTask({ title, positions, index }: Props) {
       return translation.x.value;
     }
 
-    if (translation.x.value !== originalX.value) {
+    if (translation.x.value !== 0) {
       isReturningToOriginalX.value = true;
       return withSpring(
         originalX.value,
@@ -138,7 +137,7 @@ export function SortableTask({ title, positions, index }: Props) {
       return translation.y.value;
     }
 
-    if (translation.y.value !== originalY.value) {
+    if (translation.y.value !== 0) {
       isReturningToOriginalY.value = true;
       return withSpring(
         originalY.value,
@@ -155,7 +154,14 @@ export function SortableTask({ title, positions, index }: Props) {
 
   const animatedStyles = useAnimatedStyle(() => {
     return {
-      backgroundColor: isGestureActive.value || isReturningToOriginalX.value || isReturningToOriginalY.value ? '#EFF3F3' : 'white',
+      flex: 1,
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      backgroundColor: (isGestureActive.value || isReturningToOriginalX.value || isReturningToOriginalY.value)
+        ? '#EFF3F3'
+        : 'white',
       transform: [
         { translateX: translateX.value },
         { translateY: translateY.value },

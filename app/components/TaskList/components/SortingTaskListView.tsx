@@ -24,8 +24,6 @@ export function SortingTaskListView({ tasks }: Props) {
     return {
       id: task.id,
       order: useSharedValue(0),
-      originalX: useSharedValue(0),
-      originalY: useSharedValue(0),
       x: useSharedValue(0),
       y: useSharedValue(0),
       height: useSharedValue(0),
@@ -48,8 +46,8 @@ export function SortingTaskListView({ tasks }: Props) {
               }) => {
                 const position = positions[index];
                 position.order.value = index;
-                position.originalX.value = x;
-                position.originalY.value = y;
+                position.x.value = x;
+                position.y.value = y;
                 position.height.value = height;
                 position.width.value = width;
                 position.isReady.value = true;
