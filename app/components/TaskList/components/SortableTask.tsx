@@ -8,6 +8,7 @@ import Animated, {
   useSharedValue,
   useDerivedValue,
   withSpring,
+  runOnJS,
 } from 'react-native-reanimated';
 import {
   GestureEvent,
@@ -86,65 +87,73 @@ export function SortableTask({ title, positions, index }: Props) {
   const originalY = useSharedValue(position.y.value);
 
   const isGestureActive = useSharedValue(false);
-  const isAnimatedTransitionActiveX = useSharedValue(false);
-  const isAnimatedTransitionActiveY = useSharedValue(false);
+  const isReturningToOriginalX = useSharedValue(false);
+  const isReturningToOriginalY = useSharedValue(false);
 
   const translation = useVector();
-  const translateX = useDerivedValue(() => {
-    if (isGestureActive.value) {
-      return translation.x.value;
-    }
-
-    isAnimatedTransitionActiveX.value = true;
-    return withSpring(
-      originalX.value,
-      {
-        damping: 30,
-        stiffness: 200,
-      },
-      () => (isAnimatedTransitionActiveX.value = false),
-    );
-  });
-  const translateY = useDerivedValue(() => {
-    if (isGestureActive.value) {
-      return translation.y.value;
-    }
-
-    isAnimatedTransitionActiveY.value = true;
-    return withSpring(
-      originalY.value,
-      {
-        // mass: 5,
-        damping: 30,
-        stiffness: 200,
-      },
-      () => (isAnimatedTransitionActiveY.value = false),
-    );
-  });
-
   const onGestureEvent = useAnimatedGestureHandler<GestureEvent<PanGestureHandlerEventPayload>>({
     onStart: () => {
       translation.x.value = originalX.value;
       translation.y.value = originalY.value;
-      isGestureActive.value = true;
     },
     onEnd: () => {
       isGestureActive.value = false;
     },
     onActive: ({ translationX, translationY }) => {
+      isGestureActive.value = true;
       translation.x.value = translationX;
       translation.y.value = translationY;
     },
   });
 
+  const translateX = useDerivedValue(() => {
+    if (isGestureActive.value) {
+      return translation.x.value;
+    }
+
+    if (translation.x.value !== originalX.value) {
+      isReturningToOriginalX.value = true;
+      return withSpring(
+        originalX.value,
+        {
+          damping: 30,
+          stiffness: 200,
+        },
+        () => (isReturningToOriginalX.value = false),
+      );
+    }
+
+    return originalX.value;
+  });
+
+  const translateY = useDerivedValue(() => {
+    if (isGestureActive.value) {
+      return translation.y.value;
+    }
+
+    if (translation.y.value !== originalY.value) {
+      isReturningToOriginalY.value = true;
+      return withSpring(
+        originalY.value,
+        {
+          damping: 30,
+          stiffness: 200,
+        },
+        () => (isReturningToOriginalY.value = false),
+      );
+    }
+
+    return originalY.value;
+  });
+
   const animatedStyles = useAnimatedStyle(() => {
     return {
-      backgroundColor: isGestureActive.value || isAnimatedTransitionActiveX.value || isAnimatedTransitionActiveY.value ? '#EFF3F3' : 'white',
+      backgroundColor: isGestureActive.value || isReturningToOriginalX.value || isReturningToOriginalY.value ? '#EFF3F3' : 'white',
       transform: [
         { translateX: translateX.value },
         { translateY: translateY.value },
       ],
-      zIndex: isGestureActive.value || isAnimatedTransitionActiveX.value || isAnimatedTransitionActiveY.value ? 100 : 0,
+      zIndex: isGestureActive.value || isReturningToOriginalX.value || isReturningToOriginalY.value ? 100 : 0,
     };
   });
 
