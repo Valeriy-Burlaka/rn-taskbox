@@ -63,7 +63,7 @@ interface Props {
 export function SortableTask({ title, positions, index }: Props) {
 
   // Layout hasn't been calculated yet, - return non-animated version
-  if (!(positions && index)) {
+  if (positions === undefined || index === undefined) {
     return (
       <Container>
         <StyledText editable={false}>
@@ -80,9 +80,9 @@ export function SortableTask({ title, positions, index }: Props) {
     );
   }
 
-  const position = positions[index];
-  const originalX = useSharedValue(position.x.value);
-  const originalY = useSharedValue(position.y.value);
+  const thisElement = positions[index];
+  const originalX = useDerivedValue(() => (thisElement.x.value));
+  const originalY = useDerivedValue(() => (thisElement.y.value));
 
   const isGestureActive = useSharedValue(false);
   const isReturningToOriginalX = useSharedValue(false);
@@ -94,21 +94,97 @@ export function SortableTask({ title, positions, index }: Props) {
     runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Medium);
   };
 
+  function byOrder(a: TaskPosition, b: TaskPosition) {
+    "worklet";
+    return a.order.value > b.order.value ? 1 : -1;
+  }
+
+  const between = (value: number, rangeStart: number, rangeEnd: number) => {
+    "worklet";
+
+    return value >= rangeStart && value <= rangeEnd;
+  };
+
+  const swapElements = (allElements: TaskPosition[], fromPosition: number, toPosition: number) => {
+    "worklet";
+
+    const copy = allElements.slice().sort(byOrder);
+    copy[toPosition] = allElements[fromPosition];
+    copy[fromPosition] = allElements[toPosition];
+
+    return copy.map((element, index) => {
+      element.order.value = index;
+    });
+  };
+
+  const recalculateLayout = (allElements: TaskPosition[]) => {
+    "worklet";
+
+    const elementHeight = allElements[0].height.value;
+    allElements.sort(byOrder).forEach((elem) => {
+      elem.y.value = elem.order.value * elementHeight;
+    });
+  };
+
   const translation = useVector();
-  const onGestureEvent = useAnimatedGestureHandler<GestureEvent<PanGestureHandlerEventPayload>>({
-    onStart: () => {
+  const onGestureEvent = useAnimatedGestureHandler<
+    GestureEvent<PanGestureHandlerEventPayload>,
+    { x: number, y: number }
+  >({
+    onStart: (_event, ctx) => {
       hapticsImpact();
-      translation.x.value = 0;
-      translation.y.value = 0;
+      ctx.x = originalX.value;
+      ctx.y = originalY.value;
+      translation.x.value = originalX.value;
+      translation.y.value = originalY.value;
     },
     onEnd: () => {
       hapticsImpact();
       isGestureActive.value = false;
     },
-    onActive: ({ translationX, translationY }) => {
+    onActive: ({ translationX, translationY }, ctx) => {
       isGestureActive.value = true;
-      translation.x.value = translationX + originalX.value;
-      translation.y.value = translationY + originalY.value;
+      translation.x.value = translationX + ctx.x;
+      translation.y.value = translationY + ctx.y;
+
+      // Since I really operate only in one dimension (Y-axis), maybe check only 2 elements, top and bottom from this element?
+      for (let i = 0; i < positions.length; i++) {
+        const comparedElement = positions[i];
+
+        if (thisElement.id === comparedElement.id) {
+          continue;
+        }
+
+        if (
+          // FIXME: This condition works well only when dragging up, because the y-drug-anchor is at the top of the drag'able element.
+          // Hence, when dragging down, this condition evaluates to `true` when the drag'able element covers an element below almost entirely.
+          (
+            translationY < 0 && between(
+              translation.y.value,
+              comparedElement.y.value + comparedElement.height.value * 0.25,
+              comparedElement.y.value + comparedElement.height.value * 0.75,
+            )
+          ) || (
+            translationY > 0 && between(
+              translation.y.value + thisElement.height.value,
+              comparedElement.y.value + comparedElement.height.value * 0.25,
+              comparedElement.y.value + comparedElement.height.value * 0.75,
+            )
+          )
+        ) {
+          hapticsImpact();
+          console.log('Elements before swap, this element (title / order[0] / y-position / y-cumulative-translation):', thisElement.title, thisElement.order.value, thisElement.y.value, translation.y.value);
+          console.log('Elements before swap, compared element (title / order[0] / y-position / y-cumulative-translation):', comparedElement.title, comparedElement.order.value, comparedElement.y.value, comparedElement.y.value);
+          swapElements(positions, thisElement.order.value, comparedElement.order.value);
+          console.log('Elements AFTER swap, this element (title / order[0] / y-position / y-cumulative-translation):', thisElement.title, thisElement.order.value, thisElement.y.value, translation.y.value);
+          console.log('Elements AFTER swap, compared element (title / order[0] / y-position / y-cumulative-translation):', comparedElement.title, comparedElement.order.value, comparedElement.y.value, comparedElement.y.value);
+          recalculateLayout(positions);
+          console.log('Elements AFTER RE-CalculateLayout, this element (title / order[0] / y-position / y-cumulative-translation):', thisElement.title, thisElement.order.value, thisElement.y.value, translation.y.value);
+          console.log('Elements AFTER RE-CalculateLayout, compared element (title / order[0] / y-position / y-cumulative-translation):', comparedElement.title, comparedElement.order.value, comparedElement.y.value, comparedElement.y.value);
+
+          break;
+        }
+      }
     },
   });
 
@@ -130,6 +206,11 @@ export function SortableTask({ title, positions, index }: Props) {
     }
 
     return originalX.value;
+  });
+
+  const originalYTracker = useDerivedValue(() => {
+    console.log('Orignal Y changed for element:', thisElement.title, thisElement.y.value, originalY.value);
+    return thisElement.y.value;
   });
 
   const translateY = useDerivedValue(() => {
@@ -159,6 +240,9 @@ export function SortableTask({ title, positions, index }: Props) {
       top: 0,
       left: 0,
       right: 0,
+      opacity: (isGestureActive.value || isReturningToOriginalX.value || isReturningToOriginalY.value)
+      ? 0.5
+      : 1,
       backgroundColor: (isGestureActive.value || isReturningToOriginalX.value || isReturningToOriginalY.value)
         ? '#EFF3F3'
         : 'white',

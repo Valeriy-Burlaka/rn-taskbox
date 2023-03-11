@@ -23,6 +23,7 @@ export function SortingTaskListView({ tasks }: Props) {
   const positions: TaskPosition[] = sortableTasks.map((task) => {
     return {
       id: task.id,
+      title: task.title,
       order: useSharedValue(0),
       x: useSharedValue(0),
       y: useSharedValue(0),
