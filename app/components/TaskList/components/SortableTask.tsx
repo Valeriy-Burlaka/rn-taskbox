@@ -3,18 +3,13 @@ import * as Haptics from 'expo-haptics';
 import styled from '@emotion/native';
 import Animated, {
   useAnimatedStyle,
-  useAnimatedGestureHandler,
   type SharedValue,
   useSharedValue,
   useDerivedValue,
   withSpring,
   runOnJS,
 } from 'react-native-reanimated';
-import {
-  GestureEvent,
-  PanGestureHandler,
-  type PanGestureHandlerEventPayload,
-} from 'react-native-gesture-handler';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { useVector } from 'react-native-redash';
 
 import { TaskData } from 'types/task';
@@ -128,31 +123,35 @@ export function SortableTask({ title, positions, index }: Props) {
   const isReturningToOriginalY = useSharedValue(false);
 
   const translation = useVector();
-  const onGestureEvent = useAnimatedGestureHandler<
-    GestureEvent<PanGestureHandlerEventPayload>,
-    { x: number, y: number }
-  >({
-    onStart: (_event, ctx) => {
+  const translationContext = useVector();
+
+  const panGesture = Gesture.Pan()
+    .onBegin(() => {
       hapticImpact();
-      ctx.x = originalX.value;
-      ctx.y = originalY.value;
+      translationContext.x.value = originalX.value;
+      translationContext.y.value = originalY.value;
       translation.x.value = originalX.value;
       translation.y.value = originalY.value;
-    },
-    onEnd: () => {
+    })
+    .onEnd(() => {
       hapticImpact();
       isGestureActive.value = false;
-    },
-    onActive: ({ translationX, translationY }, ctx) => {
+      translationContext.x.value = 0;
+      translationContext.y.value = 0;
+    })
+    .onUpdate(({ translationX, translationY }) => {
+      console.log(translationY);
       isGestureActive.value = true;
-      translation.x.value = translationX + ctx.x;
-      translation.y.value = translationY + ctx.y;
+      translation.x.value = translationX + translationContext.x.value;
+      translation.y.value = translationY + translationContext.y.value;
 
       // FIXME: Since I really operate only in one dimension (Y-axis), maybe check only 2 elements, top and bottom from this element?
       for (let i = 0; i < positions.length; i++) {
         const comparedElement = positions[i];
 
-        if (thisElement.id === comparedElement.id) {
+        // console.log('COMPARING element ', thisElement.title, thisElement.order.value, 'to element: ', comparedElement.title, comparedElement.order.value, `(at index: ${i})`);
+        // if (thisElement.id === comparedElement.id) {
+        if (thisElement.order.value === comparedElement.order.value) {
           continue;
         }
 
@@ -184,8 +183,7 @@ export function SortableTask({ title, positions, index }: Props) {
           break;
         }
       }
-    },
-  });
+    });
 
   const translateX = useDerivedValue(() => {
     if (isGestureActive.value) {
@@ -194,6 +192,7 @@ export function SortableTask({ title, positions, index }: Props) {
 
     if (translation.x.value !== 0) {
       isReturningToOriginalX.value = true;
+
       return withSpring(
         originalX.value,
         {
@@ -207,11 +206,6 @@ export function SortableTask({ title, positions, index }: Props) {
     return originalX.value;
   });
 
-  const originalYTracker = useDerivedValue(() => {
-    console.log('Orignal Y changed for element:', thisElement.title, thisElement.y.value, originalY.value);
-    return thisElement.y.value;
-  });
-
   const translateY = useDerivedValue(() => {
     if (isGestureActive.value) {
       return translation.y.value;
@@ -219,6 +213,7 @@ export function SortableTask({ title, positions, index }: Props) {
 
     if (translation.y.value !== 0) {
       isReturningToOriginalY.value = true;
+
       return withSpring(
         originalY.value,
         {
@@ -229,8 +224,25 @@ export function SortableTask({ title, positions, index }: Props) {
       );
     }
 
-    return originalY.value;
+    return withSpring(originalY.value);
   });
+
+  const originalYTracker = useDerivedValue(() => {
+    console.log('Orignal Y changed for element:', thisElement.title, thisElement.y.value, originalY.value);
+    return thisElement.y.value;
+  }, [thisElement.title, thisElement.y.value, originalY.value]);
+
+  const translationYTracker = useDerivedValue(() => {
+    console.log('TRANSLATION Y changed for element:', thisElement.title, translation.y.value);
+
+    return translation.y;
+  }, [translation.y.value]);
+
+  const orderTracker = useDerivedValue(() => {
+    console.log('Element ORDER changed:', thisElement.title, thisElement.order.value);
+
+    return thisElement.order;
+  }, [thisElement.order.value]);
 
   const animatedStyles = useAnimatedStyle(() => {
     return {
@@ -260,17 +272,15 @@ export function SortableTask({ title, positions, index }: Props) {
       <StyledText editable={false}>
         {title}
       </StyledText>
-      <PanGestureHandler
-        onGestureEvent={onGestureEvent}
-      >
-        <Animated.View>
+      <GestureDetector gesture={panGesture}>
+        <View>
           <FontelloIcon
             color='lightgrey'
             name='braille'
             size={spacings.unitless.space125}
           />
-        </Animated.View>
-      </PanGestureHandler>
+        </View>
+      </GestureDetector>
     </Container>
   )
 }
