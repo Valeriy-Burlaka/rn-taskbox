@@ -1,12 +1,16 @@
+import { useMemo } from 'react';
 import { TouchableOpacity } from 'react-native';
 
-import { ContextMenu } from 'components/ContextMenu';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import styled from '@emotion/native';
+
+import { SORT_TASKS_FEATURE_ENABLED } from 'config/featureFlags';
 
 import { TaskList } from 'types';
 import { spacings } from 'theme/Spacings';
 import { textSizes } from 'theme/Typography';
+
+import { ContextMenu, type MenuAction } from 'components/ContextMenu';
 
 const HeaderContainer = styled.View<{}>`
   flex-direction: row;
@@ -51,6 +55,32 @@ export function Header({
   onPressMenuOptionEdit,
   onPressMenuOptionSort,
 }: Props) {
+  const menuActions = useMemo(() => {
+    const result: MenuAction[] = [
+      {
+        name: 'Edit List Details',
+        icon: 'pencil',
+        onPress: onPressMenuOptionEdit,
+      },
+      {
+        name: 'Delete List',
+        icon: 'trash',
+        isDestructive: true,
+        onPress: onPressMenuOptionDelete,
+      },
+    ];
+    if (SORT_TASKS_FEATURE_ENABLED) {
+      result.splice(1, 0, {
+        name: 'Sort Reminders',
+        icon: 'arrow.up.arrow.down',
+        hasDelimiter: true,
+        onPress: onPressMenuOptionSort,
+      });
+    }
+
+    return result;
+  }, [SORT_TASKS_FEATURE_ENABLED]);
+
   return (
     <HeaderContainer>
 
@@ -83,25 +113,7 @@ export function Header({
           </TouchableOpacity>
         ) : (
           <ContextMenu
-            actions={[
-              {
-                name: 'Edit List Details',
-                icon: 'pencil',
-                onPress: onPressMenuOptionEdit,
-              },
-              {
-                name: 'Sort Reminders',
-                icon: 'arrow.up.arrow.down',
-                hasDelimiter: true,
-                onPress: onPressMenuOptionSort,
-              },
-              {
-                name: 'Delete List',
-                icon: 'trash',
-                isDestructive: true,
-                onPress: onPressMenuOptionDelete,
-              },
-            ]}
+            actions={menuActions}
             dropdownMenuMode={true}
           >
             <Ionicons

@@ -10,6 +10,7 @@ import { spacings } from 'theme/Spacings';
 
 import { TaskCheckmark } from './components/TaskCheckmark';
 import { Props as TaskTitleProps, TaskTitle } from './components/TaskTitle';
+import { SORT_TASKS_FEATURE_ENABLED } from 'config/featureFlags';
 
 export type Props = {
   color: string;
@@ -56,26 +57,28 @@ export default function Task({
         onSubmitEditing={onSubmitEditing}
       />
 
-      {state !== TaskStates.TASK_NEW && (
-        <TouchableOpacity
-          hitSlop={{
-            left: 10,
-            right: 10,
-            top: 10,
-            bottom: 10,
-          }}
-          onPress={() => {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            onPin(id);
-          }}
-        >
-          <PercolateIcons
-            name="star"
-            size={24}
-            color={state == TaskStates.TASK_PINNED ? '#26c6da' : '#eee' }
-          />
-        </TouchableOpacity>
-      )}
+      {(!SORT_TASKS_FEATURE_ENABLED && state !== TaskStates.TASK_NEW) ?
+        (
+          <TouchableOpacity
+            hitSlop={{
+              left: 10,
+              right: 10,
+              top: 10,
+              bottom: 10,
+            }}
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              onPin(id);
+            }}
+          >
+            <PercolateIcons
+              name="star"
+              size={24}
+              color={state == TaskStates.TASK_PINNED ? '#26c6da' : '#eee' }
+            />
+          </TouchableOpacity>
+        ) : null
+      }
 
     </Container>
   );
