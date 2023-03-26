@@ -1,6 +1,5 @@
-import { View } from 'components/Themed';
-import { useState } from 'react';
-import { ScrollView } from 'react-native';
+import { useEffect, useRef, useState, } from 'react';
+import { FlatList, ScrollView, View, Dimensions } from 'react-native';
 import {
   useSharedValue,
   runOnUI,
@@ -15,8 +14,24 @@ interface Props {
   tasks: TaskData[];
 }
 
+const { width, height } = Dimensions.get('window');
+console.log('Screen width:', width, 'height:', height)
+
 export function SortingTaskListView({ tasks }: Props) {
   const [isReady, setReady] = useState(false);
+  const flatListRef = useRef<FlatList>(null);
+
+  useEffect(() => {
+    console.log('FlatList ref methods:', flatListRef?.current?.getNativeScrollRef)
+    console.log('FlatList ref methods, scrollToOffset:', flatListRef?.current?.scrollToOffset)
+    // const scrollRef = flatListRef?.current?.getNativeScrollRef();
+    // console.log(scrollRef)
+    // console.log('FlatList scrollRef:', scrollRef)
+    // console.log('FlatList scrollRef methods:', scrollRef.scrollToOffset)
+    if (flatListRef?.current?.scrollToOffset) {
+      flatListRef?.current?.scrollToOffset({ offset: 960, animated: true });
+    }
+  },[flatListRef.current])
 
   const sortableTasks = tasks.filter(t => t.state === TaskStates.TASK_INBOX);
 
@@ -72,17 +87,38 @@ export function SortingTaskListView({ tasks }: Props) {
   }
 
   return (
-    <ScrollView>
-      {sortableTasks.map((task, index) => {
+    <FlatList
+      ref={flatListRef}
+      onLayout={({
+        nativeEvent: {
+          layout: { x, y, height, width, },
+        },
+      }) => {
+        console.log('SortableTasksList FlatList onLayout:', x, y, height, width)
+      }}
+      data={sortableTasks}
+      renderItem={({ item, index }) => {
         return (
           <SortableTask
-            key={task.id}
-            title={task.title}
-            positions={positions}
+            key={item.id}
+            title={item.title}
             index={index}
           />
-        );
-      })}
-    </ScrollView>
+        )
+      }}
+    />
+
+    // <ScrollView>
+    //   {sortableTasks.map((task, index) => {
+    //     return (
+    //       <SortableTask
+    //         key={task.id}
+    //         title={task.title}
+    //         positions={positions}
+    //         index={index}
+    //       />
+    //     );
+    //   })}
+    // </ScrollView>
   );
 }
