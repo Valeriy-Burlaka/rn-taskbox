@@ -19,13 +19,15 @@ import { textSizes } from 'theme/Typography';
 
 import { FontelloIcon } from 'constants/Fontello';
 
+export const TASK_HEIGHT = 48;
+
 const Container = styled(Animated.View)`
   align-items: center;
   background-color: white;
   justify-content: space-between;
   flex-direction: row;
   flex-wrap: nowrap;
-  height: 48px;
+  height: ${() => TASK_HEIGHT + 'px'};
   padding-left: ${spacings.space75};
   padding-right: ${spacings.space125};
 `;
@@ -127,26 +129,26 @@ export function SortableTask({ title, positions, index }: Props) {
   const translationContext = useVector();
 
   const panGesture = Gesture.Pan()
-    .onBegin((event) => {
-      hapticImpact();
-      // translationContext.x.value = originalX.value;
-      // translationContext.y.value = originalY.value;
-      // translation.x.value = originalX.value;
-      // translation.y.value = originalY.value;
-    })
-    .onEnd(() => {
-      hapticImpact();
-      isGestureActive.value = false;
-      translationContext.x.value = 0;
-      translationContext.y.value = 0;
-    })
-    .onUpdate(({ translationX, translationY, x, y, absoluteX, absoluteY }) => {
-      console.log('>>>>>>>>>>>>>>>')
-      console.log('Translation, X/Y:', translationX, translationY);
-      console.log('Absolute, X/Y:', absoluteX, absoluteY);
-      console.log('X, Y:', x, y);
-      }
-    );
+    // .onBegin((event) => {
+    //   hapticImpact();
+    //   // translationContext.x.value = originalX.value;
+    //   // translationContext.y.value = originalY.value;
+    //   // translation.x.value = originalX.value;
+    //   // translation.y.value = originalY.value;
+    // })
+    // .onEnd(() => {
+    //   hapticImpact();
+    //   isGestureActive.value = false;
+    //   translationContext.x.value = 0;
+    //   translationContext.y.value = 0;
+    // })
+    // .onUpdate(({ translationX, translationY, x, y, absoluteX, absoluteY }) => {
+    //   // console.log('>>>>>>>>>>>>>>>')
+    //   // console.log('Translation, X/Y:', translationX, translationY);
+    //   // console.log('Absolute, X/Y:', absoluteX, absoluteY);
+    //   // console.log('X, Y:', x, y);
+    //   }
+    // );
 
   // const translateX = useDerivedValue(() => {
   //   if (isGestureActive.value) {
