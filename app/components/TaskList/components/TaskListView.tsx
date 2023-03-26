@@ -76,6 +76,7 @@ export function TaskListView({
 
       <KeyboardAwareFlatList
         data={tasks}
+        initialNumToRender={15} // FIXME: make this dynamic
         keyExtractor={task => task.id}
         renderItem={({ item }) => {
           return (
