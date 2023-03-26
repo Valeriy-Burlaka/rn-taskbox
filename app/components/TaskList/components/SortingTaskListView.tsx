@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, } from 'react';
+import { useCallback, useEffect, useRef, useState, } from 'react';
 import { FlatList, ScrollView, View, Dimensions } from 'react-native';
 import {
   useSharedValue,
@@ -41,6 +41,16 @@ export function SortingTaskListView({ tasks }: Props) {
 
   const sortableTasks = tasks.filter(t => t.state === TaskStates.TASK_INBOX);
 
+  const renderItem = useCallback(({ index, item }: { index: number, item: TaskData}) => {
+    return (
+      <SortableTask
+        key={item.id}
+        title={item.title}
+        index={index}
+      />
+    )
+  }, []);
+
   return (
     <FlatList
       ref={flatListRef}
@@ -55,15 +65,7 @@ export function SortingTaskListView({ tasks }: Props) {
         // console.log('Can fit on screen: ', (SCREEN_HEIGHT - insets.top - insets.bottom) / TASK_HEIGHT, 'tasks')
       }}
       data={sortableTasks}
-      renderItem={({ item, index }) => {
-        return (
-          <SortableTask
-            key={item.id}
-            title={item.title}
-            index={index}
-          />
-        )
-      }}
+      renderItem={renderItem}
     />
   );
 }
