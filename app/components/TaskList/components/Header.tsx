@@ -16,10 +16,11 @@ const HeaderContainer = styled.View<{}>`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: ${spacings.space200};
-  padding-top: ${spacings.space50};
+  margin-bottom: ${spacings.space100};
+  padding-bottom: ${spacings.space50};
   padding-left: ${spacings.space50};
   padding-right: ${spacings.space50};
+  padding-top: ${spacings.space50};
 `;
 
 const HeaderText = styled.Text<{ color: string }>`
@@ -37,6 +38,7 @@ const ButtonContainer = styled.View`
 export type Props = Pick<TaskList, 'name' | 'color'> &
   {
     isEditingTasks: boolean;
+    onHeightDetermined: (height: number) => void;
     onPressDone: () => void;
     onPressBack: () => void;
     onPressMenuOptionDelete: () => void;
@@ -49,6 +51,7 @@ export function Header({
   name,
   color,
   isEditingTasks,
+  onHeightDetermined,
   onPressDone,
   onPressBack,
   onPressMenuOptionDelete,
@@ -82,7 +85,11 @@ export function Header({
   }, [SORT_TASKS_FEATURE_ENABLED]);
 
   return (
-    <HeaderContainer>
+    <HeaderContainer
+      onLayout={({ nativeEvent: { layout: { height }}}) => {
+        onHeightDetermined(height);
+      }}
+    >
 
       <TouchableOpacity
         onPress={onPressBack}

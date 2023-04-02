@@ -2,6 +2,7 @@ import * as React from 'react';
 import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import styled from '@emotion/native';
+import Animated, { type SharedValue, useAnimatedScrollHandler } from 'react-native-reanimated';
 
 import { TaskData } from 'types/task';
 
@@ -22,11 +23,14 @@ export type Props = {
   onEndEditingTask: TaskProps['onEndEditing'];
   onFocusTask: TaskProps['onFocus'];
   onSubmitEditingTask: TaskProps['onSubmitEditing'];
+  scrollOffsetY: SharedValue<number>;
 };
 
 const ListItemsContainer = styled(SafeAreaView)`
   flex: 1;
 `;
+
+const AnimatedKeyboardAwareFlatList = Animated.createAnimatedComponent(KeyboardAwareFlatList);
 
 export function TaskListView({
   color,
@@ -38,6 +42,7 @@ export function TaskListView({
   onFocusTask,
   onPinTask,
   onSubmitEditingTask,
+  scrollOffsetY,
 }: Props) {
 
   if (loading) {
@@ -53,6 +58,12 @@ export function TaskListView({
       </ListItemsContainer>
     );
   }
+
+  const onScroll = useAnimatedScrollHandler({
+    onScroll: ({ contentOffset: { y }}) => {
+      scrollOffsetY.value = y;
+    },
+  });
 
   return (
     <ListItemsContainer>
@@ -74,10 +85,11 @@ export function TaskListView({
         />
       </View>
 
-      <KeyboardAwareFlatList
+      <AnimatedKeyboardAwareFlatList
         data={tasks}
         initialNumToRender={15} // FIXME: make this dynamic
         keyExtractor={task => task.id}
+        onScroll={onScroll}
         renderItem={({ item }) => {
           return (
             <Task

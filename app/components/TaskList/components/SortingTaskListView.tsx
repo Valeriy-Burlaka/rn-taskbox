@@ -4,6 +4,8 @@ import {
   useSharedValue,
   runOnUI,
   runOnJS,
+  useAnimatedScrollHandler,
+  type SharedValue,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -12,12 +14,14 @@ import { SCREEN_HEIGHT } from 'constants/Layout';
 import { TaskData, TaskStates } from 'types/task';
 
 import { SortableTask, TASK_HEIGHT, type TaskPosition } from './SortableTask';
+import { AnimatedFlatList } from './utils/AnimatedFlatList';
 
 interface Props {
+  scrollOffsetY: SharedValue<number>;
   tasks: TaskData[];
 }
 
-export function SortingTaskListView({ tasks }: Props) {
+export function SortingTaskListView({ scrollOffsetY, tasks }: Props) {
   const flatListRef = useRef<FlatList>(null);
   const insets = useSafeAreaInsets();
   // Doesn't take into account height taken by screen header, which means that we will instruct
@@ -51,8 +55,18 @@ export function SortingTaskListView({ tasks }: Props) {
     )
   }, []);
 
+  const onScroll = useAnimatedScrollHandler({
+    onScroll: ({ contentOffset: { y }}) => {
+      scrollOffsetY.value = y;
+    },
+  });
+
   return (
-    <FlatList
+    <AnimatedFlatList
+      data={sortableTasks}
+      renderItem={null}  // TODO: document the issue with zIndex ( https://github.com/facebook/react-native/issues/28751 )
+      CellRendererComponent={renderItem}  // This is how I made `zIndex` work for me
+
       ref={flatListRef}
       initialNumToRender={numInitialItemsToRender}
       onLayout={({
@@ -60,12 +74,11 @@ export function SortingTaskListView({ tasks }: Props) {
           layout: { x, y, height, width, },
         },
       }) => {
-        console.log('Screen width:', width, 'height:', height)
-        // console.log('SortableTasksList FlatList onLayout:', x, y, height, width)
+        console.log('Screen height:', SCREEN_HEIGHT)
+        console.log('SortableTasksList AnimatedFlatList onLayout:', x, y, height, width);
         // console.log('Can fit on screen: ', (SCREEN_HEIGHT - insets.top - insets.bottom) / TASK_HEIGHT, 'tasks')
       }}
-      data={sortableTasks}
-      renderItem={renderItem}
+      onScroll={onScroll}
     />
   );
 }

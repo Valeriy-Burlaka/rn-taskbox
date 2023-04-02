@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { Keyboard } from 'react-native';
 
 import * as Haptics from 'expo-haptics';
-import { StatusBar } from 'expo-status-bar';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import Animated, { useAnimatedStyle, useDerivedValue, useSharedValue, type SharedValue } from 'react-native-reanimated';
 
 import { useAppData } from 'providers/DataProvider';
 import { TaskStates } from 'types/task';
@@ -15,6 +15,37 @@ import { AddTaskButton } from './components/AddTaskButton';
 import { SortingTaskListView } from './components/SortingTaskListView';
 import { TaskListView } from './components/TaskListView';
 
+interface HeaderBackgroundProps {
+  height: SharedValue<number>;
+  scrollOffsetY: SharedValue<number>;
+};
+
+const HeaderBackground = ({ height, scrollOffsetY }: HeaderBackgroundProps) => {
+  if (height.value === 0) {
+    return null;
+  }
+
+  const animatedStyles = useAnimatedStyle(() => ({
+    backgroundColor: scrollOffsetY.value > 50 ? '#f1ebeb' : 'transparent',
+    height: height.value,
+  }));
+
+  return (
+    <Animated.View
+      style={[
+        animatedStyles,
+        {
+          opacity: 0.3,
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+        }
+      ]}
+    />
+  );
+};
+
 export function TaskList({ listId }: { listId: string }) {
   const navigation = useNavigation();
 
@@ -22,6 +53,14 @@ export function TaskList({ listId }: { listId: string }) {
 
   const [isEditingTasks, setEditingTasks] = useState(false);
   const [isSortingTasks, setSortingTasks] = useState(false);
+
+  const { top: topInsetHeight } = useSafeAreaInsets();
+  const [headerHeight, setHeaderHeight] = useState(0);
+
+  const headerBackgroundHeight = useDerivedValue(() => {
+    return headerHeight + topInsetHeight;
+  }, [headerHeight, topInsetHeight]);
+  const scrollOffsetY = useSharedValue(0);
 
   // console.log('Is editing?', editing);
   // console.log('Task in edit:', taskInEditId.current);
@@ -135,12 +174,13 @@ export function TaskList({ listId }: { listId: string }) {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <StatusBar />
+      <HeaderBackground scrollOffsetY={scrollOffsetY} height={headerBackgroundHeight} />
 
       <Header
         name={thisList.name}
         color={thisList.color}
         isEditingTasks={isEditingTasks || isSortingTasks}
+        onHeightDetermined={setHeaderHeight}
         onPressDone={() => {
           if (isEditingTasks) exitEditTaskMode();
           if (isSortingTasks) setSortingTasks(false);
@@ -153,6 +193,7 @@ export function TaskList({ listId }: { listId: string }) {
 
       {isSortingTasks ? (
         <SortingTaskListView
+          scrollOffsetY={scrollOffsetY}
           tasks={tasks}
         />
       ) : (
@@ -167,6 +208,7 @@ export function TaskList({ listId }: { listId: string }) {
           onFocusTask={enterEditTaskMode}
           onPinTask={onPinTask}
           onSubmitEditingTask={onSubmitEditingTask}
+          scrollOffsetY={scrollOffsetY}
         />
       )}
 
