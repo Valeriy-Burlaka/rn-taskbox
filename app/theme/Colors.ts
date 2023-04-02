@@ -3,6 +3,7 @@ const tintColorDark = '#fff';
 
 // https://www.w3schools.com/tags/ref_colornames.asp
 export const palette = {
+  AliceBlue: '#F0F8FF',
   BlueViolet: '#8A2BE2',
   Crimson: '#DC143C',
   DarkGoldenRod: '#B8860B',

@@ -14,8 +14,7 @@ import { useVector } from 'react-native-redash';
 
 import { TaskData } from 'types/task';
 
-import { spacings } from 'theme/Spacings';
-import { textSizes } from 'theme/Typography';
+import { palette, spacings, textSizes } from 'theme';
 
 import { FontelloIcon } from 'constants/Fontello';
 
@@ -99,8 +98,8 @@ export function SortableTask({ height, index, positions, title }: Props) {
   const originalY = useDerivedValue(() => (thisElement.y.value));
 
   const isGestureActive = useSharedValue(false);
-  const isReturningToOriginalX = useSharedValue(false);
   const isReturningToOriginalY = useSharedValue(false);
+  const isMoving = useDerivedValue(() => isGestureActive.value || isReturningToOriginalY.value);
 
   const translation = useVector();
   const translationContext = useVector();
@@ -210,16 +209,12 @@ export function SortableTask({ height, index, positions, title }: Props) {
       top: 0,
       left: 0,
       right: 0,
-      opacity: (isGestureActive.value || isReturningToOriginalX.value || isReturningToOriginalY.value)
-      ? 0.5
-      : 1,
-      backgroundColor: (isGestureActive.value || isReturningToOriginalX.value || isReturningToOriginalY.value)
-        ? '#EFF3F3'
-        : 'white',
+      opacity: isMoving.value ? 0.8 : 1,
+      backgroundColor: isMoving.value ? palette.AliceBlue : 'white',
       transform: [
         { translateY: translateY.value },
       ],
-      zIndex: isGestureActive.value || isReturningToOriginalX.value || isReturningToOriginalY.value ? 100 : 0,
+      zIndex: isMoving.value ? 1 : 0,
     };
   });
 

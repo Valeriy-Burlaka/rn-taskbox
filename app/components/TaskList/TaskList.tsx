@@ -10,6 +10,8 @@ import { useAppData } from 'providers/DataProvider';
 import { TaskStates } from 'types/task';
 import { createDeleteAlert } from 'utils/deleteListAlert';
 
+import { palette } from 'theme/Colors';
+
 import { Header } from './components/Header';
 import { AddTaskButton } from './components/AddTaskButton';
 import { SortingTaskListView } from './components/SortingTaskListView';
@@ -26,7 +28,7 @@ const HeaderBackground = ({ height, scrollOffsetY }: HeaderBackgroundProps) => {
   }
 
   const animatedStyles = useAnimatedStyle(() => ({
-    backgroundColor: scrollOffsetY.value > 50 ? '#f1ebeb' : 'transparent',
+    backgroundColor: scrollOffsetY.value > 50 ? palette.AliceBlue : 'transparent',
     height: height.value,
   }));
 
@@ -35,7 +37,6 @@ const HeaderBackground = ({ height, scrollOffsetY }: HeaderBackgroundProps) => {
       style={[
         animatedStyles,
         {
-          opacity: 0.3,
           position: 'absolute',
           top: 0,
           left: 0,
