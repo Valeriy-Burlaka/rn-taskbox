@@ -19,15 +19,13 @@ import { textSizes } from 'theme/Typography';
 
 import { FontelloIcon } from 'constants/Fontello';
 
-export const TASK_HEIGHT = 48;
-
-const Container = styled(Animated.View)`
+const Container = styled(Animated.View)<{ height: number}>`
   align-items: center;
   background-color: white;
   justify-content: space-between;
   flex-direction: row;
   flex-wrap: nowrap;
-  height: ${() => TASK_HEIGHT + 'px'};
+  height: ${({ height }) => height + 'px'};
   padding-left: ${spacings.space75};
   padding-right: ${spacings.space125};
 `;
@@ -44,17 +42,15 @@ const StyledText = styled(TextInput)`
 export type TaskPosition = {
   id: string,
   order: SharedValue<number>,
-  x: SharedValue<number>,
   y: SharedValue<number>,
   height: SharedValue<number>,
-  width: SharedValue<number>,
-  isReady: SharedValue<boolean>,
 }
 
 interface Props {
+  height: number;
+  index: number;
+  positions: TaskPosition[];
   title: TaskData['title'];
-  positions?: TaskPosition[];
-  index?: number;
 }
 
 function hapticImpact() {
@@ -96,30 +92,11 @@ function recalculateLayout(allElements: TaskPosition[]) {
   });
 }
 
-export function SortableTask({ title, positions, index }: Props) {
+export function SortableTask({ height, index, positions, title }: Props) {
 
-  // // Layout hasn't been calculated yet, - return non-animated version
-  // if (positions === undefined || index === undefined) {
-  //   console.log(`Task: ${title} -> no positions calculated yet`)
-  //   return (
-  //     <Container>
-  //       <StyledText editable={false}>
-  //         {title}
-  //       </StyledText>
-  //         <View>
-  //           <FontelloIcon
-  //             color='lightgrey'
-  //             name='braille'
-  //             size={spacings.unitless.space125}
-  //           />
-  //         </View>
-  //     </Container>
-  //   );
-  // }
-
-  // const thisElement = positions[index];
+  const thisElement = positions[index];
   // const originalX = useDerivedValue(() => (thisElement.x.value));
-  // const originalY = useDerivedValue(() => (thisElement.y.value));
+  const originalY = useDerivedValue(() => (thisElement.y.value));
 
   const isGestureActive = useSharedValue(false);
   const isReturningToOriginalX = useSharedValue(false);
@@ -129,68 +106,85 @@ export function SortableTask({ title, positions, index }: Props) {
   const translationContext = useVector();
 
   const panGesture = Gesture.Pan()
-    // .onBegin((event) => {
-    //   hapticImpact();
-    //   // translationContext.x.value = originalX.value;
-    //   // translationContext.y.value = originalY.value;
-    //   // translation.x.value = originalX.value;
-    //   // translation.y.value = originalY.value;
-    // })
-    // .onEnd(() => {
-    //   hapticImpact();
-    //   isGestureActive.value = false;
-    //   translationContext.x.value = 0;
-    //   translationContext.y.value = 0;
-    // })
-    // .onUpdate(({ translationX, translationY, x, y, absoluteX, absoluteY }) => {
-    //   // console.log('>>>>>>>>>>>>>>>')
-    //   // console.log('Translation, X/Y:', translationX, translationY);
-    //   // console.log('Absolute, X/Y:', absoluteX, absoluteY);
-    //   // console.log('X, Y:', x, y);
-    //   }
-    // );
+    .onBegin(() => {
+      hapticImpact();
+      // translationContext.x.value = originalX.value;
+      translationContext.y.value = originalY.value;
+      // translation.x.value = originalX.value;
+      translation.y.value = originalY.value;
+    })
+    .onEnd(() => {
+      hapticImpact();
+      isGestureActive.value = false;
+      translationContext.x.value = 0;
+      translationContext.y.value = 0;
+    })
+    .onUpdate(({ absoluteY, translationY }) => {
+      console.log(translationY);
+      isGestureActive.value = true;
+      // translation.x.value = translationX + translationContext.x.value;
+      translation.y.value = translationY + translationContext.y.value;
 
-  // const translateX = useDerivedValue(() => {
-  //   if (isGestureActive.value) {
-  //     return translation.x.value;
-  //   }
+      // FIXME: Since I really operate only in one dimension (Y-axis), maybe check only 2 elements, top and bottom from this element?
+      for (let i = 0; i < positions.length; i++) {
+        const comparedElement = positions[i];
 
-  //   if (translation.x.value !== 0) {
-  //     isReturningToOriginalX.value = true;
+        // console.log('COMPARING element ', thisElement.title, thisElement.order.value, 'to element: ', comparedElement.title, comparedElement.order.value, `(at index: ${i})`);
+        // if (thisElement.id === comparedElement.id) {
+        if (thisElement.order.value === comparedElement.order.value) {
+          continue;
+        }
 
-  //     return withSpring(
-  //       originalX.value,
-  //       {
-  //         damping: 30,
-  //         stiffness: 200,
-  //       },
-  //       () => (isReturningToOriginalX.value = false),
-  //     );
-  //   }
+        if (
+          (
+            translationY < 0 && between(
+              translation.y.value,
+              comparedElement.y.value + comparedElement.height.value * 0.25,
+              comparedElement.y.value + comparedElement.height.value * 0.75,
+            )
+          ) || (
+            translationY > 0 && between(
+              translation.y.value + thisElement.height.value,
+              comparedElement.y.value + comparedElement.height.value * 0.25,
+              comparedElement.y.value + comparedElement.height.value * 0.75,
+            )
+          )
+        ) {
+          hapticImpact();
+          console.log('Elements before swap, this element (title / order[0] / y-position / y-cumulative-translation):', title, thisElement.order.value, thisElement.y.value, translation.y.value);
+          console.log('Elements before swap, compared element (title / order[0] / y-position / y-cumulative-translation):', title, comparedElement.order.value, comparedElement.y.value, comparedElement.y.value);
+          swapElements(positions, thisElement.order.value, comparedElement.order.value);
+          console.log('Elements AFTER swap, this element (title / order[0] / y-position / y-cumulative-translation):', title, thisElement.order.value, thisElement.y.value, translation.y.value);
+          console.log('Elements AFTER swap, compared element (title / order[0] / y-position / y-cumulative-translation):', title, comparedElement.order.value, comparedElement.y.value, comparedElement.y.value);
+          recalculateLayout(positions);
+          console.log('Elements AFTER RE-CalculateLayout, this element (title / order[0] / y-position / y-cumulative-translation):', title, thisElement.order.value, thisElement.y.value, translation.y.value);
+          console.log('Elements AFTER RE-CalculateLayout, compared element (title / order[0] / y-position / y-cumulative-translation):', title, comparedElement.order.value, comparedElement.y.value, comparedElement.y.value);
 
-  //   return originalX.value;
-  // });
+          break;
+        }
+      }
+    });
 
-  // const translateY = useDerivedValue(() => {
-  //   if (isGestureActive.value) {
-  //     return translation.y.value;
-  //   }
+  const translateY = useDerivedValue(() => {
+    if (isGestureActive.value) {
+      return translation.y.value;
+    }
 
-  //   if (translation.y.value !== 0) {
-  //     isReturningToOriginalY.value = true;
+    if (translation.y.value !== 0) {
+      isReturningToOriginalY.value = true;
 
-  //     return withSpring(
-  //       originalY.value,
-  //       {
-  //         damping: 30,
-  //         stiffness: 200,
-  //       },
-  //       () => (isReturningToOriginalY.value = false),
-  //     );
-  //   }
+      return withSpring(
+        originalY.value,
+        {
+          damping: 30,
+          stiffness: 200,
+        },
+        () => (isReturningToOriginalY.value = false),
+      );
+    }
 
-  //   return withSpring(originalY.value);
-  // });
+    return withSpring(originalY.value);
+  });
 
   // const originalYTracker = useDerivedValue(() => {
   //   console.log('Orignal Y changed for element:', thisElement.title, thisElement.y.value, originalY.value);
@@ -211,27 +205,27 @@ export function SortableTask({ title, positions, index }: Props) {
 
   const animatedStyles = useAnimatedStyle(() => {
     return {
-      // flex: 1,
-      // position: 'absolute',
-      // top: 0,
-      // left: 0,
-      // right: 0,
-      // opacity: (isGestureActive.value || isReturningToOriginalX.value || isReturningToOriginalY.value)
-      // ? 0.5
-      // : 1,
-      // backgroundColor: (isGestureActive.value || isReturningToOriginalX.value || isReturningToOriginalY.value)
-      //   ? '#EFF3F3'
-      //   : 'white',
-      // transform: [
-      //   { translateX: translateX.value },
-      //   { translateY: translateY.value },
-      // ],
-      // zIndex: isGestureActive.value || isReturningToOriginalX.value || isReturningToOriginalY.value ? 100 : 0,
+      flex: 1,
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      opacity: (isGestureActive.value || isReturningToOriginalX.value || isReturningToOriginalY.value)
+      ? 0.5
+      : 1,
+      backgroundColor: (isGestureActive.value || isReturningToOriginalX.value || isReturningToOriginalY.value)
+        ? '#EFF3F3'
+        : 'white',
+      transform: [
+        { translateY: translateY.value },
+      ],
+      zIndex: isGestureActive.value || isReturningToOriginalX.value || isReturningToOriginalY.value ? 100 : 0,
     };
   });
 
   return (
     <Container
+      height={height}
       style={animatedStyles}
     >
       <StyledText editable={false}>
