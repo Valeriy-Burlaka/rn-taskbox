@@ -99,7 +99,6 @@ export function SortableTask({ height, index, positions, title }: Props) {
 
   const isGestureActive = useSharedValue(false);
   const isReturningToOriginalY = useSharedValue(false);
-  const isMoving = useDerivedValue(() => isGestureActive.value || isReturningToOriginalY.value);
 
   const translation = useVector();
   const translationContext = useVector();
@@ -204,17 +203,28 @@ export function SortableTask({ height, index, positions, title }: Props) {
 
   const animatedStyles = useAnimatedStyle(() => {
     return {
+      backgroundColor: (isGestureActive.value || isReturningToOriginalY.value) ? palette.AliceBlue : 'white',
       flex: 1,
+      opacity: isGestureActive.value ? 0.8 : 1,
       position: 'absolute',
       top: 0,
       left: 0,
       right: 0,
-      opacity: isMoving.value ? 0.8 : 1,
-      backgroundColor: isMoving.value ? palette.AliceBlue : 'white',
+      // shadowColor: 'black',
+      // shadowOffset: {
+      //   height: 0,
+      //   width: 0,
+      // },
+      // shadowOpacity: withSpring(isGestureActive.value ? 0.2 : 0),
+      // shadowRadius: 10,
       transform: [
         { translateY: translateY.value },
       ],
-      zIndex: isMoving.value ? 1 : 0,
+      // TO-UNDERSTAND: I tried to re-factor (isGestureActive.value || isReturningToOriginalY.value) into a single,
+      // `useDerivedValue` variable, but it doesn't work as expected. It seems that the derived value
+      // doesn't keep up updating when a gesture is ended and an element transitions back to its original position.
+      // This results in animated styles depending on the derived value not being updated.
+      zIndex: (isGestureActive.value || isReturningToOriginalY.value) ? 1 : 0,
     };
   });
 
