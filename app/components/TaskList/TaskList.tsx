@@ -4,7 +4,7 @@ import { Keyboard } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import Animated, { useAnimatedStyle, useDerivedValue, useSharedValue, type SharedValue } from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, useSharedValue, type SharedValue } from 'react-native-reanimated';
 
 import { useAppData } from 'providers/DataProvider';
 import { TaskStates } from 'types/task';
@@ -18,19 +18,19 @@ import { SortingTaskListView } from './components/SortingTaskListView';
 import { TaskListView } from './components/TaskListView';
 
 interface HeaderBackgroundProps {
-  height: SharedValue<number>;
+  height: number;
   scrollOffsetY: SharedValue<number>;
 };
 
 const HeaderBackground = ({ height, scrollOffsetY }: HeaderBackgroundProps) => {
-  if (height.value === 0) {
+  if (height <= 0) {
     return null;
   }
 
   const animatedStyles = useAnimatedStyle(() => ({
     backgroundColor: scrollOffsetY.value > 50 ? palette.AliceBlue : 'transparent',
-    height: height.value,
-  }));
+    height,
+  }), [height]);
 
   return (
     <Animated.View
@@ -58,16 +58,8 @@ export function TaskList({ listId }: { listId: string }) {
   const { top: topInsetHeight } = useSafeAreaInsets();
   const [headerHeight, setHeaderHeight] = useState(0);
 
-  const headerBackgroundHeight = useDerivedValue(() => {
-    return headerHeight + topInsetHeight;
-  }, [headerHeight, topInsetHeight]);
+  const headerBackgroundHeight = headerHeight + topInsetHeight;
   const scrollOffsetY = useSharedValue(0);
-
-  // console.log('Is editing?', editing);
-  // console.log('Task in edit:', taskInEditId.current);
-
-  // console.log(`TasksList: ID: ${listId}`);
-  // console.log(`TasksList: Data from context:`, taskLists[listId]);
 
   const thisList = taskLists[listId];
   const tasks = thisList.tasks;
@@ -128,7 +120,7 @@ export function TaskList({ listId }: { listId: string }) {
     });
   };
 
-  // inout ended
+  // input ended
   const onEndEditingTask = (taskId: string, taskTitle: string, taskState?: TaskStates) => {
     saveTask(taskId, taskTitle, taskState);
   };
