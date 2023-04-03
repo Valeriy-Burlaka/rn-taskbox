@@ -94,14 +94,19 @@ function BottomTabNavigator() {
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />
-      <BottomTab.Screen
-        name="Storybook"
-        component={StorybookScreen}
-        options={{
-          title: 'Storybook',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />
+      {__DEV__ ?
+        (
+          <BottomTab.Screen
+            name="Storybook"
+            component={StorybookScreen}
+            options={{
+              title: 'Storybook',
+              tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+            }}
+          />
+        ) : null
+      }
+
     </BottomTab.Navigator>
   );
 }
