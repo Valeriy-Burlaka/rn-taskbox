@@ -50,6 +50,9 @@ interface Props {
   index: number;
   positions: TaskPosition[];
   title: TaskData['title'];
+  getScrollDirection: (panY: number) => 'down' | 'up' | null;
+  startScrolling: (direction: 'down' | 'up') => void;
+  stopScrolling: () => void;
 }
 
 function hapticImpact() {
@@ -91,10 +94,16 @@ function recalculateLayout(allElements: TaskPosition[]) {
   });
 }
 
-export function SortableTask({ height, index, positions, title }: Props) {
-
+export function SortableTask({
+  height,
+  index,
+  positions,
+  title,
+  getScrollDirection,
+  startScrolling,
+  stopScrolling,
+}: Props) {
   const thisElement = positions[index];
-  // const originalX = useDerivedValue(() => (thisElement.x.value));
   const originalY = useDerivedValue(() => (thisElement.y.value));
 
   const isGestureActive = useSharedValue(false);
@@ -106,9 +115,7 @@ export function SortableTask({ height, index, positions, title }: Props) {
   const panGesture = Gesture.Pan()
     .onBegin(() => {
       hapticImpact();
-      // translationContext.x.value = originalX.value;
       translationContext.y.value = originalY.value;
-      // translation.x.value = originalX.value;
       translation.y.value = originalY.value;
     })
     .onEnd(() => {
@@ -116,51 +123,56 @@ export function SortableTask({ height, index, positions, title }: Props) {
       isGestureActive.value = false;
       translationContext.x.value = 0;
       translationContext.y.value = 0;
+      runOnJS(stopScrolling)();
     })
     .onUpdate(({ absoluteY, translationY }) => {
-      console.log(translationY);
+      // console.log(translationY, absoluteY);
       isGestureActive.value = true;
-      // translation.x.value = translationX + translationContext.x.value;
       translation.y.value = translationY + translationContext.y.value;
 
-      // FIXME: Since I really operate only in one dimension (Y-axis), maybe check only 2 elements, top and bottom from this element?
-      for (let i = 0; i < positions.length; i++) {
-        const comparedElement = positions[i];
-
-        // console.log('COMPARING element ', thisElement.title, thisElement.order.value, 'to element: ', comparedElement.title, comparedElement.order.value, `(at index: ${i})`);
-        // if (thisElement.id === comparedElement.id) {
-        if (thisElement.order.value === comparedElement.order.value) {
-          continue;
-        }
-
-        if (
-          (
-            translationY < 0 && between(
-              translation.y.value,
-              comparedElement.y.value + comparedElement.height.value * 0.25,
-              comparedElement.y.value + comparedElement.height.value * 0.75,
-            )
-          ) || (
-            translationY > 0 && between(
-              translation.y.value + thisElement.height.value,
-              comparedElement.y.value + comparedElement.height.value * 0.25,
-              comparedElement.y.value + comparedElement.height.value * 0.75,
-            )
-          )
-        ) {
-          hapticImpact();
-          console.log('Elements before swap, this element (title / order[0] / y-position / y-cumulative-translation):', title, thisElement.order.value, thisElement.y.value, translation.y.value);
-          console.log('Elements before swap, compared element (title / order[0] / y-position / y-cumulative-translation):', title, comparedElement.order.value, comparedElement.y.value, comparedElement.y.value);
-          swapElements(positions, thisElement.order.value, comparedElement.order.value);
-          console.log('Elements AFTER swap, this element (title / order[0] / y-position / y-cumulative-translation):', title, thisElement.order.value, thisElement.y.value, translation.y.value);
-          console.log('Elements AFTER swap, compared element (title / order[0] / y-position / y-cumulative-translation):', title, comparedElement.order.value, comparedElement.y.value, comparedElement.y.value);
-          recalculateLayout(positions);
-          console.log('Elements AFTER RE-CalculateLayout, this element (title / order[0] / y-position / y-cumulative-translation):', title, thisElement.order.value, thisElement.y.value, translation.y.value);
-          console.log('Elements AFTER RE-CalculateLayout, compared element (title / order[0] / y-position / y-cumulative-translation):', title, comparedElement.order.value, comparedElement.y.value, comparedElement.y.value);
-
-          break;
-        }
+      const scrollDirection = getScrollDirection(absoluteY);
+      if (scrollDirection) {
+        runOnJS(startScrolling)(scrollDirection);
       }
+
+      // // FIXME: Since I really operate only in one dimension (Y-axis), maybe check only 2 elements, top and bottom from this element?
+      // for (let i = 0; i < positions.length; i++) {
+      //   const comparedElement = positions[i];
+
+      //   // console.log('COMPARING element ', thisElement.title, thisElement.order.value, 'to element: ', comparedElement.title, comparedElement.order.value, `(at index: ${i})`);
+      //   // if (thisElement.id === comparedElement.id) {
+      //   if (thisElement.order.value === comparedElement.order.value) {
+      //     continue;
+      //   }
+
+      //   if (
+      //     (
+      //       translationY < 0 && between(
+      //         translation.y.value,
+      //         comparedElement.y.value + comparedElement.height.value * 0.25,
+      //         comparedElement.y.value + comparedElement.height.value * 0.75,
+      //       )
+      //     ) || (
+      //       translationY > 0 && between(
+      //         translation.y.value + thisElement.height.value,
+      //         comparedElement.y.value + comparedElement.height.value * 0.25,
+      //         comparedElement.y.value + comparedElement.height.value * 0.75,
+      //       )
+      //     )
+      //   ) {
+      //     hapticImpact();
+      //     console.log('Elements before swap, this element (title / order[0] / y-position / y-cumulative-translation):', title, thisElement.order.value, thisElement.y.value, translation.y.value);
+      //     console.log('Elements before swap, compared element (title / order[0] / y-position / y-cumulative-translation):', title, comparedElement.order.value, comparedElement.y.value, comparedElement.y.value);
+      //     swapElements(positions, thisElement.order.value, comparedElement.order.value);
+      //     console.log('Elements AFTER swap, this element (title / order[0] / y-position / y-cumulative-translation):', title, thisElement.order.value, thisElement.y.value, translation.y.value);
+      //     console.log('Elements AFTER swap, compared element (title / order[0] / y-position / y-cumulative-translation):', title, comparedElement.order.value, comparedElement.y.value, comparedElement.y.value);
+      //     recalculateLayout(positions);
+      //     console.log('Elements AFTER RE-CalculateLayout, this element (title / order[0] / y-position / y-cumulative-translation):', title, thisElement.order.value, thisElement.y.value, translation.y.value);
+      //     console.log('Elements AFTER RE-CalculateLayout, compared element (title / order[0] / y-position / y-cumulative-translation):', title, comparedElement.order.value, comparedElement.y.value, comparedElement.y.value);
+
+      //     break;
+      //   }
+      // }
     });
 
   const translateY = useDerivedValue(() => {
@@ -170,6 +182,7 @@ export function SortableTask({ height, index, positions, title }: Props) {
 
     if (translation.y.value !== 0) {
       isReturningToOriginalY.value = true;
+      // console.log('Returning to original Y for element ', title, 'from: ', translation.y.value, 'to: ', originalY.value);
 
       return withSpring(
         originalY.value,

@@ -55,7 +55,7 @@ export function TaskList({ listId }: { listId: string }) {
   const [isEditingTasks, setEditingTasks] = useState(false);
   const [isSortingTasks, setSortingTasks] = useState(false);
 
-  const { top: topInsetHeight } = useSafeAreaInsets();
+  const { bottom: bottomInsetHeight, top: topInsetHeight } = useSafeAreaInsets();
   const [headerHeight, setHeaderHeight] = useState(0);
 
   const headerBackgroundHeight = headerHeight + topInsetHeight;
@@ -186,6 +186,8 @@ export function TaskList({ listId }: { listId: string }) {
 
       {isSortingTasks ? (
         <SortingTaskListView
+          bottomInsetHeight={bottomInsetHeight}
+          topInsetHeight={headerBackgroundHeight}
           scrollOffsetY={scrollOffsetY}
           tasks={tasks}
         />
