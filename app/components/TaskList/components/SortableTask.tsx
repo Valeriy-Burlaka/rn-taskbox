@@ -6,7 +6,6 @@ import Animated, {
   useAnimatedReaction,
   type SharedValue,
   useSharedValue,
-  useDerivedValue,
   withSpring,
   withTiming,
   runOnJS,
@@ -45,28 +44,26 @@ function hapticImpact() {
   runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Medium);
 }
 
-function between(value: number, rangeStart: number, rangeEnd: number) {
-  "worklet";
-
-  return value >= rangeStart && value <= rangeEnd;
-}
-
 function clamp(value: number, min: number, max: number) {
   "worklet";
 
   return Math.max(min, Math.min(value, max));
 }
 
-function swapPositions(positions: SharedValue<{[key: string]: number}>, fromPosition: number, toPosition: number) {
+function swapPositions(positions: {[key: string]: number}, fromPosition: number, toPosition: number) {
   "worklet";
 
-  const fromId = Object.keys(positions.value).find((key) => positions.value[key] === fromPosition);
-  const toId = Object.keys(positions.value).find((key) => positions.value[key] === toPosition);
-
-  if (fromId && toId) {
-    positions.value[fromId] = toPosition;
-    positions.value[toId] = fromPosition;
+  const newPositions = {...positions};
+  for (const id in positions) {
+    if (positions[id] === fromPosition) {
+      newPositions[id] = toPosition;
+    }
+    if (positions[id] === toPosition) {
+      newPositions[id] = fromPosition;
+    }
   }
+
+  return newPositions;
 }
 
 interface Props {
@@ -103,7 +100,13 @@ export function SortableTask({
     () => positions.value[id],
     (currentPosition, previousPosition) => {
       if (currentPosition !== previousPosition) {
-        positionY.value = withSpring(currentPosition * height);
+        positionY.value = withSpring(
+          currentPosition * height,
+          {
+            damping: 30,
+            stiffness: 200,
+          },
+        );
       }
     }
   );
@@ -143,7 +146,7 @@ export function SortableTask({
       // console.log('New position: ', newPosition, '(was: ', thisElement.order.value, ')');
       if (newPosition !== positions.value[id]) {
         // console.log('Swapping element position from ', thisElement.order.value, 'to ', newPosition, '')
-        swapPositions(positions, newPosition, positions.value[id]);
+        positions.value = swapPositions(positions.value, positions.value[id],  newPosition);
         // console.log('Updated element position:', thisElement.order.value, positions.value[index].order.value)
       }
 
@@ -163,13 +166,13 @@ export function SortableTask({
       top: positionY.value,
       left: 0,
       right: 0,
-      // shadowColor: 'black',
-      // shadowOffset: {
-      //   height: 0,
-      //   width: 0,
-      // },
-      // shadowOpacity: withSpring(isGestureActive.value ? 0.2 : 0),
-      // shadowRadius: 10,
+      shadowColor: 'black',
+      shadowOffset: {
+        height: 0,
+        width: 0,
+      },
+      shadowOpacity: withSpring(isGestureActive.value ? 0.2 : 0),
+      shadowRadius: 10,
 
       // TO-UNDERSTAND: I tried to re-factor (isGestureActive.value || isReturningToOriginalY.value) into a single,
       // `useDerivedValue` variable, but it doesn't work as expected. It seems that the derived value
