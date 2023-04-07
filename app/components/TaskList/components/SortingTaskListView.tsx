@@ -9,7 +9,7 @@ import Animated, {
 import { TaskData, TaskStates } from 'types/task';
 import { spacings } from 'theme/Spacings';
 
-import { SortableTask, type TaskPosition } from './SortableTask';
+import { SortableTask } from './SortableTask';
 import { SCREEN_HEIGHT } from 'utils/dimensions';
 
 interface Props {
@@ -36,16 +36,11 @@ export function SortingTaskListView({
   const scrollViewRef = useRef<ScrollView>(null);
   const isScrolling = useSharedValue(false);
 
-  const positions: SharedValue<TaskPosition[]> = useSharedValue(sortableItems.map((task, index) => {
-    return {
-      id: task.id,
-      title: task.title,
-      order: useSharedValue(index),
-      // this initial `y` refers to the element position inside the _parent_ container
-      y: useSharedValue(itemHeight * index),
-      height: useSharedValue(itemHeight),
-    };
-  }));
+  const itemPositions = useSharedValue(
+    Object.fromEntries(
+      sortableItems.map((item, index) => [item.id, index])
+    )
+  );
 
   const onScroll = useAnimatedScrollHandler({
     onScroll: ({ contentOffset: { y }}) => {
@@ -126,8 +121,9 @@ export function SortingTaskListView({
           <SortableTask
             key={task.id}
             height={itemHeight}
-            index={index}
-            positions={positions}
+            id={task.id}
+            positions={itemPositions}
+            itemsCount={sortableItems.length}
             scrollOffsetY={scrollOffsetY}
             title={task.title}
             topInsetHeight={topInsetHeight}

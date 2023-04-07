@@ -3,14 +3,15 @@ import * as Haptics from 'expo-haptics';
 import styled from '@emotion/native';
 import Animated, {
   useAnimatedStyle,
+  useAnimatedReaction,
   type SharedValue,
   useSharedValue,
   useDerivedValue,
   withSpring,
+  withTiming,
   runOnJS,
 } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import { useVector } from 'react-native-redash';
 
 import { TaskData } from 'types/task';
 
@@ -38,33 +39,10 @@ const StyledText = styled(TextInput)`
   line-height: 20px;
 `;
 
-export type TaskPosition = {
-  id: string,
-  order: SharedValue<number>,
-  y: SharedValue<number>,
-  height: SharedValue<number>,
-}
-
-interface Props {
-  height: number;
-  index: number;
-  positions: TaskPosition[];
-  title: TaskData['title'];
-  getScrollDirection: (panY: number) => 'down' | 'up' | null;
-  startScrolling: (direction: 'down' | 'up') => void;
-  stopScrolling: () => void;
-}
-
 function hapticImpact() {
   "worklet";
 
   runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Medium);
-}
-
-function byOrder(a: TaskPosition, b: TaskPosition) {
-  "worklet";
-
-  return a.order.value > b.order.value ? 1 : -1;
 }
 
 function between(value: number, rangeStart: number, rangeEnd: number) {
@@ -73,146 +51,108 @@ function between(value: number, rangeStart: number, rangeEnd: number) {
   return value >= rangeStart && value <= rangeEnd;
 }
 
-function swapElements(allElements: TaskPosition[], fromPosition: number, toPosition: number) {
+function clamp(value: number, min: number, max: number) {
   "worklet";
 
-  const sortedCopy = allElements.slice().sort(byOrder);
-  sortedCopy[toPosition] = allElements[fromPosition];
-  sortedCopy[fromPosition] = allElements[toPosition];
-
-  return sortedCopy.map((element, index) => {
-    element.order.value = index;
-  });
+  return Math.max(min, Math.min(value, max));
 }
 
-function recalculateLayout(allElements: TaskPosition[]) {
+function swapPositions(positions: SharedValue<{[key: string]: number}>, fromPosition: number, toPosition: number) {
   "worklet";
 
-  const elementHeight = allElements[0].height.value;
-  allElements.sort(byOrder).forEach((elem) => {
-    elem.y.value = elem.order.value * elementHeight;
-  });
+  const fromId = Object.keys(positions.value).find((key) => positions.value[key] === fromPosition);
+  const toId = Object.keys(positions.value).find((key) => positions.value[key] === toPosition);
+
+  if (fromId && toId) {
+    positions.value[fromId] = toPosition;
+    positions.value[toId] = fromPosition;
+  }
+}
+
+interface Props {
+  height: number;
+  id: string;
+  itemsCount: number;
+  positions: SharedValue<{[key: string]: number}>;
+  scrollOffsetY: SharedValue<number>;
+  title: TaskData['title'];
+  topInsetHeight: number;
+  getScrollDirection: (panY: number) => 'down' | 'up' | null;
+  startScrolling: (direction: 'down' | 'up') => void;
+  stopScrolling: () => void;
 }
 
 export function SortableTask({
   height,
-  index,
+  id,
+  itemsCount,
   positions,
+  scrollOffsetY,
   title,
+  topInsetHeight,
   getScrollDirection,
   startScrolling,
   stopScrolling,
 }: Props) {
-  const thisElement = positions[index];
-  const originalY = useDerivedValue(() => (thisElement.y.value));
+  const positionY = useSharedValue(positions.value[id] * height);
 
   const isGestureActive = useSharedValue(false);
   const isReturningToOriginalY = useSharedValue(false);
 
-  const translation = useVector();
-  const translationContext = useVector();
+  useAnimatedReaction(
+    () => positions.value[id],
+    (currentPosition, previousPosition) => {
+      if (currentPosition !== previousPosition) {
+        positionY.value = withSpring(currentPosition * height);
+      }
+    }
+  );
 
   const panGesture = Gesture.Pan()
     .onBegin(() => {
       hapticImpact();
-      translationContext.y.value = originalY.value;
-      translation.y.value = originalY.value;
     })
     .onEnd(() => {
       hapticImpact();
       isGestureActive.value = false;
-      translationContext.x.value = 0;
-      translationContext.y.value = 0;
       runOnJS(stopScrolling)();
-    })
-    .onUpdate(({ absoluteY, translationY }) => {
-      // console.log(translationY, absoluteY);
-      isGestureActive.value = true;
-      translation.y.value = translationY + translationContext.y.value;
 
-      const scrollDirection = getScrollDirection(absoluteY);
-      if (scrollDirection) {
-        runOnJS(startScrolling)(scrollDirection);
-      }
-
-      // // FIXME: Since I really operate only in one dimension (Y-axis), maybe check only 2 elements, top and bottom from this element?
-      // for (let i = 0; i < positions.length; i++) {
-      //   const comparedElement = positions[i];
-
-      //   // console.log('COMPARING element ', thisElement.title, thisElement.order.value, 'to element: ', comparedElement.title, comparedElement.order.value, `(at index: ${i})`);
-      //   // if (thisElement.id === comparedElement.id) {
-      //   if (thisElement.order.value === comparedElement.order.value) {
-      //     continue;
-      //   }
-
-      //   if (
-      //     (
-      //       translationY < 0 && between(
-      //         translation.y.value,
-      //         comparedElement.y.value + comparedElement.height.value * 0.25,
-      //         comparedElement.y.value + comparedElement.height.value * 0.75,
-      //       )
-      //     ) || (
-      //       translationY > 0 && between(
-      //         translation.y.value + thisElement.height.value,
-      //         comparedElement.y.value + comparedElement.height.value * 0.25,
-      //         comparedElement.y.value + comparedElement.height.value * 0.75,
-      //       )
-      //     )
-      //   ) {
-      //     hapticImpact();
-      //     console.log('Elements before swap, this element (title / order[0] / y-position / y-cumulative-translation):', title, thisElement.order.value, thisElement.y.value, translation.y.value);
-      //     console.log('Elements before swap, compared element (title / order[0] / y-position / y-cumulative-translation):', title, comparedElement.order.value, comparedElement.y.value, comparedElement.y.value);
-      //     swapElements(positions, thisElement.order.value, comparedElement.order.value);
-      //     console.log('Elements AFTER swap, this element (title / order[0] / y-position / y-cumulative-translation):', title, thisElement.order.value, thisElement.y.value, translation.y.value);
-      //     console.log('Elements AFTER swap, compared element (title / order[0] / y-position / y-cumulative-translation):', title, comparedElement.order.value, comparedElement.y.value, comparedElement.y.value);
-      //     recalculateLayout(positions);
-      //     console.log('Elements AFTER RE-CalculateLayout, this element (title / order[0] / y-position / y-cumulative-translation):', title, thisElement.order.value, thisElement.y.value, translation.y.value);
-      //     console.log('Elements AFTER RE-CalculateLayout, compared element (title / order[0] / y-position / y-cumulative-translation):', title, comparedElement.order.value, comparedElement.y.value, comparedElement.y.value);
-
-      //     break;
-      //   }
-      // }
-    });
-
-  const translateY = useDerivedValue(() => {
-    if (isGestureActive.value) {
-      return translation.y.value;
-    }
-
-    if (translation.y.value !== 0) {
       isReturningToOriginalY.value = true;
-      // console.log('Returning to original Y for element ', title, 'from: ', translation.y.value, 'to: ', originalY.value);
-
-      return withSpring(
-        originalY.value,
+      positionY.value = withSpring(
+        positions.value[id] * height,
         {
           damping: 30,
           stiffness: 200,
         },
         () => (isReturningToOriginalY.value = false),
       );
-    }
+    })
+    .onUpdate(({ absoluteY }) => {
+      // console.log(absoluteY);
+      isGestureActive.value = true;
 
-    return withSpring(originalY.value);
-  });
+      const updatedY = absoluteY + scrollOffsetY.value;
+      positionY.value = withTiming(updatedY - topInsetHeight - height, {
+        duration: 16,
+      });
+      const newPosition = clamp(
+        Math.floor((updatedY - topInsetHeight) / height),
+        0,
+        itemsCount - 1,
+      );
+      // console.log('New position: ', newPosition, '(was: ', thisElement.order.value, ')');
+      if (newPosition !== positions.value[id]) {
+        // console.log('Swapping element position from ', thisElement.order.value, 'to ', newPosition, '')
+        swapPositions(positions, newPosition, positions.value[id]);
+        // console.log('Updated element position:', thisElement.order.value, positions.value[index].order.value)
+      }
 
-  // const originalYTracker = useDerivedValue(() => {
-  //   console.log('Orignal Y changed for element:', thisElement.title, thisElement.y.value, originalY.value);
-  //   return thisElement.y.value;
-  // }, [thisElement.title, thisElement.y.value, originalY.value]);
+      const scrollDirection = getScrollDirection(absoluteY);
+      if (scrollDirection) {
+        runOnJS(startScrolling)(scrollDirection);
+      }
 
-  // const translationYTracker = useDerivedValue(() => {
-  //   console.log('TRANSLATION Y changed for element:', thisElement.title, translation.y.value);
-
-  //   return translation.y;
-  // }, [translation.y.value]);
-
-  // const orderTracker = useDerivedValue(() => {
-  //   console.log('Element ORDER changed:', thisElement.title, thisElement.order.value);
-
-  //   return thisElement.order;
-  // }, [thisElement.order.value]);
+    });
 
   const animatedStyles = useAnimatedStyle(() => {
     return {
@@ -220,7 +160,7 @@ export function SortableTask({
       flex: 1,
       opacity: isGestureActive.value ? 0.8 : 1,
       position: 'absolute',
-      top: 0,
+      top: positionY.value,
       left: 0,
       right: 0,
       // shadowColor: 'black',
@@ -230,9 +170,7 @@ export function SortableTask({
       // },
       // shadowOpacity: withSpring(isGestureActive.value ? 0.2 : 0),
       // shadowRadius: 10,
-      transform: [
-        { translateY: translateY.value },
-      ],
+
       // TO-UNDERSTAND: I tried to re-factor (isGestureActive.value || isReturningToOriginalY.value) into a single,
       // `useDerivedValue` variable, but it doesn't work as expected. It seems that the derived value
       // doesn't keep up updating when a gesture is ended and an element transitions back to its original position.
@@ -259,5 +197,5 @@ export function SortableTask({
         </View>
       </GestureDetector>
     </Container>
-  )
+  );
 }
