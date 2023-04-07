@@ -25,7 +25,7 @@ const Container = styled(View)`
   justify-content: space-around;
   flex-direction: row;
   flex-wrap: nowrap;
-  height: 48px;
+  height: ${spacings.space300};
   padding-horizontal: ${spacings.space75};
 `;
 
