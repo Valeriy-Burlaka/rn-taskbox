@@ -27,24 +27,25 @@ export function SortingTaskListView({
   tasks,
   scrollOffsetY,
 }: Props) {
+  const sortableItems = tasks.filter(t => t.state === TaskStates.TASK_INBOX);
+  const itemHeight = spacings.unitless.space300;
+  const totalContentHeight = sortableItems.length * itemHeight;
+  const effectiveScreenHeight = SCREEN_HEIGHT - bottomInsetHeight - topInsetHeight;
+  const maxScrollOffset = totalContentHeight - effectiveScreenHeight;
+
   const scrollViewRef = useRef<ScrollView>(null);
   const isScrolling = useSharedValue(false);
 
-  const itemHeight = spacings.unitless.space300;
-  const sortableTasks = tasks.filter(t => t.state === TaskStates.TASK_INBOX);
-  const positions: TaskPosition[] = sortableTasks.map((task, index) => {
+  const positions: SharedValue<TaskPosition[]> = useSharedValue(sortableItems.map((task, index) => {
     return {
       id: task.id,
       title: task.title,
       order: useSharedValue(index),
+      // this initial `y` refers to the element position inside the _parent_ container
       y: useSharedValue(itemHeight * index),
       height: useSharedValue(itemHeight),
     };
-  });
-  const contentHeight = positions.length * itemHeight;
-  const effectiveScreenHeight = SCREEN_HEIGHT - (bottomInsetHeight + topInsetHeight);
-  const maxScrollOffset = contentHeight - effectiveScreenHeight;
-  // console.log('Max scroll offset:', maxScrollOffset);
+  }));
 
   const onScroll = useAnimatedScrollHandler({
     onScroll: ({ contentOffset: { y }}) => {
@@ -114,20 +115,22 @@ export function SortingTaskListView({
   return (
     <AnimatedScrollView
       contentContainerStyle={{
-        height: contentHeight,
+        height: totalContentHeight,
       }}
       onScroll={onScroll}
       ref={scrollViewRef}
       scrollEventThrottle={16}
     >
-      {sortableTasks.map((task, index) => {
+      {sortableItems.map((task, index) => {
         return (
           <SortableTask
             key={task.id}
             height={itemHeight}
             index={index}
             positions={positions}
+            scrollOffsetY={scrollOffsetY}
             title={task.title}
+            topInsetHeight={topInsetHeight}
             getScrollDirection={getScrollDirection}
             startScrolling={startScrolling}
             stopScrolling={stopScrolling}
