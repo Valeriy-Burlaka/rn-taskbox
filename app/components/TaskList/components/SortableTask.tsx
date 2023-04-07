@@ -111,6 +111,15 @@ export function SortableTask({
     }
   );
 
+  useAnimatedReaction(
+    () => scrollOffsetY.value,
+    (currentScrollOffset, previousScrollOffset) => {
+      if (isGestureActive.value) {
+        positionY.value += currentScrollOffset - (previousScrollOffset || 0);
+      }
+    }
+  )
+
   const panGesture = Gesture.Pan()
     .onBegin(() => {
       hapticImpact();
