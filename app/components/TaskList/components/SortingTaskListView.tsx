@@ -21,6 +21,10 @@ interface Props {
 
 const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
 
+// TODO:
+// 1. This absolutely does not work on Android. It lags as hell immediately after the pan gesture starts.
+// 2. Scroll animation can be done without `requestAnimationFrame`. Use `scrollY.value = withTiming()` instead.
+//    When need to stop animation, use `cancelAnimation` from reanimated
 export function SortingTaskListView({
   bottomInsetHeight,
   topInsetHeight,
