@@ -16,7 +16,6 @@ const HeaderContainer = styled.View<{}>`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: ${spacings.space100};
   padding-bottom: ${spacings.space50};
   padding-left: ${spacings.space50};
   padding-right: ${spacings.space50};
