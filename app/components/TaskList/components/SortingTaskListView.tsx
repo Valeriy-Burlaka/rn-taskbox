@@ -51,7 +51,7 @@ export function SortingTaskListView({
   const getScrollDirection = (panY: number): 'down' | 'up' | null => {
     "worklet";
 
-    const nearEdgeThreshold = 30;
+    const nearEdgeThreshold = itemHeight;
     let result = null;
 
     if (panY - topInsetHeight <= nearEdgeThreshold) {
@@ -77,7 +77,7 @@ export function SortingTaskListView({
     isScrolling.value = true;
 
     let start = 0;
-    const scrollSpeed = direction === 'down' ? 15 : -15;
+    const scrollSpeed = itemHeight * 0.75 * (direction === 'down' ? 1 : -1);
 
     function scroll(timestamp: number) {
       // console.log('In scroll worker:', start, timestamp, timestamp - start, isScrolling.value);

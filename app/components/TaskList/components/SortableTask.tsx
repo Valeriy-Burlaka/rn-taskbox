@@ -155,6 +155,7 @@ export function SortableTask({
       // console.log('New position: ', newPosition, '(was: ', thisElement.order.value, ')');
       if (newPosition !== positions.value[id]) {
         // console.log('Swapping element position from ', thisElement.order.value, 'to ', newPosition, '')
+        hapticImpact();
         positions.value = swapPositions(positions.value, positions.value[id],  newPosition);
         // console.log('Updated element position:', thisElement.order.value, positions.value[index].order.value)
       }
@@ -162,6 +163,8 @@ export function SortableTask({
       const scrollDirection = getScrollDirection(absoluteY);
       if (scrollDirection) {
         runOnJS(startScrolling)(scrollDirection);
+      } else {
+        runOnJS(stopScrolling)();
       }
 
     });
