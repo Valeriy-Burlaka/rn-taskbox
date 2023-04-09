@@ -12,6 +12,7 @@ export interface TaskData {
   title: string;
   state: TaskStates;
   createdAt: number;
+  order?: number;
 }
 
 export type TaskDataUpdate = Pick<TaskData, 'title'> | Pick<TaskData, 'state'>;

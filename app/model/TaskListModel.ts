@@ -1,5 +1,4 @@
-import { type GlyphIcon } from 'constants/Fontello';
-import { palette, type PaletteColor } from 'theme/Colors';
+import { palette } from 'theme/Colors';
 import { idGenerator } from 'utils/id';
 
 import { TaskModel } from 'model/TaskModel';
@@ -31,30 +30,14 @@ class TaskListId {
   }
 }
 
-// // Seems like too much interfaces but in reality I don't know how to implement this properly
-// 1. A class implements a data interface (TaskList), i.e., it guarantees the availability of
-//    of a certain data fields
-// 2. A class constructs itself from input data object, whoch comes from a storage (JSON.parsed(string))
-// 3. We know _nothing_ about what's stored in that object, - it may be corrupted, have missing fields, etc.
-// 4. So, by definition, this input really has the features of _any_ object.
-// 5. Thus, it's reasonable to treat it as `any` type, - don't rely on any properties availability
-//    before we validated them.
-//
-// interface TaskListData {
-//   id?: string;
-//   tasks?: TaskData[];
-//   name: string;
-//   color: string;
-//   icon: string;
-// }
-
 export class TaskListModel implements TaskList {
-  public id: string;
-  public name: string;
-  public color: PaletteColor;
-  public icon: GlyphIcon;
+  public id: TaskList['id'];
+  public name: TaskList['name'];
+  public color: TaskList['color'];
+  public icon: TaskList['icon'];
+
+  private _tasksOrder: TaskList['tasksOrder'] = 'by-date-created';
   private _tasks: Map<string, TaskData>;
-  private _tasksOrder: 'legacy' | 'by-date-created' = 'by-date-created';
 
   /**
    * Orders tasks by state (PINNED -> ACTIVE -> ARCHIVED), and then alphabetically
@@ -87,12 +70,13 @@ export class TaskListModel implements TaskList {
     return tasksInOrder;
   }
 
-  constructor(taskList: NewTaskList) {
+  constructor(taskList: NewTaskList | TaskList) {
     this.name = taskList.name;
     this.color = taskList.color;
     this.icon = taskList.icon;
 
-    this.id = taskList.id || new TaskListId().toString();
+    this.id = !!taskList.id ? taskList.id : new TaskListId().toString();
+    this._tasksOrder = !!taskList.tasksOrder ? taskList.tasksOrder : 'by-date-created';
 
     this._tasks = new Map();
     if (taskList.tasks) {
@@ -100,6 +84,14 @@ export class TaskListModel implements TaskList {
         this._tasks.set(task.id, task);
       }
     }
+  }
+
+  public get tasks(): TaskList['tasks'] {
+    return this.orderTasks([...this._tasks.values()]);
+  }
+
+  public get tasksOrder(): TaskList['tasksOrder'] {
+    return this._tasksOrder;
   }
 
   public orderTasks(tasks: TaskData[]): TaskData[] {
@@ -110,10 +102,6 @@ export class TaskListModel implements TaskList {
     } else {
       return tasks;
     }
-  }
-
-  public get tasks(): TaskData[] {
-    return this.orderTasks([...this._tasks.values()]);
   }
 
   public getTaskById(taskId: string): TaskData {
@@ -169,6 +157,7 @@ export class TaskListModel implements TaskList {
       color: this.color,
       icon: this.icon,
       tasks: this.tasks,
+      tasksOrder: this.tasksOrder,
     };
   }
 
@@ -186,6 +175,7 @@ export class TaskListModel implements TaskList {
       color: palette.DimGray,
       icon: 'list-bullet',
       tasks: [],
+      tasksOrder: 'by-date-created',
     };
   }
 

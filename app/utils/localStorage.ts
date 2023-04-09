@@ -59,11 +59,14 @@ export default {
     }
   },
 
-  removeItem: async function(key: string): Promise<void> {
+  removeItem: async function(key: string): Promise<boolean> {
     try {
       await AsyncStorage.removeItem(key);
+
+      return true;
     } catch (e) {
       console.error(`localStorage: Failed to "removeItem" "${key}":`, e);
+      return false;
     }
   },
 }

@@ -3,7 +3,6 @@ import localStorage from 'utils/localStorage';
 
 import { TaskListModel } from 'model/TaskListModel';
 import { TaskData } from 'types/task';
-import { NewTaskList } from 'types/taskList';
 
 export const STORAGE_KEYS = {
   initialListCreationMarker: 'initialListCreated',
@@ -56,24 +55,21 @@ export class TaskListRepository {
     }
   }
 
-  public async createList(listData: NewTaskList): Promise<TaskListModel> {
-    const list = new TaskListModel(listData);
-    await localStorage.setItem(list.id, list.toJson());
-
-    return list;
+  public async createList(list: TaskListModel): Promise<boolean> {
+    return localStorage.setItem(list.id, list.toJson());
   }
 
-  public async updateList(list: TaskListModel): Promise<void> {
-    await localStorage.setItem(list.id, list.toJson());
+  public async updateList(list: TaskListModel): Promise<boolean> {
+    return localStorage.setItem(list.id, list.toJson());
   }
 
-  public async deleteList(listId: string): Promise<void> {
+  public async deleteList(listId: string): Promise<boolean> {
     return localStorage.removeItem(listId);
   }
 
   public async getListTasks(listId: string): Promise<TaskData[]> {
     const jsonResult = await localStorage.getItem(listId);
-    // const jsonResult = await localStorage.getItem(`list-0`);
+
     if (jsonResult) {
       const taskList = TaskListModel.fromJson(jsonResult);
 

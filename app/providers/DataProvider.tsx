@@ -66,9 +66,11 @@ export const DataProvider = ({ children }: Props) => {
 
   const createList = async (listData: NewTaskList): Promise<void> => {
     console.log('Creating new list:', listData);
+    const newList = new TaskListModel(listData);
+
     return repository
-      .createList(listData)
-      .then((newList: TaskListModel) => {
+      .createList(newList)
+      .then(() => {
         setTaskLists({
           ...taskLists,
           [newList.id]: newList,
@@ -89,9 +91,9 @@ export const DataProvider = ({ children }: Props) => {
 
   const updateList = async (listId: string, { name, icon, color }: TaskListUpdate): Promise<void> => {
     const list = taskLists[listId];
-    list.name = name;
-    list.icon = icon;
-    list.color = color;
+    if (name) list.name = name;
+    if (icon) list.icon = icon;
+    if (color) list.color = color;
 
     return _updateTreeAndSyncStorage(list);
   };
