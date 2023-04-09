@@ -25,7 +25,7 @@ export class TaskId {
   }
 }
 
-export class Task {
+export class TaskModel {
   public id: TaskData['id'];
   public title: TaskData['title'];
   public state: TaskData['state'];

@@ -1,9 +1,9 @@
 
 import localStorage from 'utils/localStorage';
 
-import { TaskListModel } from 'model/TaskList';
+import { TaskListModel } from 'model/TaskListModel';
 import { TaskData } from 'types/task';
-import { NewTaskList, TaskList } from 'types/taskList';
+import { NewTaskList } from 'types/taskList';
 
 export const STORAGE_KEYS = {
   initialListCreationMarker: 'initialListCreated',

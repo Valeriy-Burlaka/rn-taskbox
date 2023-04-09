@@ -5,11 +5,11 @@ import React, {
   type Context,
 } from 'react';
 
-import { TaskListModel } from 'model/TaskList';
+import { TaskListModel } from 'model/TaskListModel';
 import { TaskListRepository } from 'repository/TaskListRepository';
 
 import { TaskData, TaskDataUpdate } from 'types/task';
-import { NewTaskList, TaskList, TaskListUpdate } from 'types';
+import { NewTaskList, TaskListUpdate } from 'types';
 
 function useContextStrict<T>(context: Context<T | undefined>): T {
   const contextValue = useContext(context);

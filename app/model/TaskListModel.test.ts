@@ -1,9 +1,9 @@
 import { TaskStates } from 'types/task';
 
-import { TaskListModel } from './TaskList';
+import { TaskListModel } from './TaskListModel';
 
 describe('TaskListModel', () => {
-  
+
   test('creates new model', () => {
     const data = {
       name: 'Shopping List',
@@ -62,7 +62,7 @@ describe('TaskListModel', () => {
     expect(restored.color).toEqual(m.color);
     expect(restored.icon).toEqual(m.icon);
     expect(restored.tasks).toEqual(m.tasks);
-    
+
     // won't work w/o consistent JSON formatting
     // expect(json).toEqual('{"name":"Shopping List","icon":"shopping-cart","color":"pink","id":"list-f3h5f25339684","tasks":[{"id":"task-abc123","title":"Buy zippo","state":0},{"id":"task-xyz321","title":"Buy T-Shirt with JS Evolution","state":1}]}');
   });

@@ -2,7 +2,7 @@ import { type GlyphIcon } from 'constants/Fontello';
 import { palette, type PaletteColor } from 'theme/Colors';
 import { idGenerator } from 'utils/id';
 
-import { Task } from 'model/Task';
+import { TaskModel } from 'model/TaskModel';
 
 import { NewTaskList, TaskList } from 'types/taskList';
 import { TaskData, TaskDataUpdate } from 'types/task';
@@ -124,7 +124,7 @@ export class TaskListModel implements TaskList {
   }
 
   public createTask(): TaskData {
-    const newTask = new Task();
+    const newTask = new TaskModel();
     this._tasks.set(newTask.id, newTask.toJson());
 
     return newTask.toJson();
