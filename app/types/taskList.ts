@@ -13,4 +13,5 @@ export interface TaskList {
 }
 
 export type NewTaskList = Omit<TaskList, 'id' | 'tasksOrder' | 'tasks'>;
+// TODO: Either<> type, not Partial<>
 export type TaskListUpdate = Partial<Pick<TaskList, 'name' | 'color' | 'icon' | 'tasksOrder'>>;

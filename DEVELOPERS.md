@@ -31,13 +31,13 @@ A desirable output:
 
 Choosing a library that would satisfy all these requirements turned out to be a non-trivial task.
 
-### Options
+#### Options
 
 * [react-native-hold-menu](https://github.com/enesozturk/react-native-hold-menu)
 * [react-native-context-menu-view](https://github.com/mpiannucci/react-native-context-menu-view)
 * [@react-native-menu/menu](https://github.com/react-native-menu/menu)
 
-#### react-native-hold-menu
+##### react-native-hold-menu
 
 **Pros**:
 
@@ -59,7 +59,7 @@ Choosing a library that would satisfy all these requirements turned out to be a 
 * The API is slightly awkward, mainly for using icons.
 * It's very early in beta (`v0.1.5`), and the author himslef doesn't reccomend to use this lib in producton 🤷.
 
-#### react-native-context-menu-view
+##### react-native-context-menu-view
 
 **Pros:**
 
@@ -76,7 +76,7 @@ Choosing a library that would satisfy all these requirements turned out to be a 
   * `onPress` on the `<ContextMenu />` element isn't related to this element at all. Instead, it should _imperatively define_ all onpress actions for _all_ menu items at once.
   * To define a separator between menu items, you have to do some weird trick like defining a sub-group of `actions` inside a top-level `action` and combine this with `inlineChildren: true` parameter. Not only this is wasteful and error-prone, it also contradicts its own _type declarations_ and makes TypeScript mad at you!
 
-#### @react-native-menu/menu
+##### @react-native-menu/menu
 
 Tried this one briefly. On a first glance, it's somewhat similar to `react-native-context-menu-view` (native, with system fonts, colors and icons).
 It uses this weird imperative handler for all menu actions at once as well.
@@ -95,7 +95,7 @@ Has a few extras:
 
 After reading the issues page, decided to not waste time trying to create an implementation with this library.
 
-### Decision
+#### Decision
 
 An accidental discovery has been made when I installed _both_ `react-native-context-menu-view` and `react-native-hold-menu` libraries at the same time and tested their components under a switch.
 Wrapping the `<App />` component in the `<HoldMenuProvider>` auto-magically fixed the issue with navigation for `<ContextMenu>`.
@@ -103,3 +103,19 @@ This 99.9% happens because `<HoldMenuProvider>` uses `react-native-gesture-handl
 This means that I should be able to implement my own small solution for the issue without pulling in the entire library and use it only as a hacky fix for another library.
 
 For now, though, I decided to use his setup (`react-native-context-menu-view` for actual context menu component, `react-native-hold-menu` for fixing the gesture handling and the issue with triggering on-press navigation after a long press).
+
+### Drag-n-drop functionality
+
+#### Options / Attempts
+
+##### react-drag-n-drop-list library
+
+Unusable - lags as hell on Android, I can't even move an item. Don't remember what's on iPhone, need to re-test.
+
+##### FlatList
+
+Unusable because `setData` ends the Pan gesture, this is it.
+
+#####
+
+#### Decision
