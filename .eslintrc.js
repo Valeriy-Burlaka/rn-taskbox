@@ -94,6 +94,7 @@ module.exports = {
     '@typescript-eslint/no-use-before-define': 'off',
 
     /// React
+    'react/react-in-jsx-scope': 'off',
     'react/no-unescaped-entities': 'off',
     'react/display-name': 'off',
     'react/jsx-curly-brace-presence': [
