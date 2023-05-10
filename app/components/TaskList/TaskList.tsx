@@ -23,14 +23,15 @@ interface HeaderBackgroundProps {
 };
 
 const HeaderBackground = ({ height, scrollOffsetY }: HeaderBackgroundProps) => {
-  if (height <= 0) {
-    return null;
-  }
 
   const animatedStyles = useAnimatedStyle(() => ({
     backgroundColor: scrollOffsetY.value > 50 ? palette.AliceBlue : 'transparent',
     height,
   }), [height]);
+
+  if (height <= 0) {
+    return null;
+  }
 
   return (
     <Animated.View
