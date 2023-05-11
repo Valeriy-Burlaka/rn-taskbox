@@ -75,6 +75,19 @@ export class TaskListModel implements TaskList {
     return tasksInOrder;
   }
 
+  private orderTasksByCustomOrder(tasks: TaskData[]): TaskData[] {
+    const tasksInOrder = [...tasks].sort((t1: TaskData, t2: TaskData) => {
+      // "task.order is probably `undefined`", and this is totally fine with me.
+      // We should have '.order' property for all tasks in a 'custom'-ordered list, but if we ever have an
+      // 'undefined' task order, these tasks will be NaN-sorted to the end of a list.
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      return t1.order - t2.order;
+    });
+
+    return tasksInOrder;
+  }
+
   constructor(taskList: NewTaskList | TaskList) {
     this.name = taskList.name;
     this.color = taskList.color;
@@ -102,6 +115,8 @@ export class TaskListModel implements TaskList {
   public orderTasks(tasks: TaskData[]): TaskData[] {
     if (this.tasksOrder === 'by-date-created') {
       return this.orderTasksByDateCreated(tasks);
+    } else if (this.tasksOrder === 'manual') {
+      return this.orderTasksByCustomOrder(tasks);
     } else if (this.tasksOrder === 'legacy') {
       return this.orderTasks__Legacy(tasks);
     } else {

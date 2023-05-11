@@ -1,14 +1,15 @@
 import { TaskData, TaskStates } from 'types';
+
 import { idGenerator } from 'utils/id';
 
 export class TaskId {
   private _id;
 
-  private generateId () {
+  private generateId() {
     return `${TaskId.COMMON_PREFIX}${idGenerator()}`;
   }
 
-  constructor () {
+  constructor() {
     this._id = this.generateId();
   }
 
@@ -25,25 +26,28 @@ export class TaskId {
   }
 }
 
-export class TaskModel {
+export class TaskModel implements TaskData {
   public id: TaskData['id'];
   public title: TaskData['title'];
   public state: TaskData['state'];
   public createdAt: TaskData['createdAt'];
+  public order?: TaskData['order'];
 
-  constructor () {
+  constructor() {
     this.id = new TaskId().toString();
     this.title = '';
     this.state = TaskStates.TASK_NEW;
     this.createdAt = Date.now();
+    this.order = undefined;
   }
 
-  toJson (): TaskData {
+  toJson(): TaskData {
     return {
       id: this.id,
       title: this.title,
       state: this.state,
       createdAt: this.createdAt,
+      order: this.order,
     };
   }
 }

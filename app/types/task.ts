@@ -1,5 +1,3 @@
-import { idGenerator } from 'utils/id';
-
 export enum TaskStates {
   TASK_PINNED = 0,
   TASK_INBOX = 1,
@@ -15,4 +13,4 @@ export interface TaskData {
   order?: number;
 }
 
-export type TaskDataUpdate = Pick<TaskData, 'title'> | Pick<TaskData, 'state'>;
+export type TaskDataUpdate = Partial<Pick<TaskData, 'title' | 'state' | 'order'>>;
