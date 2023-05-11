@@ -10,11 +10,11 @@ import { palette } from 'theme/Colors';
 class TaskListId {
   private _id;
 
-  private generateId () {
+  private generateId() {
     return `${TaskListId.COMMON_PREFIX}${idGenerator()}`;
   }
 
-  constructor () {
+  constructor() {
     this._id = this.generateId();
   }
 
@@ -31,20 +31,24 @@ class TaskListId {
   }
 }
 
+function isTaskList(obj: NewTaskList | TaskList): obj is TaskList {
+  return (obj as TaskList).id !== undefined;
+}
+
 export class TaskListModel implements TaskList {
   public id: TaskList['id'];
   public name: TaskList['name'];
   public color: TaskList['color'];
   public icon: TaskList['icon'];
+  public tasksOrder: TaskList['tasksOrder'] = 'by-date-created';
 
-  private _tasksOrder: TaskList['tasksOrder'] = 'by-date-created';
   private _tasks: Map<string, TaskData>;
 
   /**
    * Orders tasks by state (PINNED -> ACTIVE -> ARCHIVED), and then alphabetically
    */
   private orderTasks__Legacy(tasks: TaskData[]): TaskData[] {
-    const tasksInOrder = [ ...tasks ].sort((t1: TaskData, t2: TaskData) => {
+    const tasksInOrder = [...tasks].sort((t1: TaskData, t2: TaskData) => {
       if (t1.state === t2.state) {
         return t1.title.toLowerCase().charCodeAt(0) - t2.title.toLowerCase().charCodeAt(0);
       } else {
@@ -60,7 +64,7 @@ export class TaskListModel implements TaskList {
    * appearing at the end of the list.
    */
   private orderTasksByDateCreated(tasks: TaskData[]): TaskData[] {
-    const tasksInOrder = [ ...tasks ].sort((t1: TaskData, t2: TaskData) => {
+    const tasksInOrder = [...tasks].sort((t1: TaskData, t2: TaskData) => {
       if (t1.state !== t2.state) {
         return t1.state - t2.state;
       } else {
@@ -76,11 +80,15 @@ export class TaskListModel implements TaskList {
     this.color = taskList.color;
     this.icon = taskList.icon;
 
-    this.id = !!taskList.id ? taskList.id : new TaskListId().toString();
-    this._tasksOrder = !!taskList.tasksOrder ? taskList.tasksOrder : 'by-date-created';
-
     this._tasks = new Map();
-    if (taskList.tasks) {
+    // new task list
+    if (!isTaskList(taskList)) {
+      this.id = new TaskListId().toString();
+      this.tasksOrder = 'by-date-created';
+      this._tasks = new Map();
+    } else {
+      this.id = taskList.id;
+      this.tasksOrder = taskList.tasksOrder;
       for (const task of taskList.tasks) {
         this._tasks.set(task.id, task);
       }
@@ -91,14 +99,10 @@ export class TaskListModel implements TaskList {
     return this.orderTasks([...this._tasks.values()]);
   }
 
-  public get tasksOrder(): TaskList['tasksOrder'] {
-    return this._tasksOrder;
-  }
-
   public orderTasks(tasks: TaskData[]): TaskData[] {
-    if (this._tasksOrder === 'by-date-created') {
+    if (this.tasksOrder === 'by-date-created') {
       return this.orderTasksByDateCreated(tasks);
-    } else if (this._tasksOrder === 'legacy') {
+    } else if (this.tasksOrder === 'legacy') {
       return this.orderTasks__Legacy(tasks);
     } else {
       return tasks;
@@ -126,13 +130,10 @@ export class TaskListModel implements TaskList {
       return;
     }
 
-    this._tasks.set(
-      taskId,
-      {
-        ...this._tasks.get(taskId),
-        ...taskData,
-      } as TaskData,
-    )
+    this._tasks.set(taskId, {
+      ...this._tasks.get(taskId),
+      ...taskData,
+    } as TaskData);
   }
 
   public deleteTask(taskId: string): void {
@@ -181,7 +182,7 @@ export class TaskListModel implements TaskList {
   }
 
   public static detectTaskListIdsFromStringArray(input: string[]): string[] {
-    return input.filter(s => s.startsWith(TaskListId.COMMON_PREFIX));
+    return input.filter((s) => s.startsWith(TaskListId.COMMON_PREFIX));
   }
 }
 
