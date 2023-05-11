@@ -1,19 +1,25 @@
-
-import localStorage from 'utils/localStorage';
+import { TaskData } from 'types/task';
 
 import { TaskListModel } from 'model/TaskListModel';
-import { TaskData } from 'types/task';
+
+import localStorage from 'utils/localStorage';
 
 export const STORAGE_KEYS = {
   initialListCreationMarker: 'initialListCreated',
 };
 
 export class TaskListRepository {
-
   private async getAllListIds(): Promise<string[]> {
     const allKeys = await localStorage.getAllKeys();
+    // TODO: Owes an explanation. Here is an brain dump of what I remember:
+    // (basically, we get a very simple key-value storage from AsyncStorage, and there are some other keys on the top level (which keys?;
+    // And the list keys aren't stored under some "lists" key providing a namespace for all lists, because it would mean we have to
+    // update _all_ lists at once when we updating any of them, because all values are just strings and there is no partial updates or smthg.)
+    //
+    // TODO2: Keep recording architectural decisions. There was a good attempt ot document the choice of context menu library, but there is
+    // clearly a lack of documentation for storage, repository, etc.
 
-    return allKeys && TaskListModel.detectTaskListIdsFromStringArray(allKeys) || [];
+    return (allKeys && TaskListModel.detectTaskListIdsFromStringArray(allKeys)) || [];
   }
 
   public async getLists(): Promise<{ [key: string]: TaskListModel }> {
@@ -23,8 +29,9 @@ export class TaskListRepository {
 
     const result = lists
       .filter(([_listId, listData]) => !!listData)
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore - complains on "listData possibly `null`" despite the .filter() above
-      .map(([listId, listData]) => [listId, TaskListModel.fromJson(listData)])
+      .map(([listId, listData]) => [listId, TaskListModel.fromJson(listData)]);
 
     return Object.fromEntries(result);
   }
@@ -40,10 +47,7 @@ export class TaskListRepository {
     const listIds = await this.getAllListIds();
     if (!listIds.length) {
       const data = TaskListModel.INITIAL_TASKLIST_PARAMETERS;
-      const result = await localStorage.setItem(
-        data.id,
-        JSON.stringify(data),
-      );
+      const result = await localStorage.setItem(data.id, JSON.stringify(data));
       if (result) {
         // theoretically, can fail too
         await localStorage.setItem(STORAGE_KEYS.initialListCreationMarker, JSON.stringify(true));
@@ -79,7 +83,6 @@ export class TaskListRepository {
     }
     // something is wrong if we requested a task list by ID but didn't get a result
   }
-
 
   // deleteTaskFromList
 
