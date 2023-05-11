@@ -1,5 +1,6 @@
-import { type GlyphIcon } from 'constants/Fontello';
-import { type PaletteColor } from 'theme/Colors';
+import type { GlyphIcon } from 'constants/Fontello';
+
+import type { PaletteColor } from 'theme/Colors';
 
 import { TaskData } from './task';
 
