@@ -133,6 +133,26 @@ module.exports = {
             position: 'after',
           },
           {
+            pattern: 'types/**',
+            group: 'internal',
+            position: 'after',
+          },
+          {
+            pattern: 'model/**',
+            group: 'internal',
+            position: 'after',
+          },
+          {
+            pattern: 'utils/**',
+            group: 'internal',
+            position: 'after',
+          },
+          {
+            pattern: 'theme/**',
+            group: 'internal',
+            position: 'after',
+          },
+          {
             pattern: 'components/**',
             group: 'internal',
             position: 'after',

@@ -1,10 +1,11 @@
-import { palette } from 'theme/Colors';
-import { idGenerator } from 'utils/id';
+import type { NewTaskList, TaskList } from 'types/taskList';
+import type { TaskData, TaskDataUpdate } from 'types/task';
 
 import { TaskModel } from 'model/TaskModel';
 
-import { NewTaskList, TaskList } from 'types/taskList';
-import { TaskData, TaskDataUpdate } from 'types/task';
+import { idGenerator } from 'utils/id';
+
+import { palette } from 'theme/Colors';
 
 class TaskListId {
   private _id;
