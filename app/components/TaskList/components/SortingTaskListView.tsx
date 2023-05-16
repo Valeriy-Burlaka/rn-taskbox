@@ -52,19 +52,26 @@ export function SortingTaskListView({
     },
   });
 
-  const getScrollDirection = (panY: number): 'down' | 'up' | null => {
-    "worklet";
+  /**
+   * When we drag a task and it's near the edge of the task list, we want to start auto-scrolling the list.
+   * @param panGestureY A `y` coordinate of the current position of the pointer, relative to the window. Roughly
+   * corresponds to the `y` position of the task being dragged on the screen.
+   * @returns The direction in which we want to start auto-scrolling the list, or `null`.
+   */
+  const getAutoScrollDirection = (panGestureY: number): 'down' | 'up' | null => {
+    'worklet';
 
-    const nearEdgeThreshold = itemHeight;
-    let result = null;
+    const autoScrollThreshold = itemHeight;
+    const isNearTopEdge = panGestureY - topInsetHeight <= autoScrollThreshold;
+    const isNearBottomEdge = SCREEN_HEIGHT - panGestureY - bottomInsetHeight <= autoScrollThreshold;
 
-    if (panY - topInsetHeight <= nearEdgeThreshold) {
-      result = 'up' as const;
-    } else if (SCREEN_HEIGHT - panY - bottomInsetHeight <= nearEdgeThreshold) {
-      result = 'down' as const;
+    if (isNearTopEdge) {
+      return 'up' as const;
+    } else if (isNearBottomEdge) {
+      return 'down' as const;
     }
 
-    return result;
+    return null;
   };
 
   const startScrolling = (direction: 'down' | 'up') => {
@@ -131,7 +138,7 @@ export function SortingTaskListView({
             scrollOffsetY={scrollOffsetY}
             title={task.title}
             topInsetHeight={topInsetHeight}
-            getScrollDirection={getScrollDirection}
+            getAutoScrollDirection={getAutoScrollDirection}
             startScrolling={startScrolling}
             stopScrolling={stopScrolling}
           />

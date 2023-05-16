@@ -74,7 +74,7 @@ interface Props {
   scrollOffsetY: SharedValue<number>;
   title: TaskData['title'];
   topInsetHeight: number;
-  getScrollDirection: (panY: number) => 'down' | 'up' | null;
+  getAutoScrollDirection: (panY: number) => 'down' | 'up' | null;
   startScrolling: (direction: 'down' | 'up') => void;
   stopScrolling: () => void;
 }
@@ -87,7 +87,7 @@ export function SortableTask({
   scrollOffsetY,
   title,
   topInsetHeight,
-  getScrollDirection,
+  getAutoScrollDirection,
   startScrolling,
   stopScrolling,
 }: Props) {
@@ -160,13 +160,12 @@ export function SortableTask({
         // console.log('Updated element position:', thisElement.order.value, positions.value[index].order.value)
       }
 
-      const scrollDirection = getScrollDirection(absoluteY);
-      if (scrollDirection) {
-        runOnJS(startScrolling)(scrollDirection);
+      const autoScrollDirection = getAutoScrollDirection(absoluteY);
+      if (autoScrollDirection) {
+        runOnJS(startScrolling)(autoScrollDirection);
       } else {
         runOnJS(stopScrolling)();
       }
-
     });
 
   const animatedStyles = useAnimatedStyle(() => {
