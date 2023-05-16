@@ -1,33 +1,38 @@
 import { useState } from 'react';
 import { Keyboard } from 'react-native';
-
 import * as Haptics from 'expo-haptics';
+import type { SharedValue } from 'react-native-reanimated';
+// eslint-disable-next-line import/default
+import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import Animated, { useAnimatedStyle, useSharedValue, type SharedValue } from 'react-native-reanimated';
 
 import { useAppData } from 'providers/DataProvider';
+
 import { TaskStates } from 'types/task';
+
 import { createDeleteAlert } from 'utils/deleteListAlert';
 
 import { palette } from 'theme/Colors';
 
-import { Header } from './components/Header';
 import { AddTaskButton } from './components/AddTaskButton';
+import { Header } from './components/Header';
 import { SortingTaskListView } from './components/SortingTaskListView';
 import { TaskListView } from './components/TaskListView';
 
 interface HeaderBackgroundProps {
   height: number;
   scrollOffsetY: SharedValue<number>;
-};
+}
 
 const HeaderBackground = ({ height, scrollOffsetY }: HeaderBackgroundProps) => {
-
-  const animatedStyles = useAnimatedStyle(() => ({
-    backgroundColor: scrollOffsetY.value > 50 ? palette.AliceBlue : 'transparent',
-    height,
-  }), [height]);
+  const animatedStyles = useAnimatedStyle(
+    () => ({
+      backgroundColor: scrollOffsetY.value > 50 ? palette.AliceBlue : 'transparent',
+      height,
+    }),
+    [height],
+  );
 
   if (height <= 0) {
     return null;
@@ -37,12 +42,13 @@ const HeaderBackground = ({ height, scrollOffsetY }: HeaderBackgroundProps) => {
     <Animated.View
       style={[
         animatedStyles,
+        // eslint-disable-next-line react-native/no-inline-styles
         {
           position: 'absolute',
           top: 0,
           left: 0,
           right: 0,
-        }
+        },
       ]}
     />
   );
@@ -80,7 +86,7 @@ export function TaskList({ listId }: { listId: string }) {
 
   const onPressSortTasks = () => {
     setSortingTasks(true);
-  }
+  };
 
   const onPressAddButton = () => {
     Haptics.impactAsync(
@@ -198,7 +204,6 @@ export function TaskList({ listId }: { listId: string }) {
           icon={thisList.icon}
           loading={false}
           tasks={tasks}
-
           onArchiveTask={onArchiveTask}
           onEndEditingTask={onEndEditingTask}
           onFocusTask={enterEditTaskMode}
@@ -208,13 +213,7 @@ export function TaskList({ listId }: { listId: string }) {
         />
       )}
 
-      {!isSortingTasks ? (
-        <AddTaskButton
-          color={thisList.color}
-          onPress={onPressAddButton}
-        />
-      ) : null}
-
+      {!isSortingTasks ? <AddTaskButton color={thisList.color} onPress={onPressAddButton} /> : null}
     </SafeAreaView>
   );
 }
