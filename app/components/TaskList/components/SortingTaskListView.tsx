@@ -1,16 +1,16 @@
 import { useRef } from 'react';
 import { ScrollView } from 'react-native';
-import Animated, {
-  useAnimatedScrollHandler,
-  useSharedValue,
-  type SharedValue,
-} from 'react-native-reanimated';
+import type { SharedValue } from 'react-native-reanimated';
+// eslint-disable-next-line import/default
+import Animated, { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated';
 
 import { TaskData, TaskStates } from 'types/task';
+
+import { SCREEN_HEIGHT } from 'utils/dimensions';
+
 import { spacings } from 'theme/Spacings';
 
 import { SortableTask } from './SortableTask';
-import { SCREEN_HEIGHT } from 'utils/dimensions';
 
 interface Props {
   tasks: TaskData[];
@@ -41,9 +41,7 @@ export function SortingTaskListView({
   const isScrolling = useSharedValue(false);
 
   const itemPositions = useSharedValue(
-    Object.fromEntries(
-      sortableItems.map((item, index) => [item.id, index])
-    )
+    Object.fromEntries(sortableItems.map((item, index) => [item.id, index])),
   );
 
   const onScroll = useAnimatedScrollHandler({

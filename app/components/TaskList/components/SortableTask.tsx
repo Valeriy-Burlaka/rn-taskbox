@@ -1,10 +1,11 @@
 import { View, TextInput } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import styled from '@emotion/native';
+import type { SharedValue } from 'react-native-reanimated';
+// eslint-disable-next-line import/default
 import Animated, {
   useAnimatedStyle,
   useAnimatedReaction,
-  type SharedValue,
   useSharedValue,
   withSpring,
   withTiming,
@@ -14,9 +15,8 @@ import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 
 import { TaskData } from 'types/task';
 
-import { palette, spacings, textSizes } from 'theme';
-
 import { FontelloIcon } from 'constants/Fontello';
+import { palette, spacings, textSizes } from 'theme';
 
 const Container = styled(Animated.View)<{ height: number}>`
   align-items: center;
@@ -58,6 +58,7 @@ function swapPositions(positions: {[key: string]: number}, fromPosition: number,
     if (positions[id] === fromPosition) {
       newPositions[id] = toPosition;
     }
+
     if (positions[id] === toPosition) {
       newPositions[id] = fromPosition;
     }
@@ -100,15 +101,12 @@ export function SortableTask({
     () => positions.value[id],
     (currentPosition, previousPosition) => {
       if (currentPosition !== previousPosition) {
-        positionY.value = withSpring(
-          currentPosition * height,
-          {
-            damping: 30,
-            stiffness: 200,
-          },
-        );
+        positionY.value = withSpring(currentPosition * height, {
+          damping: 30,
+          stiffness: 200,
+        });
       }
-    }
+    },
   );
 
   useAnimatedReaction(
@@ -117,8 +115,8 @@ export function SortableTask({
       if (isGestureActive.value) {
         positionY.value += currentScrollOffset - (previousScrollOffset || 0);
       }
-    }
-  )
+    },
+  );
 
   const panGesture = Gesture.Pan()
     .onBegin(() => {
