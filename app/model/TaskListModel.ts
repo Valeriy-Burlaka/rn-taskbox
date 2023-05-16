@@ -115,7 +115,7 @@ export class TaskListModel implements TaskList {
   public orderTasks(tasks: TaskData[]): TaskData[] {
     if (this.tasksOrder === 'by-date-created') {
       return this.orderTasksByDateCreated(tasks);
-    } else if (this.tasksOrder === 'manual') {
+    } else if (this.tasksOrder === 'custom') {
       return this.orderTasksByCustomOrder(tasks);
     } else if (this.tasksOrder === 'legacy') {
       return this.orderTasks__Legacy(tasks);

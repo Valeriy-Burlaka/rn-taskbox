@@ -10,7 +10,7 @@ export interface TaskList {
   color: PaletteColor;
   icon: GlyphIcon;
   tasks: TaskData[];
-  tasksOrder: 'legacy' | 'by-date-created' | 'manual';
+  tasksOrder: 'legacy' | 'by-date-created' | 'custom';
 }
 
 export type NewTaskList = Omit<TaskList, 'id' | 'tasksOrder' | 'tasks'>;
