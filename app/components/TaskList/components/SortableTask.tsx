@@ -18,7 +18,7 @@ import { TaskData } from 'types/task';
 import { FontelloIcon } from 'constants/Fontello';
 import { palette, spacings, textSizes } from 'theme';
 
-const Container = styled(Animated.View)<{ height: number}>`
+const Container = styled(Animated.View)<{ height: number }>`
   align-items: center;
   background-color: white;
   justify-content: space-between;
@@ -39,21 +39,25 @@ const StyledText = styled(TextInput)`
 `;
 
 function hapticImpact() {
-  "worklet";
+  'worklet';
 
   runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Medium);
 }
 
 function clamp(value: number, min: number, max: number) {
-  "worklet";
+  'worklet';
 
   return Math.max(min, Math.min(value, max));
 }
 
-function swapPositions(positions: {[key: string]: number}, fromPosition: number, toPosition: number) {
-  "worklet";
+function swapPositions(
+  positions: { [key: string]: number },
+  fromPosition: number,
+  toPosition: number,
+) {
+  'worklet';
 
-  const newPositions = {...positions};
+  const newPositions = { ...positions };
   for (const id in positions) {
     if (positions[id] === fromPosition) {
       newPositions[id] = toPosition;
@@ -71,7 +75,7 @@ interface Props {
   height: number;
   id: string;
   itemsCount: number;
-  positions: SharedValue<{[key: string]: number}>;
+  positions: SharedValue<{ [key: string]: number }>;
   scrollOffsetY: SharedValue<number>;
   title: TaskData['title'];
   topInsetHeight: number;
@@ -168,7 +172,8 @@ export function SortableTask({
 
   const animatedStyles = useAnimatedStyle(() => {
     return {
-      backgroundColor: (isGestureActive.value || isReturningToOriginalY.value) ? palette.AliceBlue : 'white',
+      backgroundColor:
+        isGestureActive.value || isReturningToOriginalY.value ? palette.AliceBlue : 'white',
       flex: 1,
       opacity: isGestureActive.value ? 0.8 : 1,
       position: 'absolute',
@@ -187,25 +192,16 @@ export function SortableTask({
       // `useDerivedValue` variable, but it doesn't work as expected. It seems that the derived value
       // doesn't keep up updating when a gesture is ended and an element transitions back to its original position.
       // This results in animated styles depending on the derived value not being updated.
-      zIndex: (isGestureActive.value || isReturningToOriginalY.value) ? 1 : 0,
+      zIndex: isGestureActive.value || isReturningToOriginalY.value ? 1 : 0,
     };
   });
 
   return (
-    <Container
-      height={height}
-      style={animatedStyles}
-    >
-      <StyledText editable={false}>
-        {title}
-      </StyledText>
+    <Container height={height} style={animatedStyles}>
+      <StyledText editable={false}>{title}</StyledText>
       <GestureDetector gesture={panGesture}>
         <View>
-          <FontelloIcon
-            color='lightgrey'
-            name='braille'
-            size={spacings.unitless.space125}
-          />
+          <FontelloIcon color="lightgrey" name="braille" size={spacings.unitless.space125} />
         </View>
       </GestureDetector>
     </Container>

@@ -45,7 +45,7 @@ export function SortingTaskListView({
   );
 
   const onScroll = useAnimatedScrollHandler({
-    onScroll: ({ contentOffset: { y }}) => {
+    onScroll: ({ contentOffset: { y } }) => {
       scrollOffsetY.value = y;
     },
   });
@@ -76,9 +76,8 @@ export function SortingTaskListView({
     // console.log('Start scrolling...');
 
     const alreadyScrolling = isScrolling.value;
-    const canScrollFurther = direction === 'down' ?
-      scrollOffsetY.value <= maxScrollOffset :
-      scrollOffsetY.value > 0;
+    const canScrollFurther =
+      direction === 'down' ? scrollOffsetY.value <= maxScrollOffset : scrollOffsetY.value > 0;
     if (alreadyScrolling || !canScrollFurther) {
       return;
     }
