@@ -2,6 +2,7 @@
   "name": "react-native-taskbox",
   "version": "1.0.0",
   "scripts": {
+    "build:ios:dev": "yarn prebuild:ios && eas build --platform ios --profile development --local",
     "go": "expo start",
     "start": "expo start --dev-client",
     "android": "expo run:android",
