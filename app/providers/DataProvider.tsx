@@ -4,6 +4,7 @@ import React, {
   useState,
   type Context,
 } from 'react';
+import { produce } from 'immer';
 
 import { TaskListModel } from 'model/TaskList';
 import { TaskListRepository } from 'repository/TaskListRepository';
@@ -46,9 +47,8 @@ interface Props {
 const repository = new TaskListRepository();
 
 /**
- * In-memory tree of lists and tasks. Needed to provide immediate availability of the data
+ * In-memory tree of lists and tasks. Provides immediate availability of the data
  * when navigating between screens.
- *
  */
 export const DataProvider = ({ children }: Props) => {
   const [taskLists, setTaskLists] = useState<AppData['taskLists']>({});
@@ -69,10 +69,9 @@ export const DataProvider = ({ children }: Props) => {
     return repository
       .createList(listData)
       .then((newList: TaskListModel) => {
-        setTaskLists({
-          ...taskLists,
-          [newList.id]: newList,
-        });
+        setTaskLists(produce(taskLists, (draft) => {
+          draft[newList.id] = newList;
+        }));
       });
   };
 
@@ -81,9 +80,9 @@ export const DataProvider = ({ children }: Props) => {
     return repository
       .deleteList(listId)
       .then(() => {
-        const _taskLists = { ...taskLists };
-        delete _taskLists[listId];
-        setTaskLists(_taskLists);
+        setTaskLists(produce(taskLists, (draft) => {
+          delete draft[listId];
+        }));
       });
   };
 
@@ -106,6 +105,14 @@ export const DataProvider = ({ children }: Props) => {
       ...taskLists,
       [list.id]: list,
     });
+
+    // Unfortunately, this won't work with Immer because we only mutate an instance of the class retrieved from the
+    // draft tree, so Immer is not able to track these changes (it's designed to work with plain object and arrays)
+    // I may want to re-consider my architecture at some point 🤔
+    //
+    // setTaskLists(produce(taskLists, (draft) => {
+    //   draft[list.id] = list;
+    // }));
 
     console.log(`Created new task in list "${listId}":`, newTask);
 
