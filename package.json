@@ -2,6 +2,7 @@
   "name": "react-native-taskbox",
   "version": "1.0.0",
   "scripts": {
+    "build:ios:dev": "yarn prebuild:ios && eas build --platform ios --profile development --local",
     "go": "expo start",
     "start": "expo start --dev-client",
     "android": "expo run:android",
@@ -9,7 +10,6 @@
     "web": "expo start --web",
     "eject": "expo eject",
     "lint": "eslint . --ext .tsx",
-    "build:ios:dev": "yarn prebuild:ios && eas build --platform ios --profile development --local",
     "prebuild:ios": "expo prebuild --clean --platform ios",
     "test": "jest",
     "update-stories": "sb-rn-get-stories --config-path storybook-ondevice",
@@ -38,6 +38,7 @@
     "expo-splash-screen": "~0.16.2",
     "expo-status-bar": "~1.4.0",
     "expo-web-browser": "~11.0.0",
+    "immer": "^10.0.2",
     "polished": "^4.2.2",
     "react": "18.0.0",
     "react-dom": "18.0.0",
@@ -100,8 +101,5 @@
   "resolutions": {
     "react-test-renderer": "18.1.0"
   },
-  "volta": {
-    "node": "16.13.2",
-    "yarn": "3.5.0"
-  }
+  "private": false
 }
